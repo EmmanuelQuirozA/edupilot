@@ -1,14 +1,25 @@
+import './i18n';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { AuthProvider } from './context/AuthContext';
+
+// import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // This imports Bootstrap's JS (including dropdown functionality)
+import 'bootstrap-icons/font/bootstrap-icons.css'; // For Bootstrap Icons
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'daterangepicker/daterangepicker.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,0 +1,258 @@
+body{
+  background: #E4E9F7 !important;
+  color: black;
+}
+
+footer {
+  background-color: #007bff;
+  padding: 1rem;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  font-size: 16px;
+  color: white;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+}
+
+footer p {
+  color: white;
+  text-decoration: none;
+  margin-bottom: 0;
+}
+/* Sidebar styling */
+#sidebar {
+  position: fixed;
+  transition: all 0.3s;
+}
+
+#sidebar.collapsed {
+  width: 80px;
+}
+
+#sidebar img {
+  transition: all 0.3s;
+}
+
+#sidebar.collapsed img {
+  width: 40px;
+}
+
+/* Main content adjustment */
+.content {
+  transition: all 0.3s;
+}
+
+#sidebar.collapsed ~ .content {
+  margin-left: 70px;
+}
+
+/* Hide text in collapsed sidebar */
+#sidebar.collapsed .nav-link {
+  text-align: center;
+  font-size: 0;
+}
+
+#sidebar.collapsed .nav-link i {
+  font-size: 24px;
+}
+
+.groupStyle{
+  border-bottom: 1px solid rgb(228 228 228);
+  margin-bottom: 1.5rem;
+}
+
+/* Right Filter Sidebar */
+.right-sidebar {
+  position: fixed;
+  top: 0;
+  right: -300px; /* Hidden initially */
+  width: 300px;
+  height: 100vh;
+  background-color: #fff;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  z-index: 1050;
+  transition: right 0.3s ease-in-out; /* Smooth transition */
+  overflow-y: auto;
+}
+
+/* Visible state for the sidebar */
+.right-sidebar.visible {
+  right: 0;
+}
+
+/* Overlay styles */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  z-index: 1040; /* Behind the sidebar */
+  transition: 0.5s;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1010;
+}
+
+/* New Sidebar */
+
+/* Ajuste del sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  /*padding: 58px 0 0; */
+  width: 240px;
+  background-color: #11101d; /* Fondo oscuro */
+  color: #fff;
+  z-index: 600;
+  transition: width 0.3s;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.main-container {
+  width: 100%;
+  transition: all 0.3s;
+}
+
+.main-container.expanded {
+  margin-left: 80px; /* Ajuste para el sidebar colapsado */
+}
+
+.main-container.expanded .toggle-sidebar {
+  left: 90px;
+}
+
+
+.sidebar.collapsed .logo_name {
+  display: none; /* Oculto por defecto */
+}
+
+.sidebar.expanded .logo_name {
+  display: inline; /* Se muestra cuando se expande */
+}
+
+
+
+.sidebar.expanded .link_name {
+  display: inline; /* Muestra el texto cuando está expandido */
+}
+
+
+
+.logo-details.d-flex.align-items-center {
+  padding: 20px;
+}
+
+img.logo_img {
+  width: 25%;
+}
+
+span.logo_name.ms-2 {
+  font-size: 22px;
+  color: #fff;
+  font-weight: 600;
+  transition: 0.3s ease;
+  transition-delay: 0.1s;
+}
+
+
+
+/* 1) Center all tab text */
+.custom-fullwidth-tabs .nav-link {
+  text-align: center;
+  border-radius: 0 !important;  /* reset per-tab rounding */
+}
+
+/* 2) Round only the outer corners of the first/last tabs */
+.custom-fullwidth-tabs .nav-item:first-child .nav-link {
+  border-top-left-radius: 0.5rem !important;
+  border-bottom-left-radius: 0.5rem !important;
+}
+.custom-fullwidth-tabs .nav-item:last-child .nav-link {
+  border-top-right-radius: 0.5rem !important;
+  border-bottom-right-radius: 0.5rem !important;
+}
+
+/* 3) Strip the default active underline */
+.custom-fullwidth-tabs .nav-link.active {
+  border-bottom: none !important;
+  position: relative; /* for our pseudo-element */
+}
+
+/* 4) Add a custom, centered, shorter underline */
+.custom-fullwidth-tabs .nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;         /* adjust length here */
+  height: 0.25rem;     /* thickness of the underline */
+  background-color: currentColor;  /* uses the link’s text color */
+  border-radius: 1.125rem 1.125rem 0  0;         /* slightly round the ends */
+}
+
+
+/* make the tooltip white with gray border */
+.custom-tooltip-wrapper .tooltip-inner {
+  background-color: #fff !important;
+  color: #333 !important;
+  border: 1px solid #ccc !important;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+}
+/* color the little arrow */
+.custom-tooltip-wrapper .tooltip-arrow::before {
+  border-top-color: #ccc !important;
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-size: 12px;
+  }
+
+  .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+
+  .col-md-4 {
+    width: 33.3333% !important;
+    flex: 0 0 33.3333% !important;
+    max-width: 33.3333% !important;
+  }
+
+  .col-md-6 {
+    width: 50% !important;
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+  }
+
+  .col-md-12 {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Avoid printing buttons and navigation */
+  .no-print {
+    display: none !important;
+  }
+}
