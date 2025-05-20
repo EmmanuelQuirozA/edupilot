@@ -253,6 +253,7 @@
   "mass_upload_teachers": "Carga masiva de profesores",
   "mass_upload": "Carga masiva",
   "drop_the_file_here": "Suelta el archivo aquí",
+	"attach_receipt": "Adjunta un recibo",
 	"upload_receipt": "Actualiza el recibo",
   "drag_and_drop_a_csv_file_here_or_click_to_select": "Arrastra aquí un archivo CSV o haz clic para seleccionar",
   "drag_drop_or_click_to_upload": "Arrastra aquí un archivo o haz clic para seleccionar",

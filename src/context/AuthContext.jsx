@@ -19,7 +19,7 @@ export const useAuth = () => {
 
 export function AuthProvider({ children }) {
   const [user, setUser]     = useState(null);
-  const [userDetails, setUserDetails]     = useState(null);
+  const [userDetails, setUserDetails] = useState({});
   const [loading, setLoading] = useState(true);
 
   // Helper: read & decode token
@@ -73,7 +73,20 @@ export function AuthProvider({ children }) {
     // Save token and user data in localStorage
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
+    
+    // decode and set
+    const decoded = jwtDecode(data.token);
+    setUser({
+      role:     decoded.role,
+      userId:   decoded.userId,
+      schoolId: decoded.schoolId,
+      username: decoded.sub,
+    });
+    setUserDetails(data.user);
+
+    // Update both pieces of state
     setUser(data.user);
+    setUserDetails(data.user);
   };
 
   const logout = () => {

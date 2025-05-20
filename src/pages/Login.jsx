@@ -31,12 +31,14 @@ const Login = () => {
     try {
       const payload = {
         usernameOrEmail: email,
-        password,
-        language: i18n.language || 'en',
+        password
       };
 
-      const response = await axios.post('http://localhost:8080/api/auth/login', payload);
-      // console.log(response.data);
+      const response = await axios.post(
+        'http://localhost:8080/api/auth/login',
+        payload,
+        { params: { lang: i18n.language || 'es' } }
+      );
 
       // Use the login function from AuthContext to update state
       login({ token: response.data.token, user: response.data.user });

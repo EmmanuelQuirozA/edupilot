@@ -140,7 +140,7 @@ export default function Header({ pageTitle, collapsed, toggleSidebar }) {
           {user ? (
             <MDBDropdown>
               <MDBDropdownToggle tag="button" className="btn btn-primary p-2">
-                {userDetails.firstName || 'User'}
+                {userDetails?.firstName || 'User'}
               </MDBDropdownToggle>
               <MDBDropdownMenu className="dropdown-menu">
                 <MDBDropdownItem onClick={() => navigate('/profile')} className="dropdown-item cursor-pointer">

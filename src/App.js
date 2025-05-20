@@ -13,23 +13,23 @@ import LoginPage       from './pages/Login'
 // Common components
 // import NotFound         from './components/common/NotFound'
 // import Unauthorized     from './components/common/Unauthorized'
-// import ProtectedRoute   from './components/common/ProtectedRoute'
+import ProtectedRoute   from './components/common/ProtectedRoute'
 
 // // Layout wrapper (with Header, Sidebar, Footer inside)
 // import Layout          from './components/Layout'
 
 // // “Router” bundles
-// import DashboardRouter from './routes/DashboardRouter'
+import DashboardRouter from './routes/DashboardRouter'
 // import UsersRouter     from './routes/UsersRouter'
-// // import ReportsRouter   from './routes/ReportsRouter'
+import ReportsRouter   from './routes/ReportsRouter'
 // import SchoolsRouter   from './routes/SchoolsRouter'
 // import TeachersRouter   from './routes/TeachersRouter'
 // import StudentsRouter   from './routes/StudentsRouter'
 // import CoffeeRouter  from './routes/CoffeeRouter'
-// import PaymentsReportsRouter  from './routes/PaymentsReportsRouter'
+import PaymentsReportsRouter  from './routes/PaymentsReportsRouter'
 // import ClassesRouter  from './routes/ClassesRouter'
 // import StudentDetailsRouter  from './routes/StudentDetailsRouter'
-// import PaymentRequestDetailsRouter  from './routes/PaymentRequestDetailsRouter.jsx'
+import PaymentRequestDetailsRouter  from './routes/PaymentRequestDetailsRouter'
 // import SettingsRouter  from './routes/SettingsRouter'
 
 // import PrintDemo from './components/PrintDemo';
@@ -96,11 +96,11 @@ function AppRoutes() {
       
 
       {/* All secured pages */}
-      {/* <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SCHOOL_ADMIN', 'FINANCE']} />}> */}
-        {/* <Route path="/dashboard" element={<DashboardRouter />} /> */}
-        {/* <Route path="/paymentreports/*" element={<PaymentsReportsRouter />} /> */}
+      <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SCHOOL_ADMIN', 'FINANCE']} />}>
+        <Route path="/dashboard" element={<DashboardRouter />} />
+        <Route path="/paymentreports/*" element={<PaymentsReportsRouter />} />
         {/* <Route path="/studentdetails/:studentId/*" element={<StudentDetailsRouter />} /> */}
-        {/* <Route path="/paymentreports/paymentrequestdetails/:payment_request_id/*" element={<PaymentRequestDetailsRouter />} /> */}
+        <Route path="/paymentreports/paymentrequestdetails/:payment_request_id/*" element={<PaymentRequestDetailsRouter />} />
 
         {/* <Route path="/schools/*" element={<SchoolsRouter />} /> */}
         {/* <Route path="/classes/*" element={<ClassesRouter />} /> */}
@@ -108,7 +108,7 @@ function AppRoutes() {
         {/* <Route path="/teachers/*" element={<TeachersRouter />} /> */}
         {/* <Route path="/students/*" element={<StudentsRouter />} /> */}
 
-      {/* </Route> */}
+      </Route>
       
       {/* Fallbacks */}
       {/* <Route path="unauthorized" element={<Unauthorized />} /> */}

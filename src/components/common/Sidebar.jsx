@@ -1,14 +1,14 @@
-import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
   MDBContainer,
   MDBListGroup,
   MDBListGroupItem,
   MDBTooltip,
   MDBBtn
-} from 'mdb-react-ui-kit'
-import { useTranslation } from 'react-i18next'
-import { useAuth } from '../../context/AuthContext'
+} from 'mdb-react-ui-kit';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../context/AuthContext';
 
 // define your menu by roleName
 const menuConfig = {
@@ -77,17 +77,18 @@ const menuConfig = {
       ]
     }
   ]
-}
+};
 
 export default function Sidebar({ collapsed, isMobile, mobileOpen }) {
-  const { t } = useTranslation()
-  const { user, logout } = useAuth()
-  const location = useLocation()
-  const role     = user?.role?.toUpperCase()
-  const groups   = menuConfig[role] || []
+  const { t } = useTranslation();
+  const { user, logout } = useAuth();
+  const location = useLocation();
+  const role = (user?.role || user?.roleName || '')?.toUpperCase();
+  if (!user) return null 
+  const groups   = menuConfig[role] || [];
 
   // width in px
-  const widthPx = collapsed ? 80 : 200
+  const widthPx = collapsed ? 80 : 200;
 
   return (
     <MDBContainer
@@ -206,4 +207,4 @@ export default function Sidebar({ collapsed, isMobile, mobileOpen }) {
       </div>
     </MDBContainer>
   )
-}
+};
