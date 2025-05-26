@@ -199,6 +199,11 @@ export const getPaymentRequestLogs = (payment_request_id, lang) =>
     .then(r => r.data)
     .catch(err => console.error("Error loading data:", err));
 
+export const getPaymentLogs = (payment_id, lang) =>
+  api.get(`/api/logs/payment/${payment_id}`, { params: { lang } })
+    .then(r => r.data)
+    .catch(err => console.error("Error loading data:", err));
+
 export const updatePaymentRequest = (payment_request_id, data, lang) =>
   api.put(`/api/reports/payment-request/update/${payment_request_id}`, { data }, { params: { lang } })
     .then(r => r.data)
@@ -219,9 +224,24 @@ export const getPaymentConcepts = (lang) =>
       console.error("Error fetching the data:", err);
       throw err;
     });
+/**
+ * Download a protected file by filename.
+ * @param {string} filename
+ * @param {string} lang
+ * @returns {Promise<Blob>}
+ */
+export const getProtectedFile = (filename) =>
+  api.get(`/api/protectedfiles/${filename}`, {
+    responseType: 'blob'
+  })
+  .then(r => r.data)
+  .catch(err => {
+    console.error('Error fetching protected file:', err);
+    throw err;
+  });
 
-export const getPaymentStatuses = (lang) =>
-  api.get(`/api/catalog/payment-statuses`, { params: { lang } }) 
+export const getPaymentStatuses = (filename) =>
+  api.get(`/api/protectedfiles/${filename}`) 
     .then(r => r.data)
     .catch(err => {
       console.error("Error fetching the data:", err);
@@ -236,13 +256,121 @@ export const getPaymentThrough = (lang) =>
       throw err;
     });
     
-export const updatePayment = (payment_id, data, lang) =>
-  api.put(`/api/payments/update/${payment_id}`, data, { params: { lang } })
-    .then(r => r.data)
-    .catch(err => {
-      console.error("Error updating payment:", err);
-      throw err;
-    });
+
+// export const updatePayment = (
+//   payment_id,
+//   data = {},                        // e.g. { amount: 150, comments: "…" }
+//   lang,
+//   { removeReceipt = false, receipt = null } = {}
+// ) => {
+//   const params = { lang };
+//   if (removeReceipt) params.removeReceipt = true;
+
+//   // detect if the caller passed any data keys
+//   const hasData = data && Object.keys(data).length > 0;
+//   let body;
+//   const headers = {};
+
+//   if (receipt) {
+//     // Case A) file upload (and optional field updates)
+//     const formData = new FormData();
+//     // JSON part (empty {} if no data)
+//     formData.append(
+//       'request',
+//       new Blob([JSON.stringify(data || {})], { type: 'application/json' })
+//     );
+//     // file part
+//     formData.append('receipt', receipt);
+//     body = formData;
+//     // leave out Content-Type so the browser sets multipart boundary
+
+//   } else if (hasData) {
+//     // Case B) field-only update
+//     body = data;
+//     headers['Content-Type'] = 'application/json';
+
+//   } else {
+//     // Case C) removeReceipt-only
+//     body = null;
+//   }
+
+//   return api
+//     .put(`/api/payments/update/${payment_id}`, body, { params, headers })
+//     .then(r => r.data);
+// };
+
+export const updatePaymentFields = (payment_id, data, lang) => {
+  const params = { lang };
+  const formData = new FormData();
+  formData.append(
+    'request',
+    new Blob(
+      [JSON.stringify({
+        payment_concept_id:   data.payment_concept_id,
+        payment_through_id:   data.payment_through_id,
+        payment_created_at:   data.payment_created_at,
+        payment_month:        data.payment_month,
+        amount:               data.amount
+      })],
+      { type: 'application/json' }
+    )
+  );
+
+  return api
+    .put(`/api/payments/update/${payment_id}`, formData, { params })
+    .then(r => r.data);
+};
+
+export const uploadPaymentReceipt = (payment_id, receipt, lang) => {
+  const params = { lang };
+  const formData = new FormData();
+
+  // even if you don't need to change any other fields, we must include a 'request' part
+  formData.append(
+    'request',
+    new Blob([JSON.stringify({})], { type: 'application/json' })
+  );
+  formData.append('receipt', receipt);
+
+  return api
+    .put(
+      `/api/payments/update/${payment_id}`,
+      formData,
+      { params }
+    )
+    .then(r => r.data);
+};
+
+export const removePaymentReceipt = (payment_id, lang) => {
+  const params = { lang, removeReceipt: true };
+
+  return api
+    .put(
+      `/api/payments/update/${payment_id}`,
+      null,
+      { params }
+    )
+    .then(r => r.data);
+};
+
+export const updatePaymentStatus = (payment_id, newStatus, lang) => {
+  const params = { lang };
+  const formData = new FormData();
+  // wrap your status change in the `request` part so Spring's @RequestPart("request") picks it up
+  formData.append(
+    'request',
+    new Blob([JSON.stringify({ payment_status_id: newStatus })], {
+      type: 'application/json',
+    })
+  );
+
+  return api
+    .put(`/api/payments/update/${payment_id}`, formData, { params })
+    .then((r) => r.data);
+};
+
+
+
     
 export const uploadReceipt = (payment_id,data,lang) =>
   api.put(`/api/payments/${payment_id}/uploadReceipt?lang=${lang}`, data)

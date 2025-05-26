@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import {
   MDBModal, MDBModalDialog, MDBModalContent,
   MDBModalHeader, MDBModalTitle, MDBModalBody,
-  MDBModalFooter, MDBBtn, MDBInput, MDBCol,
-  MDBRow
+  MDBModalFooter, MDBBtn, MDBCol, MDBInput
 } from 'mdb-react-ui-kit';
 import { useTranslation } from 'react-i18next';
 import swal from 'sweetalert';
@@ -17,11 +16,11 @@ export default function UpdateRequestModal({ data, onClose, onSuccess }) {
     pr_amount: '',
     pr_pay_by: '',
     pr_comments: '',
+    payment_month: '',
     payment_status_id: '',
     late_fee: '',
     fee_type: '',
     late_fee_frequency: '',
-    payment_month: '',
     partial_payment: ''
   });
   const [isSaving, setIsSaving] = useState(false);
@@ -30,10 +29,10 @@ export default function UpdateRequestModal({ data, onClose, onSuccess }) {
   useEffect(() => {
     if (paymentRequest) {
       setFormData({
-        pr_amount:     paymentRequest.pr_amount ?? paymentRequest.amount ?? '',
-        pr_pay_by:     paymentRequest.pr_pay_by ?? paymentRequest.pay_by ?? '',
-        pr_comments:   paymentRequest.pr_comments ?? paymentRequest.comments ?? '',
-        payment_month: paymentRequest.payment_month ?? ''
+        late_fee: paymentRequest?.late_fee || '',
+        fee_type: paymentRequest?.fee_type || '%',
+        late_fee_frequency: paymentRequest?.late_fee_frequency || '',
+        partial_payment: paymentRequest?.partial_payment || ''
       });
     }
   }, [paymentRequest]);
@@ -48,10 +47,10 @@ export default function UpdateRequestModal({ data, onClose, onSuccess }) {
   const handleUpdate = async () => {
     setIsSaving(true);
     const payload = {
-      amount:        formData.pr_amount,
-      pay_by:        formData.pr_pay_by,
-      comments:      formData.pr_comments,
-      payment_month: formData.payment_month,
+      late_fee: formData.late_fee,
+      fee_type: formData.fee_type,
+      late_fee_frequency: formData.late_fee_frequency,
+      partial_payment: formData.partial_payment === 'true' || formData.partial_payment === true,
       log_type_id:   1
     };
 
@@ -73,22 +72,6 @@ export default function UpdateRequestModal({ data, onClose, onSuccess }) {
     }
   };
 
-  // Define form groups
-  const updatePaymentRequestFormGroups = [
-    {
-      columns: 1,
-      fields: [{ key: 'pr_amount', label: 'amount', type: 'number' }]
-    },
-    {
-      columns: 1,
-      fields: [
-        { key: 'pr_pay_by', label: 'pay_by', type: 'datetime-local' },
-        { key: 'pr_comments', label: 'comments', type: 'text' },
-        { key: 'payment_month', label: 'payment_month', type: 'month' }
-      ]
-    }
-  ];
-
   return (
     <MDBModal open onClose={onClose}>
       <MDBModalDialog centered>
@@ -100,25 +83,53 @@ export default function UpdateRequestModal({ data, onClose, onSuccess }) {
           </MDBModalHeader>
 
           <MDBModalBody>
-            {updatePaymentRequestFormGroups.map((group, gi) => (
-              <div key={gi} className="mb-4">
-                {group.groupTitle && <h6 className="mb-3">{t(group.groupTitle)}</h6>}
-                <MDBRow className={`row-cols-${group.columns} g-3`}>
-                  {group.fields.map(field => (
-                    <MDBCol key={field.key}>
-                      <MDBInput
-                        name={field.key}
-                        label={t(field.label)}
-                        type={field.type}
-                        className="form-control"
-                        value={formData[field.key]}
-                        onChange={handleChange(field.key)}
-                      />
-                    </MDBCol>
-                  ))}
-                </MDBRow>
+            <MDBCol key={'fee_amount'}>
+              <div className="input-group mb-3">
+                <MDBInput
+                  name="late_fee"
+                  label={t('fee_amount')}
+                  type="number"
+                  value={formData.late_fee}
+                  onChange={handleChange('late_fee')}
+                  required
+                  className="form-control"
+                />
+                <select
+                  name="fee_type"
+                  className="form-select"
+                  style={{ minWidth: '62px' }}
+                  value={formData.fee_type}
+                  onChange={handleChange('fee_type')}
+                >
+                  <option value="$">$</option>
+                  <option value="%">%</option>
+                </select>
               </div>
-            ))}
+              <div className="input-group mb-3">
+                <MDBInput
+                  name="late_fee_frequency"
+                  label={t('late_fee_frequency')}
+                  type="number"
+                  value={formData.late_fee_frequency}
+                  onChange={handleChange('late_fee_frequency')}
+                  required
+                  className="form-control"
+                  min={0}
+                />
+              </div>
+              <div className="input-group mb-3">
+                <select
+                  name="partial_payment"
+                  className="form-select"
+                  style={{ minWidth: '62px' }}
+                  value={formData.partial_payment}
+                  onChange={handleChange('partial_payment')}
+                >
+                  <option value={false}>{t('no')}</option>
+                  <option value={true}>{t('yes')}</option>
+                </select>
+              </div>
+            </MDBCol>
           </MDBModalBody>
 
           <MDBModalFooter>

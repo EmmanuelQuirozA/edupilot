@@ -104,7 +104,7 @@ export default function RegisterPaymentModal({ data, onClose, onSuccess }) {
 
     const fd = new FormData();
 
-    // wrap your JSON in a Blob so its part gets Content-Type: application/json
+    // wrap JSON in a Blob so its part gets Content-Type: application/json
     const jsonPayload = {
       payment_request_id: paymentRequest.payment_request_id,
       student_id:         student.student_id,

@@ -11,7 +11,7 @@ import './styles/custom.css';
 import LoginPage       from './pages/Login'
 
 // Common components
-// import NotFound         from './components/common/NotFound'
+import NotFound         from './components/common/NotFound'
 // import Unauthorized     from './components/common/Unauthorized'
 import ProtectedRoute   from './components/common/ProtectedRoute'
 
@@ -19,6 +19,7 @@ import ProtectedRoute   from './components/common/ProtectedRoute'
 // import Layout          from './components/Layout'
 
 // // “Router” bundles
+import ProtectedFilePage from './pages/ProtectedFilePage';
 import DashboardRouter from './routes/DashboardRouter'
 // import UsersRouter     from './routes/UsersRouter'
 import ReportsRouter   from './routes/ReportsRouter'
@@ -27,6 +28,7 @@ import ReportsRouter   from './routes/ReportsRouter'
 // import StudentsRouter   from './routes/StudentsRouter'
 // import CoffeeRouter  from './routes/CoffeeRouter'
 import PaymentsReportsRouter  from './routes/PaymentsReportsRouter'
+import PaymentDetailsRouter  from './routes/PaymentDetailsRouter'
 // import ClassesRouter  from './routes/ClassesRouter'
 // import StudentDetailsRouter  from './routes/StudentDetailsRouter'
 import PaymentRequestDetailsRouter  from './routes/PaymentRequestDetailsRouter'
@@ -98,9 +100,11 @@ function AppRoutes() {
       {/* All secured pages */}
       <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SCHOOL_ADMIN', 'FINANCE']} />}>
         <Route path="/dashboard" element={<DashboardRouter />} />
-        <Route path="/paymentreports/*" element={<PaymentsReportsRouter />} />
+        <Route path="/paymentreports" element={<PaymentsReportsRouter />} />
+        <Route path="/paymentreports/paymentdetails/:payment_id/" element={<PaymentDetailsRouter />} />
         {/* <Route path="/studentdetails/:studentId/*" element={<StudentDetailsRouter />} /> */}
-        <Route path="/paymentreports/paymentrequestdetails/:payment_request_id/*" element={<PaymentRequestDetailsRouter />} />
+        <Route path="/paymentreports/paymentrequestdetails/:payment_request_id/" element={<PaymentRequestDetailsRouter />} />
+        <Route path="/protectedfiles/:filename" element={<ProtectedFilePage />} />
 
         {/* <Route path="/schools/*" element={<SchoolsRouter />} /> */}
         {/* <Route path="/classes/*" element={<ClassesRouter />} /> */}
@@ -112,7 +116,7 @@ function AppRoutes() {
       
       {/* Fallbacks */}
       {/* <Route path="unauthorized" element={<Unauthorized />} /> */}
-      {/* <Route path="*"            element={<NotFound />} /> */}
+      <Route path="*"            element={<NotFound />} />
     </Routes>
   );
 }

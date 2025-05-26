@@ -1,32 +1,27 @@
-// src/components/paymentRequestDetails/Header
+// src/components/paymentDetails/Header
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MDBCol, MDBIcon, MDBBtn } from 'mdb-react-ui-kit';
 import swal from 'sweetalert';
-import { updatePaymentRequest } from '../../api/studentApi';
+import { updatePaymentStatus } from '../../api/studentApi';
 
-export default function RequestHeader({
+export default function PaymentHeader({
   data,
-  onPrintRequest,
-  onEditRequest,
-  onRegisterPayment,
-  canUpdateRequest,
-  canRegisterPayment,
-  canCloseRequest,
+  onPrint,
+  canClose,
   canPrint, 
   onSuccess
 }) {
   const { t, i18n } = useTranslation();
-  const { paymentRequest } = data;
   const [isSaving, setIsSaving] = useState(false);
 
   // Call backend to update status
   const handleUpdateStatus = async (newStatus) => {
     setIsSaving(true);
     try {
-      const res = await updatePaymentRequest(
-        paymentRequest.payment_request_id,
-        { payment_status_id: newStatus, log_type_id: 1 },
+      const res = await updatePaymentStatus(
+        data.payment_id,
+        newStatus,
         i18n.language
       );
       swal(res.title, res.message, res.type);
@@ -43,8 +38,8 @@ export default function RequestHeader({
   // Confirm dialog for status changes
   const confirmStatusChange = (newStatus) => {
     swal({
-      title:    newStatus === 7 ? t('confirm_close_request')  : t('confirm_cancel_request'),
-      text:     newStatus === 7 ? t('are_you_sure_close_request') : t('are_you_sure_cancel_request'),
+      title:    newStatus === 3 ? t('confirm_approve_payment')  : t('confirm_reject_payment'),
+      text:     newStatus === 3 ? t('are_you_sure_approve_payment') : t('are_you_sure_reject_payment'),
       icon:     'warning',
       buttons:  [t('no'), t('yes')],
       dangerMode:true,
@@ -60,47 +55,35 @@ export default function RequestHeader({
       <div className="d-flex align-items-center">
         <MDBIcon fas icon="receipt" className="me-2" />
         <h5 className="mb-0">
-          {t('payment_request')} #{paymentRequest.payment_request_id}
+          {t('payment')} #{data.payment_id}
         </h5>
       </div>
 
       <MDBCol className="d-none d-md-flex justify-content-end gap-2">
         {canPrint && (
-          <MDBBtn flat size="sm" color="light" rippleColor="dark" onClick={onPrintRequest}>
+          <MDBBtn flat size="sm" color="light" rippleColor="dark" onClick={onPrint}>
             <MDBIcon fas icon="print" className="me-1" /> {t('print')}
           </MDBBtn>
         )}
 
-        {canUpdateRequest && paymentRequest.payment_status_id !== 7 && paymentRequest.payment_status_id !== 8 && (
-          <MDBBtn flat size="sm" onClick={() => onEditRequest(data)}>
-            <MDBIcon fas icon="pen" />
-          </MDBBtn>
-        )}
-
-        {canRegisterPayment && paymentRequest.payment_status_id !== 7 && paymentRequest.payment_status_id !== 8 && (
-          <MDBBtn flat size="sm" onClick={() => onRegisterPayment(data)}>
-            <MDBIcon fas icon="hand-holding-usd" className="cursor-pointer" />
-          </MDBBtn>
-        )}
-
-        {canCloseRequest && paymentRequest.payment_status_id !== 7 && paymentRequest.payment_status_id !== 8 && (
+        {canClose && data.payment_status_id !== 3 && data.payment_status_id !== 4 && (
           <>
             <MDBBtn
               className="btn btn-sm btn-success"
               type="button"
-              onClick={() => confirmStatusChange(7)}
+              onClick={() => confirmStatusChange(3)}
               disabled={isSaving}
             >
-              <MDBIcon fas icon="check" className="me-1" /> {t('close_request')}
+              <MDBIcon fas icon="check" className="me-1" /> {t('approve')}
             </MDBBtn>
 
             <MDBBtn
               className="btn btn-sm btn-danger"
               type="button"
-              onClick={() => confirmStatusChange(8)}
+              onClick={() => confirmStatusChange(4)}
               disabled={isSaving}
             >
-              <MDBIcon fas icon="times" className="me-1" /> {t('cancel')}
+              <MDBIcon fas icon="times" className="me-1" /> {t('reject')}
             </MDBBtn>
           </>
         )}
