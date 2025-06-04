@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MDBCol, MDBIcon, MDBBtn } from 'mdb-react-ui-kit';
 import swal from 'sweetalert';
-import { updatePaymentStatus } from '../../api/studentApi';
+import { updatePaymentStatus } from '../../api/paymentsApi';
 
 export default function PaymentHeader({
   data,

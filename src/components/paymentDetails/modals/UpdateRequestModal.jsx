@@ -4,7 +4,8 @@ import {
   MDBModal, MDBModalDialog, MDBModalContent,
   MDBModalHeader, MDBModalTitle, MDBModalBody,
   MDBModalFooter, MDBBtn, MDBInput, MDBCol,
-  MDBRow
+  MDBRow,
+  MDBSpinner
 } from 'mdb-react-ui-kit';
 import { useTranslation } from 'react-i18next';
 import swal from 'sweetalert';
@@ -123,10 +124,10 @@ export default function UpdateRequestModal({ data, onClose, onSuccess }) {
 
           <MDBModalFooter>
             <MDBBtn outline color="secondary" onClick={onClose}>
-              {t('cancel')}
+              {isSaving ? <MDBSpinner size="sm" /> : t('cancel')}
             </MDBBtn>
             <MDBBtn onClick={handleUpdate} disabled={isSaving}>
-              {isSaving ? t('saving') + '…' : t('update')}
+              {isSaving ? <MDBSpinner size="sm" /> : t('update')}
             </MDBBtn>
           </MDBModalFooter>
 

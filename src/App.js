@@ -21,15 +21,15 @@ import ProtectedRoute   from './components/common/ProtectedRoute'
 // // “Router” bundles
 import ProtectedFilePage from './pages/ProtectedFilePage';
 import DashboardRouter from './routes/DashboardRouter'
-// import UsersRouter     from './routes/UsersRouter'
+import UsersRouter     from './routes/UsersRouter'
 import ReportsRouter   from './routes/ReportsRouter'
 // import SchoolsRouter   from './routes/SchoolsRouter'
-// import TeachersRouter   from './routes/TeachersRouter'
-// import StudentsRouter   from './routes/StudentsRouter'
+import TeachersRouter   from './routes/TeachersRouter'
+import StudentsRouter   from './routes/StudentsRouter'
 // import CoffeeRouter  from './routes/CoffeeRouter'
 import PaymentsReportsRouter  from './routes/PaymentsReportsRouter'
 import PaymentDetailsRouter  from './routes/PaymentDetailsRouter'
-// import ClassesRouter  from './routes/ClassesRouter'
+import ClassesRouter  from './routes/ClassesRouter'
 // import StudentDetailsRouter  from './routes/StudentDetailsRouter'
 import PaymentRequestDetailsRouter  from './routes/PaymentRequestDetailsRouter'
 // import SettingsRouter  from './routes/SettingsRouter'
@@ -107,10 +107,10 @@ function AppRoutes() {
         <Route path="/protectedfiles/:filename" element={<ProtectedFilePage />} />
 
         {/* <Route path="/schools/*" element={<SchoolsRouter />} /> */}
-        {/* <Route path="/classes/*" element={<ClassesRouter />} /> */}
-        {/* <Route path="/users/*" element={<UsersRouter />} /> */}
-        {/* <Route path="/teachers/*" element={<TeachersRouter />} /> */}
-        {/* <Route path="/students/*" element={<StudentsRouter />} /> */}
+        <Route path="/classes/*" element={<ClassesRouter />} />
+        <Route path="/users/*" element={<UsersRouter />} />
+        <Route path="/teachers/*" element={<TeachersRouter />} />
+        <Route path="/students/*" element={<StudentsRouter />} />
 
       </Route>
       

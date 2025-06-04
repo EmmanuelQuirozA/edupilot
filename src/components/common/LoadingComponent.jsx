@@ -1,16 +1,17 @@
 // src/components/NoDataComponent.js
 import React from 'react';
 import { MDBCard,MDBContainer,MDBSpinner } from 'mdb-react-ui-kit';
+import Layout from '../../layout/Layout';
 
 const NoDataComponent = ({ message, body }) => {
   return (
-    <MDBCard className="shadow-sm border-0 mb-3">
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight:'80vh'}}>
-        <MDBContainer className="my-5 text-center">
-          <MDBSpinner grow color="primary" />
-        </MDBContainer>
+      <div className="mb-3">
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div className="my-5 text-center">
+            <MDBSpinner grow color="primary" />
+          </div>
+        </div>
       </div>
-    </MDBCard>
   );
 };
 

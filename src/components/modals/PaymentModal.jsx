@@ -60,7 +60,7 @@ export default function PaymentModal({paymentId, show,setShow,}) {
       <MDBModalDialog size="xl">
         <MDBModalContent>
           <MDBModalHeader>
-            <MDBModalTitle>{t('payment_details')}</MDBModalTitle>
+            <MDBModalTitle>{t('payment_details')} #{paymentId} </MDBModalTitle>
             <MDBBtn
               type="button"
               className="btn-close"
@@ -156,9 +156,6 @@ export default function PaymentModal({paymentId, show,setShow,}) {
               disabled={loading}
             >
               {loading ? <MDBSpinner size="sm" /> : t('close')}
-            </MDBBtn>
-            <MDBBtn type="submit" color="primary" disabled={loading}>
-              {loading ? <MDBSpinner size="sm" /> : t('save_changes')}
             </MDBBtn>
           </MDBModalFooter>
         </MDBModalContent>

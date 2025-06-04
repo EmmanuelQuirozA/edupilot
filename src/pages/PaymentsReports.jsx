@@ -14,9 +14,13 @@ import {
 export default function PaymentsReportPage() {
   const { t } = useTranslation();
   const { role } = useAuth() || {};
+  
+  
+    // Permissions
+  const canCreate  = ['admin','school_admin','finance'].includes(role?.toLowerCase());
   const canExport = ['admin','school_admin','finance'].includes(role?.toLowerCase());
-  const canSeeHeaderActions=true;
-  const canSeeDebtOnlyBtn=true;
+  const canSeeHeaderActions = ['admin','school_admin','finance'].includes(role?.toLowerCase());;
+  const canSeeDebtOnlyBtn = ['admin','school_admin','finance'].includes(role?.toLowerCase());;
 
   // ── Preserve the active tab in URL ────────────────────────────────────────────────────────
   const [searchParams, setSearchParams] = useSearchParams();
@@ -61,6 +65,7 @@ export default function PaymentsReportPage() {
             canExport={canExport}
             canSeeHeaderActions={canSeeHeaderActions}
             canSeeDebtOnlyBtn={canSeeDebtOnlyBtn}
+            canCreate={canCreate}
           />
         </MDBTabsPane>
         <MDBTabsPane open={basicActive === 'paymentRequests'}>
@@ -69,6 +74,7 @@ export default function PaymentsReportPage() {
             canExport={canExport}
             canSeeHeaderActions={canSeeHeaderActions}
             canSeeDebtOnlyBtn={canSeeDebtOnlyBtn}
+            canCreate={canCreate}
           />
         </MDBTabsPane>
         <MDBTabsPane open={basicActive === 'payments'}>
@@ -77,6 +83,7 @@ export default function PaymentsReportPage() {
             fullList={true}
             canExport={canExport}
             canSeeHeaderActions={canSeeHeaderActions}
+            canCreate={canCreate}
           />
         </MDBTabsPane>
       </MDBTabsContent>

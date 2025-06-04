@@ -5,7 +5,7 @@ import usePaymentsReport         from '../../hooks/usePaymentsReport'
 import DataTableWrapper          from '../tables/DataTableWrapper'
 import FiltersSidebar            from '../common/FiltersSidebar'
 import DetailsModal                   from '../modals/DetailsModal'
-import { MDBRow, MDBCol, MDBInput, MDBBtn, MDBIcon } from 'mdb-react-ui-kit'
+import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit'
 import { pick } from 'lodash'
 
 export default function PaymentsTable({ 
@@ -14,7 +14,7 @@ export default function PaymentsTable({
   canExport,
   canSeeHeaderActions = true 
 }) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   
   // ── Your uncontrolled inputs ─────────────────────────────────────
   const defaultFilters = {
@@ -112,6 +112,14 @@ export default function PaymentsTable({
     handlePageChange(1)
     setFilterVisible(false);
   };
+  
+	// Helper: Count active filters
+	const getActiveFilterCount = () => {
+		return Object.values(filters).filter(
+			(value) => value && value.trim() !== ''
+		).length;
+	};
+
 
   // ── Sidebar toggle & header Actions ──────────────────────────────
   const [filterVisible, setFilterVisible] = useState(false)
@@ -119,7 +127,7 @@ export default function PaymentsTable({
     <>
       { canSeeHeaderActions && (
       <MDBBtn size="sm" outline onClick={()=>setFilterVisible(v=>!v)}>
-        <MDBIcon fas icon="filter" className="me-1"/> {t('filter')}
+        <MDBIcon fas icon="filter" className="me-1"/> {t('filter')} {getActiveFilterCount() > 0 ? `(${getActiveFilterCount()})` : ''}
       </MDBBtn>)}
     </>
   )

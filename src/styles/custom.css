@@ -256,3 +256,29 @@ span.logo_name.ms-2 {
     display: none !important;
   }
 }
+
+
+.rdt_TableRow {
+  border-bottom: none !important;
+  box-shadow: none !important; /* in case it's a shadow instead of a border */
+}
+/* Round the table container */
+.rdt_Table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: none !important; /* in case it's a shadow instead of a border */
+}
+.rdt_Pagination {
+  border-top: none !important;
+  box-shadow: none !important; /* in case it's a shadow instead of a border */
+}
+
+
+.form-select{
+  height: 35.81px;
+}
+
+.my-searchable-select li.hover-bg-light:hover {
+  background-color: #767676;
+  color: white;
+}

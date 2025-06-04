@@ -1,11 +1,10 @@
 // src/hooks/usePaymentsReport.js
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getPaymentRequests } from '../api/studentApi';
-import { getStudents } from '../api/studentApi';
-import { TextWrap } from 'react-bootstrap-icons';
+import { getPaymentRequests } from '../api/paymentRequestsApi';
+import { getStudentDetails } from '../api/studentApi';
 import LinkCell from '../components/common/LinkCell';
-import { MDBRow, MDBCol, MDBInput, MDBBtn, MDBIcon } from 'mdb-react-ui-kit'
+import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit'
 import swal from 'sweetalert'
 import { Link } from 'react-router-dom'
 
@@ -41,7 +40,6 @@ export default function usePaymentsReport({
 
   const [data, setRawData]       = useState([]);
   const [loading, setLoading] = useState(true);
-  const [exportLoading, setExportLoading] = useState(true);
   const [error, setError]     = useState('');
 
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -50,8 +48,8 @@ export default function usePaymentsReport({
   // Function to open student details modal
   const openStudentDetailsModal = async (student_id) => {
     try {
-      const student = await getStudents(student_id, i18n.language)
-      setSelectedStudent(student)
+      const student = await getStudentDetails(student_id, i18n.language)
+      setSelectedStudent(student[0])
       setShowStudentDetailModal(true)
     } catch {
       swal(t('error'), t('failed_to_fetch_data'), 'error')
@@ -96,7 +94,7 @@ export default function usePaymentsReport({
   };
 
   // 1) fetch one page
-  const fetchPage = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true)
     try {
       const { content, totalElements } = await getPaymentRequests({
@@ -153,8 +151,8 @@ export default function usePaymentsReport({
     page, perPage, orderBy, orderDir, i18n.language, t])
 
   useEffect(() => {
-    fetchPage();
-  }, [fetchPage]);
+    fetchData();
+  }, [fetchData]);
 
   // when the table requests a new page
   const handlePageChange = newPage => {
@@ -174,7 +172,6 @@ export default function usePaymentsReport({
 
   // export all:
   const exportAll = () => {
-    setExportLoading(true);
     return getPaymentRequests({
       student_id,
       payment_request_id,
@@ -202,7 +199,6 @@ export default function usePaymentsReport({
       // content now contains *all* rows: pass to your CSV component
       return content;
     })
-    .finally(() => setExportLoading(false));
   };
 
   // Build columns conditionally based on fullList
@@ -211,7 +207,7 @@ export default function usePaymentsReport({
   // Full list
   if (fullList) {
     columns.push(
-      { name: t('payment_request_id'), selector: r => r.payment_request_id, sortable: true, sortField: 'payment_request_id', width: '120px' },
+      { name: t('payment_request')+" #", selector: r => r.payment_request_id, sortable: true, sortField: 'payment_request_id', width: '120px' },
       { name: t('full_name'), selector: r => r.student_full_name, sortable: true, sortField: 'student_full_name', wrap: true,
         cell: row => {
           return (
@@ -283,6 +279,7 @@ export default function usePaymentsReport({
     // Studen Detail Modal
     selectedStudent,
     showStudentDetailModal,
-    setShowStudentDetailModal
+    setShowStudentDetailModal,
+    reload: fetchData
   };
 }

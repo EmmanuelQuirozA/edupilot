@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDropzone }               from 'react-dropzone';
-import { MDBRow, MDBIcon, MDBBtn }    from 'mdb-react-ui-kit';
+import { MDBIcon, MDBBtn }    from 'mdb-react-ui-kit';
 import { useTranslation }             from 'react-i18next';
 import { MDBCard, MDBCardHeader, MDBCardBody } from 'mdb-react-ui-kit';
 import ProtectedFileModal             from '../modals/ProtectedFileModal';
 import swal                           from 'sweetalert';
-import { uploadPaymentReceipt,removePaymentReceipt }              from '../../api/studentApi';
+import { uploadPaymentReceipt,removePaymentReceipt }              from '../../api/paymentsApi';
 
 export default function RequestSettings({ data, onSuccess, canEdit }) {
   const { t, i18n } = useTranslation()
@@ -88,7 +88,8 @@ export default function RequestSettings({ data, onSuccess, canEdit }) {
 
   return (
     <>
-      <MDBCard className="shadow-sm border-0 mb-3">
+      {( (data.payment_status_id !== 3 && data.payment_status_id !== 4) || receiptName ) &&
+      (<MDBCard className="shadow-sm border-0 mb-3">
         <MDBCardHeader className="d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center">
             <MDBIcon fas icon="file-invoice" className="me-2" />
@@ -137,7 +138,7 @@ export default function RequestSettings({ data, onSuccess, canEdit }) {
             </MDBBtn>
           )}
         </MDBCardBody>
-      </MDBCard>
+      </MDBCard>)}
       
                 
       <ProtectedFileModal

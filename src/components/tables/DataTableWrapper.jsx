@@ -37,8 +37,10 @@ export default function DataTableWrapper({
 
   // optional actions you want to show on the right of the header
   headerActions = null,
+  headerCreateRecord = null,
   // optional extra content *below* the header (e.g. filters row)
   headerExtras = null,
+  conditionalRowStyles
 }) {
   
   const paginationOptions = usePaginationOptions();
@@ -79,6 +81,7 @@ export default function DataTableWrapper({
             <MDBRow className="d-flex justify-content-between align-items-center">
             <MDBCol><h4 className="mb-0">{title}</h4></MDBCol>
               <MDBCol className="d-flex justify-content-end gap-2">
+                {headerCreateRecord}
                 {/* per‐page export */}
                 {canExport && !onExportAll && csvData && csvHeaders && (
                   <CSVLink
@@ -152,6 +155,7 @@ export default function DataTableWrapper({
               striped
               persistTableHead
               noDataComponent={<NoDataComponent message={t('no_data_available')} body={t('no_data_available_body')} />}
+              conditionalRowStyles={conditionalRowStyles}
             />
           </MDBCardBody>
         </MDBCard>

@@ -1,6 +1,6 @@
 // src/hooks/usePaymentDetails.js
 import { useState, useEffect, useCallback } from 'react';
-import { getPaymentLogs } from '../api/studentApi';
+import { getPaymentLogs } from '../api/logsApi';
 import { useTranslation } from 'react-i18next';
 
 export default function usePaymentDetails(payment_id) {

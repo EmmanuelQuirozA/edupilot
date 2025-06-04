@@ -7,7 +7,7 @@ import DataTableWrapper               from './DataTableWrapper'
 import FiltersSidebar                 from '../common/FiltersSidebar'
 import DetailsModal                   from '../modals/DetailsModal'
 import PaymentBreakdownDetailsModal     from '../modals/PaymentBreakdownDetailsModal'
-import LinkCell from '../common/LinkCell';
+import PaymentModal from '../../components/modals/PaymentModal'
 import { MDBRow, MDBCol, MDBInput, MDBBtn, MDBIcon
 } from 'mdb-react-ui-kit'
 
@@ -59,11 +59,11 @@ export default function MonthlyPaymentsTable({
     data,
     columns,
     loading,
-    error,
+    // error,
 
     totalRows,
-    page,
-    perPage,
+    // page,
+    // perPage,
     handlePageChange,
     handlePerRowsChange,
     exportAll,
@@ -75,14 +75,14 @@ export default function MonthlyPaymentsTable({
     // Student Detail Modal
     paymentBreakdownData,
     isPaymentBreakdownModalOpen,
-    setPaymentBreakdownModalOpen,
+    // setPaymentBreakdownModalOpen,
     toggleBreakdownModal,
 
     // Studen Detail Modal
     selectedStudent,
     showStudentDetailModal,
     setShowStudentDetailModal,
-    openStudentDetailsModal,
+    // openStudentDetailsModal,
 
     // Payment Detail Modal
     selectedPayment,
@@ -141,6 +141,13 @@ export default function MonthlyPaymentsTable({
     handlePageChange(1)
     setFilterVisible(false);
   };
+  
+	// Helper: Count active filters
+	const getActiveFilterCount = () => {
+		return Object.values(filters).filter(
+			(value) => value && value.trim() !== ''
+		).length;
+	};
 
   // ── Sidebar toggle & header Actions ──────────────────────────────
   const [filterVisible, setFilterVisible] = useState(false)
@@ -148,7 +155,7 @@ export default function MonthlyPaymentsTable({
     <>
       { canSeeHeaderActions && (
       <MDBBtn size="sm" outline onClick={()=>setFilterVisible(v=>!v)}>
-        <MDBIcon fas icon="filter" className="me-1"/> {t('filter')}
+        <MDBIcon fas icon="filter" className="me-1"/> {t('filter')} {getActiveFilterCount() > 0 ? `(${getActiveFilterCount()})` : ''}
       </MDBBtn>)}
     </>
   )
@@ -233,55 +240,6 @@ export default function MonthlyPaymentsTable({
     },
   ];
 
-  const paymentDetailFormGroups = [
-		{
-			groupTitle: 'student', // translation key for group title
-			columns: 2,
-			fields: [
-				{ key: 'student_full_name', label: 'full_name', type: 'text' },
-				{ key: 'payment_reference', label: 'payment_reference', type: 'text' },
-			],
-		},
-		{
-			groupTitle: 'student_details',
-			columns: 4,
-			fields: [
-				{ key: 'generation', label: 'generation', type: 'text' },
-				{ key: 'grade_group', label: 'grade_group', type: 'text' },
-				{ key: 'scholar_level_name', label: 'scholar_level_name', type: 'text' },
-				{ key: 'school_description', label: 'school_description', type: 'text' },
-			],
-		},
-		{
-			groupTitle: 'contact_and_address',
-			columns: 3,
-			fields: [
-				{ key: 'address', label: 'address', type: 'text' },
-				{ key: 'phone_number', label: 'phone_number', type: 'tel' },
-				{ key: 'email', label: 'email', type: 'email' },
-			],
-		},
-		{
-			groupTitle: 'payment_details',
-			columns: 4,
-			fields: [
-				{ key: 'payment_id', label: 'payment_id', type: 'number' },
-				{ key: 'payment_month', label: 'payment_month', type: 'date' },
-				{ key: 'amount', label: 'amount', type: 'number' },
-				{ key: 'payment_status_name', label: 'payment_status_name', type: 'text' },
-			],
-		},
-		{
-			groupTitle: 'validation_details',
-			columns: 3,
-			fields: [
-				{ key: 'validator_full_name', label: 'validator_full_name', type: 'text' },
-				{ key: 'validator_phone_number', label: 'validator_phone_number', type: 'number' },
-				{ key: 'validated_at', label: 'validated_at', type: 'datetime' },
-			],
-		}
-	];
-
   // ── Render ────────────────────────────────────────────────────────
   return (
     <>
@@ -317,12 +275,12 @@ export default function MonthlyPaymentsTable({
         filters={[
           { id:'school_id',        label:t('school'),            type:'select', options:schoolOptions,        value:filters.school_id,        onChange:v=>setFilters(f=>({...f,school_id:v})) },
           { id:'group_status',     label:t('group_status'),     type:'select', options:[
-              {label:t('select_option'),value:''},
+              {label:"— "+t('select_option')+" —",value:''},
               {label:t('enabled'),     value:'true'},
               {label:t('disabled'),    value:'false'}
             ],                          value:filters.group_status,    onChange:v=>setFilters(f=>({...f,group_status:v})) },
           { id:'user_status',      label:t('user_status'),      type:'select', options:[
-              {label:t('select_option'),value:''},
+              {label:"— "+t('select_option')+" —",value:''},
               {label:t('enabled'),     value:'true'},
               {label:t('disabled'),    value:'false'}
             ],                          value:filters.user_status,    onChange:v=>setFilters(f=>({...f,user_status:v})) },
@@ -350,14 +308,10 @@ export default function MonthlyPaymentsTable({
         navigateTo={data => `/studentdetails/${data.student_id}`}
       />
 
-      {/* Payments Detail Modals */}
-      <DetailsModal
+      <PaymentModal
+        paymentId={selectedPayment?.payment_id}
         show={showPaymentDetailModal}
         setShow={setShowPaymentDetailModal}
-        formGroups={paymentDetailFormGroups}
-        data={selectedPayment}
-        title={t('payment')}
-        size="xl"
       />
 
       <PaymentBreakdownDetailsModal

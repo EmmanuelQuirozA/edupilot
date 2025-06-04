@@ -72,8 +72,8 @@ export default function PaymentRequestDetails({ id }) {
     documentTitle: t('payment_request')+`-${id}`,
   });
 
-  if (!data)   return <NoDataComponent message={t("no_data_available")}  body={t("no_data_available_body")}/>;
   if (loading || logsLoading) return <LoadingComponent />;
+  if (!data)   return <NoDataComponent message={t("no_data_available")}  body={t("no_data_available_body")}/>;
   if (error || logsError)   return <ErrorComponent message={t('error')} body={t(error.message)} />;
 
   return (

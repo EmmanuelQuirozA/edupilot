@@ -3,10 +3,10 @@ import useAuth from '../../hooks/useAuth';
 import { useReactToPrint } from 'react-to-print';
 import swal from 'sweetalert';
 import { useTranslation }        from 'react-i18next';
-import { MDBCard, MDBCardHeader, MDBCardBody, MDBIcon, MDBCol, MDBBtn, MDBCardFooter, MDBSpinner } from 'mdb-react-ui-kit';
+import { MDBCard, MDBCardHeader, MDBCardBody, MDBCardFooter } from 'mdb-react-ui-kit';
 import usePaymentDetails from '../../hooks/usePaymentDetails';
 import usePaymentLogs from '../../hooks/usePaymentLogs';
-import { updatePaymentFields }        from '../../api/studentApi';
+import { updatePaymentFields }        from '../../api/paymentsApi';
 
 import Header from './Header';
 import StudentInfo from './StudentInfo';
@@ -26,7 +26,12 @@ export default function PaymentDetails({ id }) {
   // Fetch payment
   const { data, loading, error, reload } = usePaymentDetails(id);
   // Fetch paymentRequest logs
-  const { logs, loading:logsLoading, error:logsError, reload:logsReload } = usePaymentLogs(id);
+  const { 
+    logs, 
+    // loading:logsLoading, 
+    // error:logsError, 
+    reload:logsReload 
+  } = usePaymentLogs(id);
   
   // 2) keep a local, mutable copy for the form
   const [ editable, setEditable ] = useState(null);
@@ -87,8 +92,8 @@ export default function PaymentDetails({ id }) {
     logsReload();
   };
 
-  if (!data || !editable)   return <NoDataComponent message={t("no_data_available")}  body={t("no_data_available_body")}/>;
   if (loading) return <LoadingComponent />;
+  if (!data || !editable)   return <NoDataComponent message={t("no_data_available")}  body={t("no_data_available_body")}/>;
   if (error)   return <ErrorComponent message={t('error')} body={t(error.message)} />;
 
 
@@ -97,10 +102,12 @@ export default function PaymentDetails({ id }) {
   const canClose  = ['admin','school_admin','finance'].includes(role?.toLowerCase());
   const canPrint  = ['admin','school_admin','finance'].includes(role?.toLowerCase());
   
-
+  // Logic statement to hide the gap 
+  const isOpen = data.payment_status_id !== 3 && data.payment_status_id !== 4;
+  const hasReceiptorlogs = Boolean(data.receipt_file_name || (Array.isArray(logs) && logs.length > 0) );
   return (
     <>
-      <div className="d-none d-md-flex" style={{gap: '1rem', alignItems: 'stretch'}}>
+      <div className="d-none d-md-flex" style={{gap: (isOpen || hasReceiptorlogs) ? '1rem' : '0', alignItems: 'stretch'}}>
         <div ref={printRef} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           {loading ? <LoadingComponent /> :
             <form id="validationForm" onSubmit={e => { e.preventDefault(); handleSave(); }}>
@@ -139,7 +146,7 @@ export default function PaymentDetails({ id }) {
           }
         </div>
 
-        <div style={{ width: '25%', minWidth: '250px' }}>
+        <div style={{ maxWidth: '25%'}}>
           <ReceiptCard data={editable} onSuccess={handleSuccess} canEdit={canEdit} />
           <LogsCard data={logs} />
         </div>

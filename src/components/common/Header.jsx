@@ -12,9 +12,11 @@ import {
   MDBDropdownItem,
   MDBInputGroup,
   MDBInput,
-  MDBBtn
+  MDBBtn,
+  MDBRow
 } from 'mdb-react-ui-kit'
 import { useAuth } from '../../context/AuthContext'
+import GeneralCreateButton from './GeneralCreateButton';
 import axios from 'axios'
 
 export default function Header({ pageTitle, collapsed, toggleSidebar }) {
@@ -78,6 +80,9 @@ export default function Header({ pageTitle, collapsed, toggleSidebar }) {
 
         {/* Right Side: Language Switcher and User Authentication */}
         <div className="d-flex align-items-center gap-4 position-relative">
+          <MDBRow>
+            <GeneralCreateButton canCreate={true} />
+          </MDBRow>
           {/* Language Switcher Dropdown */}
           <MDBDropdown>
             <MDBDropdownToggle tag="button" className="btn btn-light p-2">

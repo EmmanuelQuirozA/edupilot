@@ -1,11 +1,12 @@
 // src/hooks/usePaymentsReport.js
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getPayments } from '../api/studentApi';
-import { getStudents } from '../api/studentApi';
-import { TextWrap } from 'react-bootstrap-icons';
+import { getPayments } from '../api/paymentsApi';
+import { getStudentDetails } from '../api/studentApi';
 import LinkCell from '../components/common/LinkCell';
+import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit'
 import swal from 'sweetalert'
+import { Link } from 'react-router-dom'
 
 export default function usePaymentsReport({   
   student_id,
@@ -42,8 +43,8 @@ export default function usePaymentsReport({
   // Function to open student details modal
   const openStudentDetailsModal = async (studentId) => {
     try {
-      const student = await getStudents(studentId, i18n.language)
-      setSelectedStudent(student)
+      const student = await getStudentDetails(studentId, i18n.language)
+      setSelectedStudent(student[0])
       setShowStudentDetailModal(true)
     } catch {
       swal(t('error'), t('failed_to_fetch_data'), 'error')
@@ -184,7 +185,7 @@ export default function usePaymentsReport({
   // Full list
   if (fullList) {
     columns.push(
-      { name: t('payment_id'), selector: r => r.payment_id, sortable: true, sortField: 'payment_id', width: '120px' },
+      { name: t('payment')+" #", selector: r => r.payment_id, sortable: true, sortField: 'payment_id', width: '120px' },
       { name: t('full_name'), selector: r => r.student_full_name, sortable: true, sortField: 'student_full_name', wrap: true,
         cell: row => {
           return (
@@ -204,6 +205,21 @@ export default function usePaymentsReport({
       { name: t('payment_month'), selector: r => r.payment_month, sortable: true, sortField: 'payment_month', cell: row => formatMonthYear(row.payment_month), width: '170px' },
       { name: t('scholar_level_name'), selector: r => r.scholar_level_name, sortable: true, sortField: 'scholar_level_name', wrap: true},
       { name: t('amount'), selector: r => r.amount, sortable: true, sortField: 'amount', cell: row => `$${row.amount}`, width: '120px' },
+      {
+        name: t('actions'),
+        ignoreRowClick: true,
+        cell: row => {
+          // if there's no request id you might want to disable or hide the button
+          if (!row.payment_id) return null
+          return (
+            <Link to={`/paymentreports/paymentdetails/${row.payment_id}`}>
+              <MDBBtn flat size="sm">
+                <MDBIcon fas icon="eye" />
+              </MDBBtn>
+            </Link>
+          )
+        }
+      },
     );
   } else {
     columns.push(
@@ -212,6 +228,21 @@ export default function usePaymentsReport({
       { name: t('payment_month'), selector: r => r.payment_month, sortable: true, sortField: 'payment_month', cell: row => formatMonthYear(row.payment_month), width: '170px' },
       { name: t('scholar_level_name'), selector: r => r.scholar_level_name, sortable: true, sortField: 'scholar_level_name', wrap: true},
       { name: t('amount'), selector: r => r.amount, sortable: true, sortField: 'amount', cell: row => `$${row.amount}`, width: '120px' },
+      {
+        name: t('actions'),
+        ignoreRowClick: true,
+        cell: row => {
+          // if there's no request id you might want to disable or hide the button
+          if (!row.payment_request_id) return null
+          return (
+            <Link to={`/paymentreports/paymentrequestdetails/${row.payment_request_id}`}>
+              <MDBBtn flat size="sm">
+                <MDBIcon fas icon="eye" />
+              </MDBBtn>
+            </Link>
+          )
+        }
+      },
     );
   }
 

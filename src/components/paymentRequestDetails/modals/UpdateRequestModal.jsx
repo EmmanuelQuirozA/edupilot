@@ -4,11 +4,12 @@ import {
   MDBModal, MDBModalDialog, MDBModalContent,
   MDBModalHeader, MDBModalTitle, MDBModalBody,
   MDBModalFooter, MDBBtn, MDBInput, MDBCol,
-  MDBRow
+  MDBRow,
+  MDBSpinner
 } from 'mdb-react-ui-kit';
 import { useTranslation } from 'react-i18next';
 import swal from 'sweetalert';
-import { updatePaymentRequest } from '../../../api/studentApi';
+import { updatePaymentRequest } from '../../../api/paymentRequestsApi';
 
 export default function UpdateRequestModal({ data, onClose, onSuccess }) {
   const { t, i18n } = useTranslation();
@@ -123,10 +124,10 @@ export default function UpdateRequestModal({ data, onClose, onSuccess }) {
 
           <MDBModalFooter>
             <MDBBtn outline color="secondary" onClick={onClose}>
-              {t('cancel')}
+              {isSaving ? <MDBSpinner size="sm" /> : t('cancel')}
             </MDBBtn>
             <MDBBtn onClick={handleUpdate} disabled={isSaving}>
-              {isSaving ? t('saving') + '…' : t('update')}
+              {isSaving ? <MDBSpinner size="sm" /> : t('update')}
             </MDBBtn>
           </MDBModalFooter>
 

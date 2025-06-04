@@ -5,13 +5,14 @@ import {
   MDBModal, MDBModalDialog, MDBModalContent,
   MDBModalHeader, MDBModalTitle, MDBModalBody,
   MDBModalFooter, MDBBtn, MDBRow, MDBCol, MDBIcon,
-  MDBInput
+  MDBInput,
+  MDBSpinner
 } from 'mdb-react-ui-kit';
 import { useTranslation } from 'react-i18next';
 import useCatalog from '../../../hooks/useCatalogOptions';
 import { formatDate } from '../../../utils/formatDate';
 import swal from 'sweetalert';
-import { createPayment } from '../../../api/studentApi';
+import { createPayment } from '../../../api/paymentsApi';
 
 export default function RegisterPaymentModal({ data, onClose, onSuccess }) {
   const { paymentRequest, student } = data;
@@ -227,8 +228,8 @@ export default function RegisterPaymentModal({ data, onClose, onSuccess }) {
           </MDBModalBody>
 
           <MDBModalFooter>
-            <MDBBtn outline color="secondary" onClick={onClose}>{t('cancel')}</MDBBtn>
-            <MDBBtn type="button" onClick={handleSave} disabled={isSaving}> {isSaving ? t('saving') + '…' : t('submit')}</MDBBtn>
+            <MDBBtn outline color="secondary" onClick={onClose}>{isSaving ? <MDBSpinner size="sm" /> : t('cancel')}</MDBBtn>
+            <MDBBtn type="button" onClick={handleSave} disabled={isSaving}> {isSaving ? <MDBSpinner size="sm" /> : t('submit')}</MDBBtn>
           </MDBModalFooter>
         </MDBModalContent>
       </MDBModalDialog>

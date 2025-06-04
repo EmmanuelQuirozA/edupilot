@@ -1,10 +1,10 @@
 // src/hooks/useMonthlyReport.js
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next';
-import { getMonthlyReport } from '../api/studentApi';
+import { getMonthlyReport } from '../api/paymentsApi';
 import LinkCell from '../components/common/LinkCell';
 import { getStudentDetails } from '../api/studentApi';
-import { getPaymentDetail } from '../api/studentApi';
+import { getPaymentDetail } from '../api/paymentsApi';
 import swal from 'sweetalert'
 import { MDBTooltip } from 'mdb-react-ui-kit';
 
@@ -125,16 +125,6 @@ export default function useMonthlyReport(
   }, [studentId, startDate, endDate, showDebtOnly, groupStatus, userStatus, studentFullName, paymentReference, generation, gradeGroup, scholarLevel, page, perPage, orderBy, orderDir, i18n.language, t])
 
   
-  // 1 Fetch report data when filters change
-  // useEffect(() => {
-  //   setLoading(true);
-  //   setError('');
-  //   getMonthlyReport({ studentId, startDate, endDate, lang: i18n.language })
-  //     .then(data => setRawData(data || []))
-  //     .catch(() => setError(t('failed_to_fetch_data')))
-  //     .finally(() => setLoading(false));
-  // }, [studentId, startDate, endDate, i18n.language, t]);
-  // Fixed and dynamic column keys
   const filterKeys = ['student_id','user_status','group_status','u_enabled_raw','g_enabled_raw','student','payment_reference','generation','class','scholar_level'];
   const visibleFixedKeys = filterKeys.filter(k => !['student_id','user_status','group_status','u_enabled_raw','g_enabled_raw'].includes(k));
   const monthRegex = /^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)-\d{2,4}$/i;
