@@ -3,10 +3,8 @@ import React, { useState, useEffect } from 'react'
 import useAuth                        from '../../hooks/useAuth';
 import { useTranslation }             from 'react-i18next'
 import useTeachers                     from '../../hooks/teachers/useTeachers'
-import useUserActions                from '../../hooks/users/useUserActions';
 import DataTableWrapper               from '../tables/DataTableWrapper'
 import FiltersSidebar                 from '../common/FiltersSidebar'
-import FormModal                      from '../modals/FormModal'
 import { MDBBtn, MDBIcon }            from 'mdb-react-ui-kit'
 import { pick }                       from 'lodash'
 import CreateTeacherModal              from '../teachers/modals/CreateTeacherModal';
@@ -57,9 +55,9 @@ export default function TeachersTable({
     handleSort,
 
     // class Detail Modal
-    setSelectedUser,
-    selectedUser,
-    showUserModal,
+    // setSelectedUser,
+    // selectedUser,
+    // showUserModal,
     setShowUserModal,
 
     conditionalRowStyles,
@@ -76,7 +74,6 @@ export default function TeachersTable({
     reload();
     setShowUserModal(false);
   };
-  const { isSaving, updateUser, changeUserStatus } = useUserActions(onUserSuccess);
   
   
   // ── Pure “apply these filters to these rows” helper ──────────────
@@ -162,26 +159,6 @@ export default function TeachersTable({
     pick(row, exportKeys)
   )
   
-  // Your form-group definitions for DetailsModal
-  const userFormGroups = [
-    {
-      groupTitle: '',
-      columns:    2,
-      fields: [
-        { key: 'username', label: 'username', type: 'text', required: true},
-        { key: 'scholar_level_name', label: 'scholar_level_name', type: 'text', required: true },
-      ],
-    },
-    {
-      groupTitle: '',
-      columns:    2,
-      fields: [
-        { key: 'grade', label: 'grade', type: 'number', required: true },
-        { key: 'group', label: 'group', type: 'text', required: true },
-      ],
-    }
-  ];
-  
   return (
     <>
       <DataTableWrapper
@@ -235,23 +212,6 @@ export default function TeachersTable({
         clearFilters={clearFilters}
         isVisible={filterVisible}
         toggleVisibility={()=>setFilterVisible(v=>!v)}
-      />
-
-            
-      {/* teacher Update Modal */}
-      <FormModal
-        show={showUserModal}
-        setShow={setShowUserModal}
-        formGroups={userFormGroups}
-        data={selectedUser || {}}
-        setData={setSelectedUser}
-        onSave={() => updateUser(selectedUser)}
-        title={t('update_teacher')}
-        size="xl"
-        idPrefix="update_"
-        isSaving={isSaving}
-        changeStatus={true}
-        handleStatusSwitchChange={() => changeUserStatus(selectedUser)}
       />
 
       <CreateTeacherModal show={showCreateModal} setShow={setCreateShowModal} onSuccess={onUserSuccess} />

@@ -39,7 +39,7 @@ export default function FormModal({
   handleStatusSwitchChange,
   isSaving = false,
   mass_upload = false,
-  mass_component
+  mass_component = null
 }) {
   const { t } = useTranslation();
   const [validated, setValidated] = useState(false);
@@ -117,7 +117,7 @@ export default function FormModal({
     setSearchParams({ tab: value });
   };
   useEffect(() => {
-    const currentTab = searchParams.get('tab') || 'single_creation';
+    const currentTab = searchParams.get('tab') || 'single';
     setBasicActive(currentTab);
   }, [searchParams]);
 
@@ -132,14 +132,17 @@ export default function FormModal({
               <MDBBtn type="button" className="btn-close" color="none" onClick={() => setShow(false)} />
             </MDBModalHeader>
             <MDBModalBody>
-              
-              {mass_upload ? (
+              {/* If mass_upload is false, just show the fields as before */}
+              {!mass_upload && renderGroups()}
+
+              {/* If mass_upload is true, show two tabs */}
+              {mass_upload && (
               <>
                 <MDBTabs
                   className="mb-3 custom-fullwidth-tabs"
                   style={{ backgroundColor: 'white', borderRadius: '0.5rem' }}
                 >
-                  {['single_creation','mass_creation'].map((tab, i, arr) => (
+                  {['single','mass'].map((tab, i, arr) => (
                     <MDBTabsItem key={tab} className="flex-fill">
                       <MDBTabsLink
                         onClick={() => handleBasicClick(tab)}
@@ -153,18 +156,20 @@ export default function FormModal({
                 </MDBTabs>
 
                 <MDBTabsContent>
-                  <MDBTabsPane open={basicActive === 'single_creation'}>
+                  <MDBTabsPane open={basicActive === 'single'}>
                     {renderGroups()}
                   </MDBTabsPane>
-                  <MDBTabsPane open={basicActive === 'mass_creation'}>
+                  <MDBTabsPane open={basicActive === 'mass'}>
                     {mass_component}
                   </MDBTabsPane>
                 </MDBTabsContent>
               </>
-              ): renderGroups()}
+              )}
               
             </MDBModalBody>
             <MDBModalFooter>
+              {!mass_upload || basicActive === 'single' ? (
+                <>
               {changeStatus && (
                 <MDBSwitch
                   id="statusSwitch"
@@ -190,6 +195,8 @@ export default function FormModal({
               >
                 {isSaving ? <MDBSpinner size="sm" /> : t('submit')}
               </MDBBtn>
+                </>
+              ) : null}
             </MDBModalFooter>
           </MDBModalContent>
         </MDBModalDialog>

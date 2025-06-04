@@ -77,11 +77,10 @@ export default function UsersTable({
   });
 
   // wrap reload so it also closes the modal
-  const onUserSuccess = () => {
+  const onSuccess = () => {
     reload();
     setShowUserModal(false);
   };
-  const { isSaving, updateUser, changeUserStatus } = useUserActions(onUserSuccess);
   
   
   // ── Pure “apply these filters to these rows” helper ──────────────
@@ -255,7 +254,7 @@ export default function UsersTable({
         toggleVisibility={()=>setFilterVisible(v=>!v)}
       />
 
-      <CreateStudentModal show={showCreateModal} setShow={setCreateShowModal} onSuccess={onUserSuccess} mass_upload={true}/>
+      <CreateStudentModal show={showCreateModal} setShow={setCreateShowModal} onSuccess={onSuccess} />
     </>
   );
 }

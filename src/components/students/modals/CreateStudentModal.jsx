@@ -1,47 +1,48 @@
-import React, { useState, useEffect } from 'react';
+// src/components/students/modals/CreateStudentModal.jsx
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import swal from 'sweetalert';
+import FormModal from '../../modals/FormModal';
+import MassUploadContent from '../components/MassUploadContent';
 import { createStudents } from '../../../api/studentsApi';
 import { getSchools } from '../../../api/schoolsApi';
 import { getClasses } from '../../../api/classesApi';
-import FormModal from '../../modals/FormModal';
-import MassUploadModal from '../components/MassUpload'; // adjust the relative path
 
-export default function CreateStudentModal({ show, setShow, onSuccess, mass_upload=false }) {
+export default function CreateStudentModal({ show, setShow, onSuccess }) {
   const { t, i18n } = useTranslation();
-  const [basicActive, setBasicActive] = useState('single_creation');
-  const [isSaving, setIsSaving] = useState(false);
 
   const [schools, setSchools] = useState([]);
 	const [classes, setClasses] = useState([]);
-  
-	const defaultForm = {
-    first_name: '',
-    last_name_father: '',
-    last_name_mother: '',
-    birth_date: '',
-    phone_number: '',
-    tax_id: '',
-    curp: '',
-    street: '',
-    ext_number: '',
-    int_number: '',
-    suburb: '',
-    locality: '',
-    municipality: '',
-    state: '',
-    personal_email: '',
-    image: null,
-    email: '',
-    username: '',
-    password: '',
-    school_id: '',
-    group_id: '',
-    register_id: '',
-    payment_reference: ''
-  };
-  const [formData, setFormData] = useState(defaultForm);
 
+
+  // form data for single‐student
+  const [formData, setFormData] = useState({
+    first_name:        '',
+    last_name_father:  '',
+    last_name_mother:  '',
+    birth_date:        '',
+    phone_number:      '',
+    tax_id:            '',
+    curp:              '',
+    street:            '',
+    ext_number:        '',
+    int_number:        '',
+    suburb:            '',
+    locality:          '',
+    municipality:      '',
+    state:             '',
+    personal_email:    '',
+    image:             null,
+    email:             '',
+    username:          '',
+    password:          '',
+    school_id:         '',  // will be set by parent or user
+    group_id:          '',
+    register_id:       '',
+    payment_reference: ''
+  });
+
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     getSchools(i18n.language,1)
@@ -74,99 +75,64 @@ export default function CreateStudentModal({ show, setShow, onSuccess, mass_uplo
 				setClasses([]);
 			}
 		}, [formData.school_id, i18n.language]);
-    
-  const handleSubmit = async () => {
-    // minimal validation
-    const missingKey = [
-      'first_name',
-      'last_name_father',
-      'last_name_mother',
-      'username',
-      'password',
-      'school_id',
-      'group_id',
-      'email',
-      'register_id'
-    ].find((k) => {
-      const val = formData[k];
-      return val === undefined || val === null || String(val).trim() === '';
-    });
-    if (missingKey) {
-      return swal(
-        t('error'),
-        `${t('please_fill')} ${t(missingKey)}`,
-        'warning'
-      );
-    }
 
+  // Single‐student submit handler
+  const handleSingleSubmit = async () => {
     setIsSaving(true);
+    let didCreate = false;
+
     try {
-      const payload = {
-        ...formData,
-        lang: i18n.language // so the API gets your language if needed
-      };
-      const resData = await createStudents(payload);
-      // show result alert
-      swal(resData.title, resData.message, resData.type);
-      if (resData.success !== false) {
-        // reset form
-        setFormData(defaultForm);
-        // close modal + reload parent
-        onSuccess();
+      const payload = [{ ...formData, role_id: 4 }];
+      const res = await createStudents(payload, i18n.language);
+
+      if (res.success === true) {
+        swal(res.title, res.message, 'success');
         setShow(false);
+        didCreate = true;
+      } else {
+        swal(res.title, res.message, res.type || 'warning');
       }
     } catch (err) {
       console.error(err);
-      swal(t('error'), t('create_failed'), 'error');
+      swal(t('error_title'), t('create_failed'), 'error');
     } finally {
       setIsSaving(false);
+      // Only call onSuccess if we truly created
+      if (didCreate) {
+        try {
+          onSuccess();
+        } catch (err2) {
+          console.error('Error in onSuccess():', err2);
+        }
+      }
     }
   };
 
-	const handleMassUploadSuccess = () => {
+  // Mass‐upload success handler
+  const handleMassUploadSuccess = () => {
     onSuccess();
     setShow(false);
   };
 
-  // Add user form fields to pass to the modal component
-  const addClassFormGroups = [
-		{
-			groupTitle: 'user_info',
-			columns: 1,
-			fields: [
-				{
-					// This object is a nested container (no key provided) that classes two nested classes
-					columns: 1,
-					fields: [
-						{
-							groupTitle: 'full_name',
-							columns: 3,
-							fields: [
-								{ key: 'first_name', label: 'first_name', type: 'text', required: true },
-								{ key: 'last_name_father', label: 'last_name_father', type: 'text', required: true },
-								{ key: 'last_name_mother', label: 'last_name_mother', type: 'text', required: true },
-							],
-						},
-						{
-							groupTitle: 'user_info',
-							columns: 2,
-							fields: [
-								{ key: 'username', label: 'username', type: 'text', required: true },
-								{ key: 'password', label: 'password', type: 'password', required: true },
-							],
-						},
-					]
-				}
-			],
-		},
-		{
-			groupTitle: 'user_info',
-			columns: 2,
-			fields: [
-        { key: 'username', label: 'username', type: 'text', required: true },
-        { key: 'password', label: 'password', type: 'password', required: true },
-			],
-		},
+	const singleFormGroups = [
+    {
+      groupTitle: 'name',
+      columns: 3,
+      fields: [
+        { key: 'first_name',       label: 'first_name',       type: 'text', required: true },
+        { key: 'last_name_father', label: 'last_name_father', type: 'text', required: true },
+        { key: 'last_name_mother', label: 'last_name_mother', type: 'text', required: true }
+      ]
+    },
+    {
+      groupTitle: 'user_info',
+      columns: 3,
+      fields: [
+        { key: 'email',            label: 'email',            type: 'email', required: true },
+        { key: 'username',         label: 'username',         type: 'text',  required: true },
+        { key: 'password',         label: 'password',         type: 'password', required: true }
+      ]
+    },
 		{
 			groupTitle: 'general_info', // translation key for group title
 			columns: 2,
@@ -213,7 +179,7 @@ export default function CreateStudentModal({ show, setShow, onSuccess, mass_uplo
 		},
 		{
 			groupTitle: 'contact_and_address',
-			columns: 2,
+			columns: 4,
 			fields: [
 				{ key: 'street', label: 'street', type: 'text' },
 				{ key: 'ext_number', label: 'ext_number', type: 'text' },
@@ -223,40 +189,33 @@ export default function CreateStudentModal({ show, setShow, onSuccess, mass_uplo
 				{ key: 'municipality', label: 'municipality', type: 'text' },
 				{ key: 'state', label: 'state', type: 'text' },
 				{ key: 'personal_email', label: 'personal_email', type: 'email' },
-				{ key: 'email', label: 'email', type: 'email', required: true },
 				{ key: 'phone_number', label: 'phone_number', type: 'tel' },
 			],
 		}
 	];
 
+
   return (
-    <>
-      <FormModal
-        show={show}
-        setShow={setShow}
-        formGroups={addClassFormGroups}
-        data={formData}
-        setData={setFormData}
-        onSave={handleSubmit}
-        title={t('add_student')}
-        size="xl"
-        idPrefix="create_"
-        isSaving={isSaving}
-        mass_upload={mass_upload}
-				mass_component={
-        <MassUploadModal
-          open={basicActive === 'mass_creation'}
-          onClose={() => {
-            setBasicActive('single_creation');
-          }}
-          onUploadSuccess={handleMassUploadSuccess}
-          // school_id and group_id can be passed if needed:
+    <FormModal
+      show={show}
+      setShow={setShow}
+      formGroups={singleFormGroups}
+      data={formData}
+      setData={setFormData}
+      onSave={handleSingleSubmit}
+      title={t('add_student')}
+      size="xl"
+      idPrefix="create_"
+      isSaving={isSaving}
+      mass_upload={true}
+      mass_component={
+        <MassUploadContent
           school_id={formData.school_id}
           group_id={formData.group_id}
+          onUploadSuccess={handleMassUploadSuccess}
+          onClose={() => setShow(false)}
         />
       }
-
-      />
-    </>
+    />
   );
 }

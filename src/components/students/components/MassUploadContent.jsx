@@ -1,4 +1,4 @@
-// src/components/students/components/MassUpload.jsx
+// src/components/students/components/MassUploadContent.jsx
 import React, { useState, useCallback } from 'react';
 import {
   MDBSpinner,
@@ -161,7 +161,8 @@ export default function MassUploadContent({
           border: '2px dashed #ccc',
           padding: '20px',
           textAlign: 'center',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          borderRadius: '6px'
         }}
       >
         <input {...getInputProps()} />
