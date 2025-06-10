@@ -11,7 +11,7 @@ export default function RequestSettings({ data }) {
     <>
       {Array.isArray(data) && data.length > 0 && (
         <MDBCard  className="shadow-sm border-0 mb-3">
-          <MDBCardHeader className="bg-white d-flex justify-content-between align-items-center border-bottom">
+          <MDBCardHeader className="d-flex justify-content-between align-items-center">
             <div className="d-flex align-items-center">
               <MDBIcon fas icon="undo" className="me-2" />
               <h4 className="mb-0">{t("change_log")}</h4> 

@@ -79,7 +79,7 @@ export default function DataTableWrapper({
         <MDBCard>
           <MDBCardHeader>
             <MDBRow className="d-flex justify-content-between align-items-center">
-            <MDBCol><h4 className="mb-0">{title}</h4></MDBCol>
+              <MDBCol><h4 className="mb-0">{title}</h4></MDBCol>
               <MDBCol className="d-flex justify-content-end gap-2">
                 {headerCreateRecord}
                 {/* per‐page export */}

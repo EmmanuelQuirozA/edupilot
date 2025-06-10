@@ -166,3 +166,28 @@ export function createPayment(data, lang) {
   return api.post('/api/payments/create',data,{ params: { lang } }
   ).then(r => r.data);
 }
+
+export const getMyPayments = (lang) =>{
+  const params = { lang, offset:0, limit:10, export_all:false  };
+  return api.get('/api/reports/payments', { params }).then(r => r.data);
+
+}
+
+export const getMyGroupedPayments = (
+  paymentId,
+  paymentRequestId,
+  ptName,
+  paymentMonth,
+  paymentCreatedAt,
+  tuitions,
+  lang
+) =>{
+  const params = { lang };
+  if (paymentId) params.paymentId = paymentId;
+  if (paymentRequestId) params.paymentRequestId = paymentRequestId;
+  if (ptName) params.ptName = ptName;
+  if (paymentMonth) params.paymentMonth = paymentMonth;
+  if (paymentCreatedAt) params.paymentCreatedAt = paymentCreatedAt;
+  if (tuitions) params.tuitions = tuitions;
+  return api.get('/api/payments/grouped', { params }).then(r => r.data);
+}

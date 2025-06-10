@@ -212,8 +212,9 @@ export default function MassUploadContent({
       )}
 
       {/* Footer Buttons */}
-      <div className="d-flex justify-content-end mt-3">
-        <MDBBtn color="secondary" onClick={onClose} disabled={isUploading}>
+      <div className="d-flex justify-content-end mt-3 gap-2">
+        <MDBBtn type="button"
+                outline color="secondary"  onClick={onClose} disabled={isUploading}>
           {isUploading ? <MDBSpinner size="sm" /> : t('cancel')}
         </MDBBtn>
         <MDBBtn

@@ -76,6 +76,44 @@ const menuConfig = {
         { name: 'settings', icon: 'bi bi-gear',          link: '/settings' }
       ]
     }
+  ],
+
+  STUDENT: [
+    {
+      level: 'Dashboards',
+      items: [
+        { name: 'dashboard', icon: 'bi bi-house-fill', link: '/dashboard' }
+      ]
+    },
+    {
+      level: 'Management',
+      items: [
+        { name: 'payments', icon: 'bi bi-coin', link: '/payments' },
+        { name: 'classes', icon: 'bi bi-card-checklist', link: '/classes' },
+        { name: 'subjects', icon: 'bi bi-journal-text', link: '/subjects', comingSoon: true },
+        { name: 'lessons', icon: 'bi bi-book', link: '/lessons', comingSoon: true },
+        { name: 'exams', icon: 'bi bi-pencil-square', link: '/exams', comingSoon: true },
+        { name: 'assignments', icon: 'bi bi-file-earmark-text', link: '/assignments', comingSoon: true },
+        { name: 'results', icon: 'bi bi-bar-chart-line', link: '/results', comingSoon: true },
+        { name: 'attendance', icon: 'bi bi-calendar-check', link: '/attendance', comingSoon: true },
+        { name: 'events', icon: 'bi bi-calendar-event', link: '/events', comingSoon: true },
+        { name: 'messages', icon: 'bi bi-chat-dots', link: '/messages', comingSoon: true },
+        { name: 'announcements', icon: 'bi bi-megaphone', link: '/announcements', comingSoon: true },
+      ]
+    },
+    {
+      level: 'Apps',
+      items: [
+        { name: 'coffee', icon: 'bi bi-cup-hot', link: '/coffee' }
+      ]
+    },
+    {
+      level: 'Settings',
+      items: [
+        { name: 'profile',  icon: 'bi bi-person-circle', link: '/profile' },
+        { name: 'settings', icon: 'bi bi-gear',          link: '/settings' }
+      ]
+    }
   ]
 };
 

@@ -11,6 +11,7 @@ import { MDBTooltip } from 'mdb-react-ui-kit';
 // Custom hook to fetch and prepare the monthly payments report
 export default function useMonthlyReport(
   { 
+    fullList,
     studentId,
     startDate,
     endDate,

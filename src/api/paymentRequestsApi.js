@@ -7,8 +7,7 @@ export const getPaymentRequests = ({
   pr_created_end,
   pr_pay_by_start,
   pr_pay_by_end,
-  payment_month_start,
-  payment_month_end,
+  payment_month,
   ps_pr_name,
   pt_name,
   payment_reference,
@@ -43,12 +42,7 @@ export const getPaymentRequests = ({
     params.end_date = `${pr_pay_by_end}-${last < 10 ? '0'+last : last}`;
   };
 
-  if (payment_month_start) params.payment_month_start = `${payment_month_start}-01`;
-  if (payment_month_end) {
-    const [y,m] = payment_month_end.split('-');
-    const last = new Date(y, m, 0).getDate();
-    params.end_date = `${payment_month_end}-${last < 10 ? '0'+last : last}`;
-  };
+  if (payment_month) params.payment_month = `${payment_month}-01`;
 
   if (ps_pr_name) params.ps_pr_name = ps_pr_name;
   if (pt_name) params.pt_name = pt_name;
@@ -134,6 +128,28 @@ export const createPaymentRequest = ({
 
   return api
     .post('/api/payment-requests/create', body, { params })
+    .then((res) => res.data)
+    .catch((err) => {
+      console.error('Error creating payment request:', err);
+      throw err;
+    });
+};
+
+export const getPendingPayment = (studentId) => {
+
+  return api
+    .get(`/api/payment-requests/pending`, { params: { studentId } })
+    .then((res) => res.data)
+    .catch((err) => {
+      console.error('Error creating payment request:', err);
+      throw err;
+    });
+};
+
+export const getStudentPaymentRequests = (lang) => {
+
+  return api
+    .get(`/api/payment-requests/student-pending-payments`, { params: { lang } })
     .then((res) => res.data)
     .catch((err) => {
       console.error('Error creating payment request:', err);

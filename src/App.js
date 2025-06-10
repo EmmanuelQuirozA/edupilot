@@ -98,7 +98,7 @@ function AppRoutes() {
       
 
       {/* All secured pages */}
-      <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SCHOOL_ADMIN', 'FINANCE']} />}>
+      <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SCHOOL_ADMIN', 'FINANCE', 'STUDENT']} />}>
         <Route path="/dashboard" element={<DashboardRouter />} />
         <Route path="/paymentreports" element={<PaymentsReportsRouter />} />
         <Route path="/paymentreports/paymentdetails/:payment_id/" element={<PaymentDetailsRouter />} />
@@ -108,6 +108,9 @@ function AppRoutes() {
 
         {/* <Route path="/schools/*" element={<SchoolsRouter />} /> */}
         <Route path="/classes/*" element={<ClassesRouter />} />
+      </Route>
+      
+      <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SCHOOL_ADMIN', 'FINANCE', 'STUDENT']} />}>
         <Route path="/users/*" element={<UsersRouter />} />
         <Route path="/teachers/*" element={<TeachersRouter />} />
         <Route path="/students/*" element={<StudentsRouter />} />

@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'; // Translations
 import { AuthContext } from '../context/AuthContext';
 import swal from 'sweetalert';
 import Header from '../components/common/Header';
+import { jwtDecode } from 'jwt-decode';
 
 const Login = () => {
   const { t, i18n } = useTranslation();
@@ -29,11 +30,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const payload = {
-        usernameOrEmail: email,
-        password
-      };
-
+      const payload = { usernameOrEmail: email,password };
       const response = await axios.post(
         'http://localhost:8080/api/auth/login',
         payload,
@@ -44,7 +41,8 @@ const Login = () => {
       login({ token: response.data.token, user: response.data.user });
       
       // Extract role from response (assuming it's stored as roleName)
-      const role = response.data.user.roleName;
+      const decoded = jwtDecode(response.data.token);
+      const role = (decoded.role || '').toUpperCase();
 
       // Redirect based on role
       if (role === 'ADMIN') {

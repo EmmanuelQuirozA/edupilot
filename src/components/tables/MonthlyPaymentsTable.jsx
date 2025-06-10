@@ -13,6 +13,7 @@ import { MDBRow, MDBCol, MDBInput, MDBBtn, MDBIcon
 
 export default function MonthlyPaymentsTable({
   studentId,
+  fullList=false,
   canExport,
   canSeeHeaderActions = true,
   canSeeDebtOnlyBtn   = true
@@ -23,10 +24,10 @@ export default function MonthlyPaymentsTable({
   const defaultFilters = {
     startDate:        '',
     endDate:          '',
-    showDebtOnly:         false,
+    showDebtOnly:     false,
     school_id:        '',
-    group_status:        '',
-    user_status:        '',
+    group_status:     '',
+    user_status:      '',
     student:          '',
     payment_reference:'',
     generation:       '',
@@ -43,7 +44,9 @@ export default function MonthlyPaymentsTable({
 
   // ── Load schools for the “school_id” filter dropdown ─────────────
   const [schoolOptions, setSchoolOptions] = useState([])
+  
   useEffect(() => {
+    canSeeHeaderActions &&
     getSchools(i18n.language)
       .then(raw => {
         setSchoolOptions(raw.map(s=>({
@@ -89,6 +92,7 @@ export default function MonthlyPaymentsTable({
     showPaymentDetailModal,
     setShowPaymentDetailModal,
   } = useMonthlyReport({
+    fullList,
     studentId,
     startDate: filters.startDate,
     endDate:   filters.endDate,
@@ -144,9 +148,11 @@ export default function MonthlyPaymentsTable({
   
 	// Helper: Count active filters
 	const getActiveFilterCount = () => {
-		return Object.values(filters).filter(
-			(value) => value && value.trim() !== ''
-		).length;
+    if (!filters.showDebtOnly) {
+      return Object.values(filters).filter(
+        (value) => value && value.trim() !== ''
+      ).length;
+    }
 	};
 
   // ── Sidebar toggle & header Actions ──────────────────────────────

@@ -90,7 +90,7 @@ const FormModal = ({
   };
 
   return (
-    <MDBModal open={open} onClose={onClose} tabIndex="-1">
+    <MDBModal show={open} onClose={onClose} tabIndex="-1">
       <MDBModalDialog size={size}>
         <MDBModalContent>
           <MDBModalHeader>

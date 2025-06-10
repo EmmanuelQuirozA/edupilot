@@ -66,7 +66,7 @@ export default function CreateClassButton({ show, setShow, onSuccess }) {
 
   return (
     <>
-      <MDBModal open={show} onClose={() => setShow(false)} tabIndex="-1">
+      <MDBModal show={show} onClose={() => setShow(false)} tabIndex="-1">
         <form onSubmit={handleSubmit}>
           <MDBModalDialog size="lg">
             <MDBModalContent>

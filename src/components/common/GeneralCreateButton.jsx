@@ -80,7 +80,7 @@ export default function GeneralCreateButton({ canCreate, onSuccess }) {
         </MDBBtn>
       )}
 
-      <MDBModal open={show} onClose={() => setShow(false)} tabIndex="-1">
+      <MDBModal show={show} onClose={() => setShow(false)} tabIndex="-1">
         <form onSubmit={handleSubmit}>
           <MDBModalDialog size="lg">
             <MDBModalContent>
@@ -102,6 +102,7 @@ export default function GeneralCreateButton({ canCreate, onSuccess }) {
                       {t('school')}
                     </label>
                     <select
+                      key="schoolSelector"
                       id="schoolSelect"
                       className="form-select"
                       value={formData.school_id}
@@ -124,6 +125,7 @@ export default function GeneralCreateButton({ canCreate, onSuccess }) {
                       {t('scholar_level')}
                     </label>
                     <select
+                      key="schoolarLevelSelector"
                       id="scholarLevelSelect"
                       className="form-select"
                       value={formData.scholar_level_id}

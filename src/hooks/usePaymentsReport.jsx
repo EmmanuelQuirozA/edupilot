@@ -40,6 +40,11 @@ export default function usePaymentsReport({
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showStudentDetailModal, setShowStudentDetailModal] = useState(false);
   
+  
+  const [showFileModal, setShowFileModal] = useState(false);
+  const [modalFilename, setModalFilename] = useState('');
+  const [modalFilepath, setModalFilepath] = useState('');
+  
   // Function to open student details modal
   const openStudentDetailsModal = async (studentId) => {
     try {
@@ -223,23 +228,26 @@ export default function usePaymentsReport({
     );
   } else {
     columns.push(
-      { name: t('payment_id'), selector: r => r.payment_id, sortable: true, sortField: 'payment_id', width: '120px' },
+      { name: t('payment')+'#', selector: r => r.payment_id, sortable: true, sortField: 'payment_id', width: '85px' },
       { name: t('pt_name'), selector: r => r.pt_name, sortable: true, sortField: 'pt_name', wrap: true},
-      { name: t('payment_month'), selector: r => r.payment_month, sortable: true, sortField: 'payment_month', cell: row => formatMonthYear(row.payment_month), width: '170px' },
-      { name: t('scholar_level_name'), selector: r => r.scholar_level_name, sortable: true, sortField: 'scholar_level_name', wrap: true},
-      { name: t('amount'), selector: r => r.amount, sortable: true, sortField: 'amount', cell: row => `$${row.amount}`, width: '120px' },
+      { name: t('payment_month'), selector: r => r.payment_month, sortable: true, sortField: 'payment_month', cell: row => formatMonthYear(row.payment_month) },
+      { name: t('amount'), selector: r => r.amount, sortable: true, sortField: 'amount', cell: row => `$${row.amount.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}` },
       {
         name: t('actions'),
         ignoreRowClick: true,
         cell: row => {
           // if there's no request id you might want to disable or hide the button
-          if (!row.payment_request_id) return null
+          if (!row.receipt_file_name) return null
           return (
-            <Link to={`/paymentreports/paymentrequestdetails/${row.payment_request_id}`}>
-              <MDBBtn flat size="sm">
-                <MDBIcon fas icon="eye" />
+              <MDBBtn outline size="sm"
+                onClick={() => {
+                  setModalFilename(row.receipt_file_name);
+                  setModalFilepath(row.receipt_path);
+                  setShowFileModal(true);
+                }}
+              >
+                <MDBIcon fas icon="file-pdf" className="me-1"/> Ver
               </MDBBtn>
-            </Link>
           )
         }
       },
@@ -266,6 +274,12 @@ export default function usePaymentsReport({
     // Studen Detail Modal
     selectedStudent,
     showStudentDetailModal,
-    setShowStudentDetailModal
+    setShowStudentDetailModal,
+
+    // receipt Detail Modal
+    modalFilename,
+    modalFilepath,
+    showFileModal,
+    setShowFileModal
   };
 }

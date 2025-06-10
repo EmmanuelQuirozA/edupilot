@@ -6,7 +6,7 @@ import Footer from '../components/common/Footer'
 
 export default function Layout({ pageTitle, children }) {
   // desktop collapse
-  const [desktopCollapsed, setDesktopCollapsed] = useState(false);
+  const [desktopCollapsed, setDesktopCollapsed] = useState(true);
   // mobile drawer
   const [mobileOpen, setMobileOpen]       = useState(false);
   // track viewport

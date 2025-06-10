@@ -74,15 +74,17 @@ export default function Header({ pageTitle, collapsed, toggleSidebar }) {
           >
             <MDBIcon fas icon="bars" />
           </div>
-          <h2 className="mb-0" style={{ fontWeight:'Bold', color:'black'}}>{pageTitle}</h2>
+          <h2 className="mb-0 d-none d-md-block" style={{ fontWeight:'Bold', color:'black'}}>{pageTitle}</h2>
         </div>):(<div/>)
         }
 
         {/* Right Side: Language Switcher and User Authentication */}
         <div className="d-flex align-items-center gap-4 position-relative">
+          {user && ['SCHOOL_ADMIN', 'ADMIN'].includes(user.role.toUpperCase()) ? (
           <MDBRow>
             <GeneralCreateButton canCreate={true} />
           </MDBRow>
+          ) : (null)}
           {/* Language Switcher Dropdown */}
           <MDBDropdown>
             <MDBDropdownToggle tag="button" className="btn btn-light p-2">
@@ -100,7 +102,7 @@ export default function Header({ pageTitle, collapsed, toggleSidebar }) {
           </MDBDropdown>
           
           {/* Search Input */}
-          {user ? (
+          {user && ['SCHOOL_ADMIN', 'ADMIN'].includes(user.role.toUpperCase()) ? (
             <MDBContainer>
               <MDBInputGroup>
                 <MDBInput 
@@ -108,7 +110,7 @@ export default function Header({ pageTitle, collapsed, toggleSidebar }) {
                   value={searchQuery}
                   onChange={handleSearchChange}
                 />
-                <MDBBtn rippleColor="dark">
+                <MDBBtn className='search_btn' rippleColor="dark">
                   <MDBIcon icon="search" />
                 </MDBBtn>
               </MDBInputGroup>
@@ -145,7 +147,7 @@ export default function Header({ pageTitle, collapsed, toggleSidebar }) {
           {user ? (
             <MDBDropdown>
               <MDBDropdownToggle tag="button" className="btn btn-primary p-2">
-                {userDetails?.firstName || 'User'}
+                {userDetails?.first_name || 'User'}
               </MDBDropdownToggle>
               <MDBDropdownMenu className="dropdown-menu">
                 <MDBDropdownItem onClick={() => navigate('/profile')} className="dropdown-item cursor-pointer">

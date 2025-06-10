@@ -6,14 +6,14 @@ import Users from '../pages/Users';
 export default function UsersRouter() {
   return (
     <Routes>
-      <Route 
-        path="/" 
-        element={
-          // <ProtectedRoute allowedRoles={['ADMIN','SCHOOL_ADMIN','TEACHERS']}>
-            <Users />
-          // </ProtectedRoute>
-        } 
-      />
+      {/* 1) A wrapper route that applies the guard */}
+      <Route element={<ProtectedRoute allowedRoles={['SCHOOL_ADMIN','ADMIN']} />}>
+        {/* 2) Nested route(s) that will render inside that guard */}
+        <Route
+          path="/"
+          element={<Users />}
+        />
+      </Route>
     </Routes>
   );
 }

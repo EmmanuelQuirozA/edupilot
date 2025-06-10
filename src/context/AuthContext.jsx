@@ -83,10 +83,6 @@ export function AuthProvider({ children }) {
       username: decoded.sub,
     });
     setUserDetails(data.user);
-
-    // Update both pieces of state
-    setUser(data.user);
-    setUserDetails(data.user);
   };
 
   const logout = () => {

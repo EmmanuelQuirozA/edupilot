@@ -2,10 +2,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import swal from 'sweetalert';
-import api from '../../api/api';   // your axios instance with auth interceptor
+import api from '../../api/api';   // axios instance with auth interceptor
 
 /**
- * @param {() => void} onSuccess  callback to refresh your users list
+ * @param {() => void} onSuccess  callback to refresh users list
  */
 export default function useUserActions(onSuccess) {
   const { t, i18n } = useTranslation();

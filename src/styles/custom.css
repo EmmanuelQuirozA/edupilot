@@ -282,3 +282,30 @@ span.logo_name.ms-2 {
   background-color: #767676;
   color: white;
 }
+
+
+.card{
+  border-radius: 40px !important;
+}
+.btn{
+  border-radius: 40px !important;
+}
+.search_btn {
+    border-radius: 0px 40px 40px 0 !important;
+}
+
+
+.sale-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+/* when open, allow content to show */
+.sale-details.open {
+  max-height: 500px; /* or big enough to fit your content */
+}
+
+button.accordion-button {
+    border-radius: 40px !important;
+}

@@ -26,10 +26,16 @@ export const getStudents = ({
   return api.get('/api/students/list', { params }).then(r => r.data);
 };
 
-export const getStudentDetails = (studentId, lang) =>
-  api.get('/api/students/student-details', { params: { student_id:studentId,lang } })
+export const getStudentDetails = (student_id, lang) =>
+  api.get(`/api/students/student-details/${student_id}`, { params: { lang } })
     .then(r => r.data)
     .catch(err => console.error("Error loading data:", err));
+
+export const getStudentDetailsReadOnly = ({studentId, lang}) =>{
+  const params = { lang };
+  if (studentId) params.studentId = studentId;
+  return api.get('/api/students/read-only', { params }).then(r => r.data);
+};
 
 export const getBalanceRecharges = (userId, lang) =>
   api.get('/api/reports/balancerecharges', { params: { user_id: userId, lang } })

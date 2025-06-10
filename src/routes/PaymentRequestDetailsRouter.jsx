@@ -7,14 +7,14 @@ import PaymentRequestDetailsPage from '../pages/PaymentRequestDetails'
 export default function PaymentRequestDetailssRouter() {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          // <ProtectedRoute allowedRoles={['SCHOOL_ADMIN']}>
-            <PaymentRequestDetailsPage />
-          // </ProtectedRoute>
-        }
-      />
+      {/* 1) A wrapper route that applies the guard */}
+      <Route element={<ProtectedRoute allowedRoles={['SCHOOL_ADMIN','ADMIN']} />}>
+        {/* 2) Nested route(s) that will render inside that guard */}
+        <Route
+          path="/"
+          element={<PaymentRequestDetailsPage />}
+        />
+      </Route>
     </Routes>
   )
 }
