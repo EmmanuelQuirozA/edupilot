@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import useAuth from '../../hooks/useAuth';
+import { useAuth } from '../../context/AuthContext';
 import { useReactToPrint } from 'react-to-print';
 import swal from 'sweetalert';
 import { useTranslation }        from 'react-i18next';

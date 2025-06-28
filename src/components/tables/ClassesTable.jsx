@@ -1,6 +1,6 @@
 // src/components/tables/ClassesTable.jsx
 import React, { useState, useEffect } from 'react'
-import useAuth                        from '../../hooks/useAuth';
+import { useAuth }                    from '../../context/AuthContext';
 import { useTranslation }             from 'react-i18next'
 import useClasses                     from '../../hooks/classes/useClasses'
 import useClassActions                from '../../hooks/classes/useClassActions';

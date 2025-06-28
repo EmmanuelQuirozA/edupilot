@@ -1,6 +1,6 @@
 // src/components/PaymentRequestDetails/index.jsx
 import React, { useState,useRef } from 'react';
-import useAuth from '../../hooks/useAuth';
+import { useAuth } from '../../context/AuthContext';
 import { useReactToPrint } from 'react-to-print';
 import usePaymentRequestDetails from '../../hooks/usePaymentRequestDetails';
 import usePaymentRequestLogs from '../../hooks/usePaymentRequestLogs';

@@ -31,11 +31,13 @@ export default function PaymentRequestCard({ data  }) {
             key={r.paymentRequestId}
             collapseId={`month-${r.year}-${r.month}`}
             headerTitle={
-              <div className="d-flex justify-content-between w-100">
-                <span>{r.ptName}{r.paymentMonth && (' - ' + formatDate(r.paymentMonth, i18n.language, { month: 'long' }))} </span>
-                <MDBBadge light color={new Date(r.prPayBy).setHours(0,0,0,0) < today ? 'danger' : 'secondary'}>
-                  {new Date(r.prPayBy).setHours(0,0,0,0) < today ? (t('expired_date')):(t('pay_by'))} {formatDate(r.prPayBy, i18n.language, { year: 'numeric', month: 'long', day: '2-digit' })}
-                </MDBBadge>
+              <div >
+                <MDBCol ><span>{r.ptName}{r.paymentMonth && (' - ' + formatDate(r.paymentMonth, i18n.language, { month: 'long' }))} </span></MDBCol>
+                <MDBCol>
+                  <MDBBadge light color={new Date(r.prPayBy).setHours(0,0,0,0) < today ? 'danger' : 'secondary'}>
+                    {new Date(r.prPayBy).setHours(0,0,0,0) < today ? (t('expired_date')):(t('pay_by'))} {formatDate(r.prPayBy, i18n.language, { year: 'numeric', month: 'long', day: '2-digit' })}
+                  </MDBBadge>
+                </MDBCol>
               </div>
             }
           >

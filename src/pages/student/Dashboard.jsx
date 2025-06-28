@@ -22,6 +22,7 @@ import PaymentRequestCard from '../../components/userDetails/PaymentRequestCard'
 import MonthlyPaymentsTable      from '../../components/tables/MonthlyPaymentsTable'
 import StudentPaymentsTable      from '../../components/tables/StudentPaymentsTable'
 import StudentPaymentRequestsTable      from '../../components/tables/StudentPaymentRequestsTable'
+import BalanceRechargesTable from '../../components/tables/BalanceRechargesTable';
 
 export default function Dashboard() {
   const { t, i18n } = useTranslation();
@@ -41,7 +42,7 @@ export default function Dashboard() {
     setSearchParams({ tab: value });
   };
   useEffect(() => {
-    const currentTab = searchParams.get('tab') || 'monthlyPayments';
+    const currentTab = searchParams.get('tab') || 'pending';
     setBasicActive(currentTab);
   }, [searchParams]);
 
@@ -162,9 +163,9 @@ export default function Dashboard() {
                 <MDBCardTitle><MDBIcon fas icon="history" className="me-2" /> {t('payments')}</MDBCardTitle>
                 <MDBTabs
                   className="mb-3 custom-fullwidth-tabs"
-                  style={{ backgroundColor: 'white', borderRadius: '0.5rem' }}
+                  style={{ backgroundColor: 'white', borderRadius: '40px' }}
                 >
-                  {['pending','made','tuition'].map((tab, i, arr) => (
+                  {['pending','made','tuition','balance_recharges'].map((tab, i, arr) => (
                     <MDBTabsItem key={tab} className="flex-fill">
                       <MDBTabsLink
                         onClick={() => handleBasicClick(tab)}
@@ -173,6 +174,7 @@ export default function Dashboard() {
                         { i === 0 && t('pending') }
                         { i === 1 && t('made') }
                         { i === 2 && t('tuition') }
+                        { i === 3 && t('balance_recharges') }
                       </MDBTabsLink>
                     </MDBTabsItem>
                   ))}
@@ -224,6 +226,22 @@ export default function Dashboard() {
                     {/* ── Mobile: show cards instead ── */}
                     <div className="d-block d-md-none">
                       <PaymentHistoryCard history={tuitions} tuitions={true} />
+                    </div>
+                  </MDBTabsPane>
+                  <MDBTabsPane open={basicActive === 'balance_recharges'}>
+                    {/* ── Desktop: show table ── */}
+                    <div className="d-none d-md-block">
+                      <BalanceRechargesTable
+                        fullList={false}
+                        canExport={true}
+                        canSeeHeaderActions={false}
+                        canSeeDebtOnlyBtn={false}
+                        canCreate={false}
+                      />
+                    </div>
+                    {/* ── Mobile: show cards instead ── */}
+                    <div className="d-block d-md-none">
+                      {/* <PaymentHistoryCard history={tuitions} tuitions={true} /> */}
                     </div>
                   </MDBTabsPane>
                 </MDBTabsContent>

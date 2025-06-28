@@ -1,6 +1,7 @@
 // src/components/tables/PaymentsTable.jsx
 import React, { useState, useEffect } from 'react'
 import { useTranslation }        from 'react-i18next'
+import CreatePaymentModal      from '../payment/modals/CreatePaymentModal'
 import usePaymentsReport         from '../../hooks/usePaymentsReport'
 import DataTableWrapper          from '../tables/DataTableWrapper'
 import FiltersSidebar            from '../common/FiltersSidebar'
@@ -12,11 +13,13 @@ export default function PaymentsTable({
   studentId, 
   fullList, 
   canExport,
+  canCreate = false,
   canSeeHeaderActions = true 
 }) {
   const { t } = useTranslation();
+  const [showCreateModal, setCreateShowModal] = useState(false);
   
-  // ── Your uncontrolled inputs ─────────────────────────────────────
+  // ── uncontrolled inputs ─────────────────────────────────────
   const defaultFilters = {
     payment_id:'',
     payment_request_id:'',
@@ -30,11 +33,12 @@ export default function PaymentsTable({
     payment_created_at:'',
   };
   const [filters, setFilters]               = useState(defaultFilters);
+  
 
   // ── The filters you’ve actually “applied” ─────────────────────────
   const [appliedFilters, setAppliedFilters] = useState(defaultFilters);
   
-  // ── Where your filtered rows live ─────────────────────────────────
+  // ── Where filtered rows live ─────────────────────────────────
   const [filteredData, setFilteredData]         = useState([]);
 
   // ── Fetch report via our hook ───────────────────────────────────
@@ -58,6 +62,8 @@ export default function PaymentsTable({
     selectedStudent,
     showStudentDetailModal,
     setShowStudentDetailModal,
+
+    reload
   } = usePaymentsReport({
     fullList: true,
     student_id: studentId,
@@ -72,6 +78,11 @@ export default function PaymentsTable({
     payment_month: appliedFilters.payment_month,
     payment_created_at: appliedFilters.payment_created_at,
   });
+
+  // wrap reload so it also closes the modal
+  const onUserSuccess = () => {
+    reload();
+  };
   
   // ── Pure “apply these filters to these rows” helper ──────────────
   const applyPureFilters = (rows, f) => {
@@ -131,6 +142,20 @@ export default function PaymentsTable({
       </MDBBtn>)}
     </>
   )
+    const headerCreateRecord = (
+      <>
+        {canCreate && (
+          <MDBBtn
+            color="light"
+            rippleColor="dark"
+            onClick={() => setCreateShowModal(true)}
+          >
+            <MDBIcon fas icon="add" className="me-1" />
+            {t('add')}
+          </MDBBtn>
+        )}
+      </>
+    )
 
   const exportKeys = [
     'payment_id',
@@ -145,7 +170,7 @@ export default function PaymentsTable({
     'to_pay',
     'pay_by'
   ]
-  // ── CSV prep (strip flags just like your page did) ───────────────
+  // ── CSV prep (strip flags just like page did) ───────────────
   const csvHeaders = exportKeys.map(key => ({
     key,
     label: t(key)
@@ -155,7 +180,7 @@ export default function PaymentsTable({
     pick(row, exportKeys)
   )
   
-  // Your form-group definitions for DetailsModal
+  // form-group definitions for DetailsModal
   const studentDetailFormGroups = [
     {
       groupTitle: '',
@@ -222,6 +247,7 @@ export default function PaymentsTable({
 
         // Header Extras
         headerActions={headerActions}
+        headerCreateRecord={headerCreateRecord}
       />
 
       {/* Payments Filters Sidebar */}
@@ -266,6 +292,9 @@ export default function PaymentsTable({
         size="xl"
         navigateTo={data => `/studentdetails/${data.student_id}`}
       />
+                  
+      {/* Modals */}
+      <CreatePaymentModal show={showCreateModal} setShow={setCreateShowModal} onSuccess={onUserSuccess} />
     </>
   );
 }

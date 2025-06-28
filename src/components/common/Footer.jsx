@@ -4,7 +4,7 @@ import React from 'react';
 const Footer = () => {
   return (
     <footer style={styles.footer}>
-      <p style={styles.text}>&copy; {new Date().getFullYear()} Scholar Management System. All rights reserved.</p>
+      <p style={styles.text}>&copy; {new Date().getFullYear()} EduPilot. All rights reserved.</p>
     </footer>
   );
 };

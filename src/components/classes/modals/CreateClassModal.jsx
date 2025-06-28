@@ -66,10 +66,10 @@ export default function CreateClassButton({ show, setShow, onSuccess }) {
 
   return (
     <>
-      <MDBModal show={show} onClose={() => setShow(false)} tabIndex="-1">
-        <form onSubmit={handleSubmit}>
-          <MDBModalDialog size="lg">
-            <MDBModalContent>
+      <MDBModal open={show} onClose={() => setShow(false)} tabIndex="-100">
+        <MDBModalDialog size="lg">
+          <MDBModalContent>
+            <form onSubmit={handleSubmit}>
               <MDBModalHeader>
                 <MDBModalTitle>{t('create_class')}</MDBModalTitle>
                 <MDBBtn
@@ -176,9 +176,9 @@ export default function CreateClassButton({ show, setShow, onSuccess }) {
                   {isSaving ? <MDBSpinner size="sm" /> : t('create')}
                 </MDBBtn>
               </MDBModalFooter>
-            </MDBModalContent>
-          </MDBModalDialog>
-        </form>
+            </form>
+          </MDBModalContent>
+        </MDBModalDialog>
       </MDBModal>
     </>
   );

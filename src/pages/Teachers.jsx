@@ -1,7 +1,7 @@
 // src/pages/Teachers.jsx
 import React from 'react'
 import { useTranslation }        from 'react-i18next'
-import useAuth                   from '../hooks/useAuth'
+import { useAuth } 							 from '../context/AuthContext';
 import Layout                    from '../layout/Layout'
 import TeachersTable             from '../components/tables/TeachersTable'
 

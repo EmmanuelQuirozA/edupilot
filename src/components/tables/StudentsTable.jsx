@@ -1,6 +1,6 @@
 // src/components/tables/UsersTable.jsx
 import React, { useState, useEffect } from 'react'
-import useAuth                        from '../../hooks/useAuth';
+import { useAuth }                    from '../../context/AuthContext';
 import { useTranslation }             from 'react-i18next'
 import useStudents                    from '../../hooks/students/useStudents'
 import useUserActions                from '../../hooks/users/useUserActions';

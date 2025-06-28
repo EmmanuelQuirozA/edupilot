@@ -94,7 +94,7 @@ export default function usePaymentsReport({
   };
 
   // 1) fetch one page
-  const fetchPage = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true)
     try {
       const { content, totalElements } = await getPayments({
@@ -138,8 +138,8 @@ export default function usePaymentsReport({
     page, perPage, orderBy, orderDir, i18n.language, t])
 
   useEffect(() => {
-    fetchPage();
-  }, [fetchPage]);
+    fetchData();
+  }, [fetchData]);
 
   // when the table requests a new page
   const handlePageChange = newPage => {
@@ -190,7 +190,7 @@ export default function usePaymentsReport({
   // Full list
   if (fullList) {
     columns.push(
-      { name: t('payment')+" #", selector: r => r.payment_id, sortable: true, sortField: 'payment_id', width: '120px' },
+      { name: t('id')+" #", selector: r => r.payment_id, sortable: true, sortField: 'payment_id', width: '120px' },
       { name: t('full_name'), selector: r => r.student_full_name, sortable: true, sortField: 'student_full_name', wrap: true,
         cell: row => {
           return (
@@ -280,6 +280,7 @@ export default function usePaymentsReport({
     modalFilename,
     modalFilepath,
     showFileModal,
-    setShowFileModal
+    setShowFileModal,
+    reload: fetchData
   };
 }

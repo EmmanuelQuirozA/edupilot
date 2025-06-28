@@ -203,7 +203,7 @@ export default function usePaymentsReport({
   // Full list
   if (fullList) {
     columns.push(
-      { name: t('payment_request')+" #", selector: r => r.payment_request_id, sortable: true, sortField: 'payment_request_id', width: '120px' },
+      { name: t('id')+" #", selector: r => r.payment_request_id, sortable: true, sortField: 'payment_request_id', width: '80px' },
       { name: t('full_name'), selector: r => r.student_full_name, sortable: true, sortField: 'student_full_name', wrap: true,
         cell: row => {
           return (
@@ -222,10 +222,26 @@ export default function usePaymentsReport({
       { name: t('pt_name'), selector: r => r.pt_name, sortable: true, sortField: 'pt_name', wrap: true},
       { name: t('payment_month'), selector: r => r.payment_month, sortable: true, sortField: 'payment_month', cell: row => formatMonthYear(row.payment_month), width: '170px' },
       { name: t('scholar_level_name'), selector: r => r.scholar_level_name, sortable: true, sortField: 'scholar_level_name', wrap: true},
-      { name: t('requested_amount'), selector: r => r.pr_amount, sortable: true, sortField: 'pr_amount', cell: row => `$${row.pr_amount}`, width: '120px' },
+      { name: t('requested_amount'), selector: r => r.pr_amount, sortable: true, sortField: 'pr_amount', cell: row => "$"+ row.pr_amount
+                .toFixed(2)
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ","), width: '120px' },
       { name: t('pay_by'), selector: r => r.pr_pay_by, sortable: true, sortField: 'pr_pay_by', cell: row => formatDateTime(row.pr_pay_by), width: '120px' },
       { name: t('to_pay'), selector: r => r.to_pay, sortable: true, sortField: 'to_pay', cell: row => (row.to_pay && `$${row.to_pay}`), width: '120px' },
-      { name: t('paid_to_date'), selector: r => r.total_amount_payments, sortable: true, sortField: 'total_amount_payments', cell: row => row.total_amount_payments != null ? `$${row.total_amount_payments}` : `$0`, width: '120px' },
+      {
+        name: t('paid_to_date'),
+        selector: r => r.total_amount_payments,
+        sortable: true,
+        sortField: 'total_amount_payments',
+        width: '120px',
+        cell: row => {
+          const amt = row.total_amount_payments;
+          return amt != null
+            ? "$"+ amt
+                .toFixed(2)
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            : "";
+        }
+      },
       {
         name: t('actions'),
         ignoreRowClick: true,
@@ -244,19 +260,20 @@ export default function usePaymentsReport({
     );
   } else {
     columns.push(
-      { name: t('payment_request')+" #", selector: r => r.payment_request_id, sortable: true, sortField: 'payment_request_id', width: '120px' },
+      { name: t('id')+" #", selector: r => r.payment_request_id, sortable: true, sortField: 'payment_request_id', width: '80px' },
       { name: t('pt_name'), selector: r => r.pt_name, sortable: true, sortField: 'pt_name', wrap: true},
-      { name: t('payment_month'), selector: r => r.payment_month, sortable: true, sortField: 'payment_month', cell: row => formatMonthYear(row.payment_month), width: '170px' },
+      { name: t('payment_month'), selector: r => r.payment_month, sortable: true, sortField: 'payment_month', cell: row => formatMonthYear(row.payment_month) },
       { name: t('scholar_level_name'), selector: r => r.scholar_level_name, sortable: true, sortField: 'scholar_level_name', wrap: true},
-      { name: t('requested_amount'), selector: r => r.pr_amount, sortable: true, sortField: 'pr_amount', cell: row => `$${row.pr_amount}`, width: '120px' },
-      { name: t('pay_by'), selector: r => r.pr_pay_by, sortable: true, sortField: 'pr_pay_by', cell: row => formatDateTime(row.pr_pay_by), width: '120px' },
+      { name: t('requested_amount'), selector: r => r.pr_amount, sortable: true, sortField: 'pr_amount', cell: row => "$"+ row.pr_amount
+                .toFixed(2)
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ","), width: '120px' },
+      { name: t('pay_by'), selector: r => r.pr_pay_by, sortable: true, sortField: 'pr_pay_by', cell: row => formatDateTime(row.pr_pay_by) },
       // { name: t('to_pay'), selector: r => r.to_pay, sortable: true, sortField: 'to_pay', cell: row => (row.to_pay && `$${row.to_pay}`), width: '120px' },
       {
         name: t('paid_to_date'),
         selector: r => r.total_amount_payments,
         sortable: true,
         sortField: 'total_amount_payments',
-        width: '120px',
         cell: row => {
           const amt = row.total_amount_payments;
           return amt != null

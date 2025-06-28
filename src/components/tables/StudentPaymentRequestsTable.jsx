@@ -11,11 +11,10 @@ import DetailsModal                   from '../modals/DetailsModal'
 export default function PaymentsTable({ 
   studentId, 
   canExport,
-  canCreate,
+  canCreate = false,
   canSeeHeaderActions = true 
 }) {
   const { t } = useTranslation();
-  const [showCreateModal, setCreateShowModal] = useState(false);
   
   // ── Your uncontrolled inputs ─────────────────────────────────────
   const defaultFilters = {
@@ -87,11 +86,6 @@ export default function PaymentsTable({
     pr_payment_status_id: appliedFilters.pr_payment_status_id,
     grade_group: appliedFilters.grade_group,
   });
-
-  // wrap reload so it also closes the modal
-  const onUserSuccess = () => {
-    reload();
-  };
   
   // ── Pure “apply these filters to these rows” helper ──────────────
   const applyPureFilters = (rows, f) => {
@@ -176,7 +170,6 @@ export default function PaymentsTable({
         <MDBBtn
           color="light"
           rippleColor="dark"
-          onClick={() => setCreateShowModal(true)}
         >
           <MDBIcon fas icon="add" className="me-1" />
           {t('add')}

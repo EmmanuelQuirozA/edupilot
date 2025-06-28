@@ -23,7 +23,7 @@ export const getStudents = ({
   if (status_filter) params.status_filter = status_filter;
   if (order_by)  params.order_by  = order_by;
   if (order_dir) params.order_dir = order_dir;
-  return api.get('/api/students/list', { params }).then(r => r.data);
+  return api.get('/api/students', { params }).then(r => r.data);
 };
 
 export const getStudentDetails = (student_id, lang) =>
@@ -37,10 +37,34 @@ export const getStudentDetailsReadOnly = ({studentId, lang}) =>{
   return api.get('/api/students/read-only', { params }).then(r => r.data);
 };
 
-export const getBalanceRecharges = (userId, lang) =>
-  api.get('/api/reports/balancerecharges', { params: { user_id: userId, lang } })
+export const getBalanceRecharge = (userId, lang) =>
+  api.get('/api/reports/balancerecharge', { params: { user_id: userId, lang } })
      .then(r => r.data)
      .catch(err => console.error("Error loading data:", err));
+
+export const getBalanceRecharges = ({
+  user_id,
+  school_id,
+  full_name,
+  created_at,
+  lang,
+  order_by,
+  order_dir,
+  offset = 0,
+  limit = 10,
+  export_all = false
+}) =>{
+  const params = { lang, offset, limit, export_all  };
+  if (user_id) params.user_id = user_id;
+  if (school_id) params.school_id = school_id;
+
+  if (full_name) params.full_name = full_name;
+  if (created_at) params.created_at = created_at;
+
+  if (order_by) params.order_by = order_by;
+  if (order_dir) params.order_dir = order_dir;
+  return api.get('/api/reports/balance-recharges', { params }).then(r => r.data);
+};
 
 export const getSchools = (lang) =>
   api.get('/api/schools/list', { params: { lang, status_filter: -1 } })

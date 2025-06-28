@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
+import { useAuth } 							 from '../context/AuthContext';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 import AdminDashboard   from '../pages/admin/Dashboard';
 import SchoolAdminDashboard from '../pages/school_admin/Dashboard';
@@ -9,8 +9,8 @@ import StudentDashboard from '../pages/student/Dashboard';
 
 export default function DashboardRouter() {
   function RoleBasedDashboard() {
-    const { role } = useAuth() || {};
-    switch ((role || '').toUpperCase()) {
+    const { role } = useAuth();
+    switch ((role ).toUpperCase()) {
       case 'ADMIN':
         return <AdminDashboard />;
       case 'SCHOOL_ADMIN':

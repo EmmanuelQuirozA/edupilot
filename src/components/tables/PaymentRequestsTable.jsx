@@ -18,7 +18,7 @@ export default function PaymentsTable({
   const { t } = useTranslation();
   const [showCreateModal, setCreateShowModal] = useState(false);
   
-  // ── Your uncontrolled inputs ─────────────────────────────────────
+  // ── uncontrolled inputs ─────────────────────────────────────
   const defaultFilters = {
     student_id:'',
     payment_request_id:'',
@@ -43,7 +43,7 @@ export default function PaymentsTable({
   // ── The filters you’ve actually “applied” ─────────────────────────
   const [appliedFilters, setAppliedFilters] = useState(defaultFilters);
   
-  // ── Where your filtered rows live ─────────────────────────────────
+  // ── Where filtered rows live ─────────────────────────────────
   const [filteredData, setFilteredData]         = useState([]);
 
   // ── Fetch report via our hook ───────────────────────────────────
@@ -209,7 +209,7 @@ export default function PaymentsTable({
     'late_periods',
     'to_pay'
   ]
-  // ── CSV prep (strip flags just like your page did) ───────────────
+  // ── CSV prep (strip flags just like page did) ───────────────
   const csvHeaders = exportKeys.map(key => ({
     key,
     label: t(key)
@@ -219,7 +219,7 @@ export default function PaymentsTable({
     pick(row, exportKeys)
   )
   
-  // Your form-group definitions for DetailsModal
+  // form-group definitions for DetailsModal
   const studentDetailFormGroups = [
     {
       groupTitle: '',
@@ -331,7 +331,7 @@ export default function PaymentsTable({
         navigateTo={data => `/studentdetails/${data.student_id}`}
       />
             
-      {/* Student Detail Modals */}
+      {/* Modals */}
       <CreatePaymentRequestModal show={showCreateModal} setShow={setCreateShowModal} onSuccess={onUserSuccess} />
     </>
   );

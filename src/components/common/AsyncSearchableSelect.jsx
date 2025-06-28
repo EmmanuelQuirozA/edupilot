@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MDBIcon, MDBInput, MDBSpinner } from 'mdb-react-ui-kit';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 /**
  * A “select with built-in search” that calls loadOptions(searchText)
@@ -23,11 +24,23 @@ export default function AsyncSearchableSelect({
   disabled = false,
   id
 }) {
+  const { t } = useTranslation();
   const containerRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
-  const [options, setOptions] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [options, setOptions]     = useState([]);
+  const [loading, setLoading]     = useState(false);
+  const [selectedLabel, setSelectedLabel] = useState('');
+  const searchInputRef = useRef(null);
+
+  // Whenever the `value` prop changes from outside, try to reset the label
+  // by looking it up in the last-loaded options (if any).
+  useEffect(() => {
+    const match = options.find((opt) => opt.value === value);
+    if (match) {
+      setSelectedLabel(match.label);
+    }
+  }, [value, options]);
 
   // Close dropdown if clicked outside
   useEffect(() => {
@@ -42,6 +55,12 @@ export default function AsyncSearchableSelect({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (isOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isOpen]);
 
   // Debounce + fetch options whenever searchText changes
   useEffect(() => {
@@ -60,9 +79,6 @@ export default function AsyncSearchableSelect({
     return () => clearTimeout(handler);
   }, [searchText, isOpen, loadOptions]);
 
-  // Find the label of the currently selected value
-  const selectedLabel = options.find((opt) => opt.value === value)?.label || placeholder;
-
   const toggleOpen = () => {
     if (!disabled) {
       setIsOpen((o) => !o);
@@ -72,7 +88,8 @@ export default function AsyncSearchableSelect({
   };
 
   const handleOptionClick = (opt) => {
-    onChange(opt.value);
+    onChange(opt);
+    setSelectedLabel(opt.label);  // ← save the label
     setIsOpen(false);
   };
 
@@ -99,10 +116,11 @@ export default function AsyncSearchableSelect({
             flex: 1,                    // allow it to shrink
             whiteSpace: 'nowrap',       // no wrapping
             overflow: 'hidden',         // hide overflow
-            textOverflow: 'ellipsis'    // show “…” if too long
+            textOverflow: 'ellipsis',   // show “…” if too long
+            userSelect: 'none'          // Prevents highlighting
           }}
         >
-          {value ? selectedLabel : <span className="text-muted">{placeholder}</span>}
+          {value ? value.label : <span className="text-muted">{placeholder}</span>}
         </span>
         <MDBIcon
           fas
@@ -125,11 +143,20 @@ export default function AsyncSearchableSelect({
         >
           {/* Search bar */}
           <div className="p-2">
-            <MDBInput
+            {/* <MDBInput
               size="sm"
               placeholder="Search..."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
+              inputRef={searchInputRef}
+            /> */}
+            <input
+              type="text"
+              className="form-control form-control-sm"
+              placeholder={t("search")+"..."}
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              ref={searchInputRef}
             />
           </div>
 

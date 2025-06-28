@@ -129,7 +129,7 @@ export default function useUsers({
 
   // Full list
     columns.push(
-      { name: t('user')+" #", selector: r => r.user_id, sortable: true, sortField: 'user_id', wrap: true, width: '100px',},
+      { name: t('id')+" #", selector: r => r.user_id, sortable: true, sortField: 'user_id', wrap: true, width: '100px',},
       { name: t('username'), selector: r => r.username, sortable: true, sortField: 'username', wrap: true},
       { name: t('full_name'), selector: r => r.full_name, sortable: true, sortField: 'full_name', wrap: true},
       { name: t('role_name'), selector: r => r.role_name, sortable: true, sortField: 'role_name', wrap: true},

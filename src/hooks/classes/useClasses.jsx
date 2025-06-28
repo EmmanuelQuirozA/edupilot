@@ -128,7 +128,7 @@ export default function useClasses({
 
   // Full list
     columns.push(
-      { name: t('class')+" #", selector: r => r.group_id, sortable: true, sortField: 'group_id', wrap: true},
+      { name: t('id')+" #", selector: r => r.group_id, sortable: true, sortField: 'group_id', wrap: true},
       { name: t('generation'), selector: r => r.generation, sortable: true, sortField: 'generation', wrap: true},
       { name: t('grade_group'), selector: r => r.grade_group, sortable: true, sortField: 'grade_group', wrap: true},
       { name: t('scholar_level_name'), selector: r => r.scholar_level_name, sortable: true, sortField: 'scholar_level_name', wrap: true},

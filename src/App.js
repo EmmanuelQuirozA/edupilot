@@ -1,9 +1,9 @@
 // src/App.js
 
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 
-import useAuth from './hooks/useAuth';
+import { useAuth } from './context/AuthContext';
 
 import './styles/custom.css';
 
@@ -26,7 +26,8 @@ import ReportsRouter   from './routes/ReportsRouter'
 // import SchoolsRouter   from './routes/SchoolsRouter'
 import TeachersRouter   from './routes/TeachersRouter'
 import StudentsRouter   from './routes/StudentsRouter'
-// import CoffeeRouter  from './routes/CoffeeRouter'
+import CoffeeRouter  from './routes/CoffeeRouter'
+import MenuRouter  from './routes/MenuRouter'
 import PaymentsReportsRouter  from './routes/PaymentsReportsRouter'
 import PaymentDetailsRouter  from './routes/PaymentDetailsRouter'
 import ClassesRouter  from './routes/ClassesRouter'
@@ -37,7 +38,7 @@ import PaymentRequestDetailsRouter  from './routes/PaymentRequestDetailsRouter'
 // import PrintDemo from './components/PrintDemo';
 
 function AppRoutes() {
-  const user = useAuth();
+  const { user } = useAuth();
   const home = () => {
     if (!user) return '/login';
     switch (user.role) {
@@ -101,6 +102,7 @@ function AppRoutes() {
       <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SCHOOL_ADMIN', 'FINANCE', 'STUDENT']} />}>
         <Route path="/dashboard" element={<DashboardRouter />} />
         <Route path="/paymentreports" element={<PaymentsReportsRouter />} />
+        <Route path="/reports" element={<ReportsRouter />} />
         <Route path="/paymentreports/paymentdetails/:payment_id/" element={<PaymentDetailsRouter />} />
         {/* <Route path="/studentdetails/:studentId/*" element={<StudentDetailsRouter />} /> */}
         <Route path="/paymentreports/paymentrequestdetails/:payment_request_id/" element={<PaymentRequestDetailsRouter />} />
@@ -108,6 +110,8 @@ function AppRoutes() {
 
         {/* <Route path="/schools/*" element={<SchoolsRouter />} /> */}
         <Route path="/classes/*" element={<ClassesRouter />} />
+        <Route path="/coffee/*" element={<CoffeeRouter />} />
+        <Route path="/menu/*" element={<MenuRouter />} />
       </Route>
       
       <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SCHOOL_ADMIN', 'FINANCE', 'STUDENT']} />}>
@@ -125,6 +129,21 @@ function AppRoutes() {
 }
 
 export default function App() {
+  // Safely grab logoUrl (may be undefined when logged out)
+  const { logoUrl } = useAuth();
+  const defaultFavicon = '/monarch_logo.png'; // or full URL if needed
+
+  useEffect(() => {
+    let link = document.querySelector("link[rel*='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    // use the school logo if available, otherwise default
+    link.href = logoUrl || defaultFavicon;
+  }, [logoUrl]);
+  
   return (
     <Router>
       <AppRoutes />

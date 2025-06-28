@@ -46,7 +46,8 @@ const menuConfig = {
       level: 'Management',
       items: [
         { name: 'finance', icon: 'bi bi-coin', link: '/paymentreports' },
-        { name: 'schools', icon: 'bi bi-building', link: '/schools' },
+        { name: 'reports', icon: 'bi bi-cash-coin', link: '/reports' },
+        { name: 'schools', icon: 'bi bi-building', link: '/schools', comingSoon: true },
         { name: 'classes', icon: 'bi bi-card-checklist', link: '/classes' },
         { name: 'users', icon: 'bi bi-person-badge', link: '/users' },
         { name: 'teachers', icon: 'bi bi-briefcase', link: '/teachers' },
@@ -66,7 +67,8 @@ const menuConfig = {
     {
       level: 'Apps',
       items: [
-        { name: 'coffee', icon: 'bi bi-cup-hot', link: '/coffee' }
+        { name: 'coffee', icon: 'bi bi-cup-hot', link: '/coffee' },
+        { name: 'menu', icon: 'bi bi-columns', link: '/menu' }
       ]
     },
     {
@@ -88,8 +90,8 @@ const menuConfig = {
     {
       level: 'Management',
       items: [
-        { name: 'payments', icon: 'bi bi-coin', link: '/payments' },
-        { name: 'classes', icon: 'bi bi-card-checklist', link: '/classes' },
+        { name: 'payments', icon: 'bi bi-coin', link: '/payments', comingSoon: true },
+        { name: 'classes', icon: 'bi bi-card-checklist', link: '/classes', comingSoon: true },
         { name: 'subjects', icon: 'bi bi-journal-text', link: '/subjects', comingSoon: true },
         { name: 'lessons', icon: 'bi bi-book', link: '/lessons', comingSoon: true },
         { name: 'exams', icon: 'bi bi-pencil-square', link: '/exams', comingSoon: true },
@@ -102,16 +104,10 @@ const menuConfig = {
       ]
     },
     {
-      level: 'Apps',
-      items: [
-        { name: 'coffee', icon: 'bi bi-cup-hot', link: '/coffee' }
-      ]
-    },
-    {
       level: 'Settings',
       items: [
-        { name: 'profile',  icon: 'bi bi-person-circle', link: '/profile' },
-        { name: 'settings', icon: 'bi bi-gear',          link: '/settings' }
+        { name: 'profile',  icon: 'bi bi-person-circle', link: '/profile', comingSoon: true },
+        { name: 'settings', icon: 'bi bi-gear',          link: '/settings', comingSoon: true }
       ]
     }
   ]
@@ -119,7 +115,7 @@ const menuConfig = {
 
 export default function Sidebar({ collapsed, isMobile, mobileOpen }) {
   const { t } = useTranslation();
-  const { user, logout } = useAuth();
+  const { user, logout, logoUrl } = useAuth();
   const location = useLocation();
   const role = (user?.role || user?.roleName || '')?.toUpperCase();
   if (!user) return null 
@@ -148,13 +144,13 @@ export default function Sidebar({ collapsed, isMobile, mobileOpen }) {
           : undefined,
         transition: isMobile ? 'transform 0.3s ease' : undefined,
 
-        zIndex: isMobile ? 1050 : undefined,
+        zIndex: 10000000000,
       }}
     >
       {/* Logo */}
       <div className="logo-details d-flex justify-content-center" style={{ margin: '20px 0' }}>
-        <img className="logo_img" src="http://localhost:3000/monarch_logo.png" alt="Logo" />
-        {!collapsed && <span className="logo_name ms-2">Monarch</span>}
+        <img src={logoUrl ? (logoUrl) : ("/monarch_logo.png")} alt="Logo" style={{width: !collapsed?'25%':'50%'}}/>
+        {!collapsed && <span className="logo_name d-flex align-items-center ms-2">EduPilot</span>}
       </div>
 
       <MDBListGroup 
@@ -177,7 +173,7 @@ export default function Sidebar({ collapsed, isMobile, mobileOpen }) {
                     tag={Link}
                     to={item.comingSoon ? '#' : item.link}
                     key={item.name}
-                  active={isActive.toString()}
+                    active={isActive.toString()}
                     className={`
                       d-flex pb-1 pt-1 align-items-center px-2
                       ${collapsed ? 'justify-content-center' : ''} 

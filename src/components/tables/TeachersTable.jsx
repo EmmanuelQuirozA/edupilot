@@ -1,6 +1,6 @@
 // src/components/tables/TeachersTable.jsx
 import React, { useState, useEffect } from 'react'
-import useAuth                        from '../../hooks/useAuth';
+import { useAuth }                    from '../../context/AuthContext';
 import { useTranslation }             from 'react-i18next'
 import useTeachers                     from '../../hooks/teachers/useTeachers'
 import DataTableWrapper               from '../tables/DataTableWrapper'

@@ -16,7 +16,8 @@ import {
 } from 'mdb-react-ui-kit';
 import { useTranslation } from 'react-i18next';
 import swal from 'sweetalert';
-import { getPaymentConcepts, getStudents } from '../../../api/studentApi';
+import { getPaymentConcepts } from '../../../api/studentApi';
+import { getStudents } from '../../../api/studentsApi';
 import { getSchools } from '../../../api/schoolsApi';
 import { getClasses } from '../../../api/classesApi';
 import AsyncSearchableSelect from '../../common/AsyncSearchableSelect';
@@ -228,7 +229,7 @@ export default function CreatePaymentRequestModal({ show, setShow, onSuccess }) 
       };
       if (createFor === 'school')  payload.school_id  = formData.school_id;
       if (createFor === 'class')   payload.group_id   = formData.group_id;
-      if (createFor === 'student') payload.student_id = formData.student_id;
+      if (createFor === 'student') payload.student_id = formData.student_id?.value;
 
       const createdList = await createPaymentRequest(payload);
       // createdList is an array like:
@@ -284,9 +285,9 @@ export default function CreatePaymentRequestModal({ show, setShow, onSuccess }) 
   return (
     <>
       <MDBModal open={show} onClose={() => setShow(false)} tabIndex="-1">
-        <form onSubmit={handleSubmit}>
-          <MDBModalDialog size="xl">
-            <MDBModalContent>
+        <MDBModalDialog size="xl">
+          <MDBModalContent>
+            <form onSubmit={handleSubmit}>
               <MDBModalHeader>
                 <MDBModalTitle>{t('create_payment_request')}</MDBModalTitle>
                 <MDBBtn
@@ -379,6 +380,7 @@ export default function CreatePaymentRequestModal({ show, setShow, onSuccess }) 
                       <label>{t('student')}</label>
                       <AsyncSearchableSelect
                         id="studentSelect"
+                        value={formData.student_id}
                         loadOptions={loadStudentOptions}
                         onChange={(val) => handleChange('student_id', val)}
                         placeholder={t('search_by_name')}
@@ -553,9 +555,9 @@ export default function CreatePaymentRequestModal({ show, setShow, onSuccess }) 
                   {isSaving ? <MDBSpinner size="sm" /> : t('create')}
                 </MDBBtn>
               </MDBModalFooter>
-            </MDBModalContent>
-          </MDBModalDialog>
-        </form>
+            </form>
+          </MDBModalContent>
+        </MDBModalDialog>
       </MDBModal>
     </>
   );

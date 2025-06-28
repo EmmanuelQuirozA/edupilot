@@ -4,6 +4,7 @@ body{
 }
 
 footer {
+  z-index: 1000000000;
   background-color: #007bff;
   padding: 1rem;
   position: fixed;
@@ -158,10 +159,6 @@ footer p {
   padding: 20px;
 }
 
-img.logo_img {
-  width: 25%;
-}
-
 span.logo_name.ms-2 {
   font-size: 22px;
   color: #fff;
@@ -180,12 +177,12 @@ span.logo_name.ms-2 {
 
 /* 2) Round only the outer corners of the first/last tabs */
 .custom-fullwidth-tabs .nav-item:first-child .nav-link {
-  border-top-left-radius: 0.5rem !important;
-  border-bottom-left-radius: 0.5rem !important;
+  border-top-left-radius: 40px !important;
+  border-bottom-left-radius: 40px !important;
 }
 .custom-fullwidth-tabs .nav-item:last-child .nav-link {
-  border-top-right-radius: 0.5rem !important;
-  border-bottom-right-radius: 0.5rem !important;
+  border-top-right-radius: 40px !important;
+  border-bottom-right-radius: 40px !important;
 }
 
 /* 3) Strip the default active underline */

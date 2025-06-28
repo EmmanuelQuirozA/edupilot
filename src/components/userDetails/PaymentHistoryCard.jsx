@@ -1,20 +1,29 @@
 // src/components/PaymentHistoryCard.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import {
   MDBAccordion,
   MDBAccordionItem,
   MDBListGroup,
   MDBListGroupItem,
-  MDBBadge
+  MDBBadge,
+  MDBBtn,
+  MDBIcon
 } from 'mdb-react-ui-kit';
 import PropTypes from 'prop-types';
 import { formatDate } from '../../utils/formatDate';
 import { useTranslation } from 'react-i18next'
+import ProtectedFileModal from '../modals/ProtectedFileModal';
 
 export default function PaymentHistoryCard({ history,  tuitions=false  }) {
-  const { i18n } = useTranslation();
+  const { i18n,t } = useTranslation();
+    
+    
+    const [showFileModal, setShowFileModal] = useState(false);
+    const [modalFilename, setModalFilename] = useState('');
+    const [modalFilepath, setModalFilepath] = useState('');
   
   return (
+    <>
     <MDBAccordion alwaysOpen initialActive={[]} >
       {history.map((yearBlock) => (
         <MDBAccordionItem
@@ -28,8 +37,10 @@ export default function PaymentHistoryCard({ history,  tuitions=false  }) {
               alwaysOpen
               key={`nested-${yearBlock.year}-${monthBlock.month}`}
               initialActive={[]}
+                className='border-0 p-0'
             >
               <MDBAccordionItem
+                className='card mb-2'
                 collapseId={`month-${yearBlock.year}-${monthBlock.month}`}
                 headerTitle={
                   <div className="d-flex justify-content-between w-100">
@@ -40,19 +51,33 @@ export default function PaymentHistoryCard({ history,  tuitions=false  }) {
                   </div>
                 }
               >
-                <MDBListGroup>
+                <MDBListGroup className='p-0'>
                   {monthBlock.items.map((item) => (
                     <MDBListGroupItem
-                      key={item.coffee_sale_id}
-                      className="d-flex justify-content-between"
+                      key={item.paymentId}
+                      className='p-0 my-2 border-0'
                     >
-                      {!tuitions && (
+                      {!tuitions ? (
                         <span>
                           {item.partConceptName} 
                         </span>
+                      ):(
+                        <span>
+                          {formatDate(item.paymentCreatedAt, i18n.language, { year: 'numeric', month: 'long', day: '2-digit' })} 
+                        </span>
                       )}
-                      
+                      <br/>
                       <span>${item.amount.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>
+                      <br/>
+                      {item.receiptFileName && (<MDBBtn className='w-100' outline size="sm"
+                        onClick={() => {
+                          setModalFilename(item.receiptFileName);
+                          setModalFilepath(item.receiptPath);
+                          setShowFileModal(true);
+                        }}
+                      >
+                        <MDBIcon fas icon="file-pdf" className="me-1"/> Ver
+                      </MDBBtn>)}
                     </MDBListGroupItem>
                   ))}
                 </MDBListGroup>
@@ -62,6 +87,15 @@ export default function PaymentHistoryCard({ history,  tuitions=false  }) {
         </MDBAccordionItem>
       ))}
     </MDBAccordion>
+  
+    <ProtectedFileModal
+      filename={modalFilename}
+      filepath={modalFilepath}
+      show={showFileModal}
+      onClose={() => setShowFileModal(false)}
+      lang={i18n.language}
+    />
+    </>
   );
 }
 
@@ -75,7 +109,7 @@ PaymentHistoryCard.propTypes = {
           total: PropTypes.number.isRequired,
           items: PropTypes.arrayOf(
             PropTypes.shape({
-              coffee_sale_id: PropTypes.number.isRequired,
+              paymentId: PropTypes.number.isRequired,
               item_name:      PropTypes.string.isRequired,
               quantity:       PropTypes.number.isRequired,
               total:          PropTypes.number.isRequired,

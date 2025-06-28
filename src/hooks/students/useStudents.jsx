@@ -133,7 +133,7 @@ export default function useStudents({
 
   // Full list
     columns.push(
-      { name: t('student')+" #", selector: r => r.student_id, sortable: true, sortField: 'student_id', wrap: true, width: '100px',},
+      { name: t('id')+" #", selector: r => r.student_id, sortable: true, sortField: 'student_id', wrap: true, width: '100px',},
       { name: t('register_id'), selector: r => r.register_id, sortable: true, sortField: 'register_id', wrap: true},
       { name: t('full_name'), selector: r => r.full_name, sortable: true, sortField: 'full_name', wrap: true},
       { name: t('payment_reference'), selector: r => r.payment_reference, sortable: true, sortField: 'payment_reference', wrap: true},

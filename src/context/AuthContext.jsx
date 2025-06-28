@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useContext
 } from 'react';
+import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
 
@@ -20,7 +21,23 @@ export const useAuth = () => {
 export function AuthProvider({ children }) {
   const [user, setUser]     = useState(null);
   const [userDetails, setUserDetails] = useState({});
+  const [logoUrl, setLogoUrl]       = useState(null);
+  const [role, setRole]       = useState(null);
   const [loading, setLoading] = useState(true);
+
+
+  // Fetch the logo path from your endpoint, using the token for auth
+  const fetchLogo = async (token) => {
+    try {
+      const resp = await axios.get(
+        '/api/schools/school-image',
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setLogoUrl(resp.data);  // assuming resp.data is the URL/path string
+    } catch (err) {
+      console.error('Error loading school logo:', err);
+    }
+  };
 
   // Helper: read & decode token
   const loadUserFromToken = () => {
@@ -41,6 +58,11 @@ export function AuthProvider({ children }) {
         userId:    decoded.userId,
         username:  decoded.sub
       });
+
+      setRole(decoded.role)
+
+      fetchLogo(token);
+
       setLoading(false);
       
       const userDetails = localStorage.getItem('user');
@@ -83,6 +105,10 @@ export function AuthProvider({ children }) {
       username: decoded.sub,
     });
     setUserDetails(data.user);
+
+    setRole(decoded.role)
+
+    fetchLogo(data.token);
   };
 
   const logout = () => {
@@ -94,7 +120,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ userDetails, user, loading, login, logout }}>
+    <AuthContext.Provider value={{ userDetails, logoUrl, role, user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -2,7 +2,7 @@
 import React, { useState, useEffect }       from 'react'
 import { useSearchParams }       from 'react-router-dom';
 import { useTranslation }        from 'react-i18next'
-import useAuth                   from '../hooks/useAuth'
+import { useAuth } 							 from '../context/AuthContext';
 import Layout                    from '../layout/Layout'
 import PaymentsTable             from '../components/tables/PaymentsTable'
 import MonthlyPaymentsTable      from '../components/tables/MonthlyPaymentsTable'
@@ -42,7 +42,7 @@ export default function PaymentsReportPage() {
     <Layout pageTitle={t('payments_reports')}>
       <MDBTabs
         className="mb-3 custom-fullwidth-tabs"
-        style={{ backgroundColor: 'white', borderRadius: '0.5rem' }}
+        style={{ backgroundColor: 'white', borderRadius: '40px' }}
       >
         {['monthlyPayments','paymentRequests','payments'].map((tab, i, arr) => (
           <MDBTabsItem key={tab} className="flex-fill">

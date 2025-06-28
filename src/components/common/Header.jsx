@@ -16,7 +16,7 @@ import {
   MDBRow
 } from 'mdb-react-ui-kit'
 import { useAuth } from '../../context/AuthContext'
-import GeneralCreateButton from './GeneralCreateButton';
+// import GeneralCreateButton from './GeneralCreateButton';
 import axios from 'axios'
 
 export default function Header({ pageTitle, collapsed, toggleSidebar }) {
@@ -82,7 +82,7 @@ export default function Header({ pageTitle, collapsed, toggleSidebar }) {
         <div className="d-flex align-items-center gap-4 position-relative">
           {user && ['SCHOOL_ADMIN', 'ADMIN'].includes(user.role.toUpperCase()) ? (
           <MDBRow>
-            <GeneralCreateButton canCreate={true} />
+            {/* <GeneralCreateButton canCreate={true} /> */}
           </MDBRow>
           ) : (null)}
           {/* Language Switcher Dropdown */}

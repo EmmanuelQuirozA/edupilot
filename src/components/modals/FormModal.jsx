@@ -124,9 +124,9 @@ export default function FormModal({
   return (
     <MDBModal open={show} onClose={() => setShow(false)} >
       {/* MDBValidation renders a <form> under the hood */}
-      <MDBValidation onSubmit={handleSubmit} noValidate validated={validated}>
-        <MDBModalDialog size={size}>
-          <MDBModalContent>
+      <MDBModalDialog size={size}>
+        <MDBModalContent>
+          <MDBValidation onSubmit={handleSubmit} noValidate validated={validated}>
             <MDBModalHeader>
               <MDBModalTitle>{t(title)}</MDBModalTitle>
               <MDBBtn type="button" className="btn-close" color="none" onClick={() => setShow(false)} />
@@ -198,9 +198,9 @@ export default function FormModal({
                 </>
               ) : null}
             </MDBModalFooter>
-          </MDBModalContent>
-        </MDBModalDialog>
-      </MDBValidation>
+          </MDBValidation>
+        </MDBModalContent>
+      </MDBModalDialog>
     </MDBModal>
   );
 }

@@ -133,7 +133,11 @@ export default function DataTableWrapper({
               columns={columns}
               data={data}
               progressPending={loading} 
-              progressComponent={<LoadingComponent />} 
+              progressComponent={<LoadingComponent />}  
+
+              // default sort
+              // defaultSortField="created_at"
+              defaultSortAsc={false}
 
               // server‐side pagination flags
               pagination={pagination}
