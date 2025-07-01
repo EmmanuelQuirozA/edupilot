@@ -250,7 +250,7 @@ export default function usePaymentsReport({
           if (!row.payment_request_id) return null
           return (
             <Link to={`/paymentreports/paymentrequestdetails/${row.payment_request_id}`}>
-              <MDBBtn flat size="sm">
+              <MDBBtn size="sm">
                 <MDBIcon fas icon="eye" />
               </MDBBtn>
             </Link>

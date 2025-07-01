@@ -356,5 +356,20 @@
 	"qty": "Qty",
 	"processing_sale": "Procesando venta",
   "sale_processed_successfully": "Venta procesada correctamente",
-  "failed_to_process_sale": "Error al procesar la venta"
+  "failed_to_process_sale": "Error al procesar la venta",
+	"duplicate_registration_id_in_file": "El Id de matrícula está duplicado en el archivo",
+	"duplicate_payment_reference_in_file": "La referencia de pago está duplicado en el archivo",
+	"duplicate_username_in_file": "El nombre de usuario está duplicado en el archivo",
+	"registration_id_already_exists_in_DB": "El Id de matrícula está duplicado en la base de datos",
+	"payment_reference_already_exists_in_DB": "La referencia de pago está duplicado en la base de datos",
+	"username_already_exists_in_DB": "El nombre de usuario está duplicado en la base de datos",
+	"unexpected_validation_response": "La validación no se pudo completar",
+	"error_checking_database": "Error validando en base de datos",
+	"Invalid_class": "Selecciona un grupo valido",
+	"error_validating_class": "Error validando el grupo",
+	"could_not_parse_csv": "No se pudo analizar el CSV",
+	"no_valid_records_to_upload": "No hay registros válidos para cargar",
+	"bulk_student_upload": "Carga masiva de estudiantes",
+	"row": "Fila",
+	"bulk_upload": "Carga masiva"
 }

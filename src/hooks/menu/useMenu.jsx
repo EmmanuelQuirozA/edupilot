@@ -125,7 +125,6 @@ export default function useMenu({
         cell: (row) => (
           <div className='d-flex gap-3'>
             <MDBBtn 
-              flat="true" 
               size="sm" 
               onClick={() => {
                 openMenuModal(row.menu_id);

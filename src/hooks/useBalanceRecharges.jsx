@@ -45,7 +45,6 @@ export default function useBalanceRecharges({
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      console.log(orderDir)
       const { content, totalElements } = await getBalanceRecharges({
         school_id,
         full_name,
@@ -139,14 +138,11 @@ export default function useBalanceRecharges({
   } else {
     columns.push(
       { name: t('id')+" #", selector: r => r.balance_recharge_id, sortable: true, sortField: 'balance_recharge_id', width: '120px' },
-      { name: t('generation'), selector: r => r.generation, sortable: true, sortField: 'generation' },
-      { name: t('scholar_level_name'), selector: r => r.scholar_level_name, sortable: true, sortField: 'scholar_level_name' },
-      { name: t('grade_group'), selector: r => r.grade_group, sortable: true, sortField: 'grade_group' },
       { name: t('date'), selector: r => r.created_at, sortable: true, sortField: 'created_at', cell: row => formatDate(
                 row.created_at, i18n.language, { year: 'numeric', month: 'long', day: '2-digit', hour: '2-digit', minute: '2-digit' })},
       { name: t('amount'), selector: r => r.amount, sortable: true, sortField: 'amount', cell: row => "$"+ row.amount
                 .toFixed(2)
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ","), width: '120px' }
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
     );
   }
 

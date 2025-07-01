@@ -65,7 +65,7 @@ export default function PaymentsTable({
 
     reload
   } = usePaymentsReport({
-    fullList: true,
+    fullList: fullList,
     student_id: studentId,
     payment_id: appliedFilters.payment_id,
     payment_request_id: appliedFilters.payment_request_id,
@@ -290,7 +290,7 @@ export default function PaymentsTable({
         data={selectedStudent}
         title={t('student')}
         size="xl"
-        navigateTo={data => `/studentdetails/${data.student_id}`}
+        navigateTo={data => `/students/${data.student_id}`}
       />
                   
       {/* Modals */}

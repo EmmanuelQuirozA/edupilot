@@ -171,18 +171,21 @@ export default function useMonthlyReport(
       order_dir:  orderDir.toLowerCase()
     })
     .then(({ content }) => {
-      // strip off the flag/id from all month columns
       return content.map(row => {
-        const out = { ...row }
-        // for each month-column, keep only the amount (the first chunk before any space)
-        Object.keys(out).forEach(k => {
-          if (monthRegex.test(k)) {
-            const parts = String(out[k] || '').trim().split(' ')
-            out[k] = parts[0] || ''
+        const out = { ...row };
+        Object.keys(out).forEach(key => {
+          if (monthRegex.test(key)) {
+            let parsed = null;
+            try {
+              parsed = JSON.parse(out[key]);
+              out[key] = parsed.total_amount ?? '';
+            } catch {
+              out[key] = ''; // fallback if not JSON
+            }
           }
-        })
-        return out
-      })
+        });
+        return out;
+      });
     })
     .finally(() => setExportLoading(false));
   };

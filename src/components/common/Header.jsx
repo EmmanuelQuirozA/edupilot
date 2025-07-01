@@ -59,7 +59,7 @@ export default function Header({ pageTitle, collapsed, toggleSidebar }) {
     const id = student.student_id || student.full_name.split('-')[0]
     setSearchResults([])
     setSearchQuery('')
-    navigate(`/studentdetails/${id}`)
+    navigate(`/students/${id}`)
   }
 
   return (

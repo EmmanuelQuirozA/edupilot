@@ -46,7 +46,6 @@ export default function useCoffeeSales({
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      console.log(orderDir)
       const { content, totalElements } = await getCoffeeSales({
         school_id,
         full_name,

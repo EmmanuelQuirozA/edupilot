@@ -119,7 +119,6 @@ export default function CreatePaymentModal({ show, setShow, onSuccess }) {
       payment_through_id: formData.payment_through_id,
       payment_concept_id: formData.payment_concept_id
     };
-    console.log(jsonPayload)
 
     form.append(
       'request',
@@ -202,7 +201,7 @@ export default function CreatePaymentModal({ show, setShow, onSuccess }) {
 
             {isLoading && <p>{t('loading')}…</p>}
             {!isLoading && registerPaymentFormGroups.map(group => (
-              <div key={group.groupTitle} className="my-2">
+              <div key={group.columns} className="my-2">
                 <h5 className="mb-3">{t(group.groupTitle)}</h5>
                 <div className={`row row-cols-1 row-cols-${group.columns} g-3`}>
                   

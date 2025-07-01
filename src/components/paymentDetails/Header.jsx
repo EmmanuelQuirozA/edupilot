@@ -61,7 +61,7 @@ export default function PaymentHeader({
 
       <MDBCol className="d-none d-md-flex justify-content-end gap-2">
         {canPrint && (
-          <MDBBtn flat size="sm" color="light" rippleColor="dark" onClick={onPrint}>
+          <MDBBtn size="sm" color="light" rippleColor="dark" onClick={onPrint}>
             <MDBIcon fas icon="print" className="me-1" /> {t('print')}
           </MDBBtn>
         )}

@@ -3,13 +3,12 @@ import React, { useState, useEffect } from 'react'
 import { useAuth }                    from '../../context/AuthContext';
 import { useTranslation }             from 'react-i18next'
 import useStudents                    from '../../hooks/students/useStudents'
-import useUserActions                from '../../hooks/users/useUserActions';
 import DataTableWrapper               from '../tables/DataTableWrapper'
 import FiltersSidebar                 from '../common/FiltersSidebar'
-import FormModal                      from '../modals/FormModal'
 import { MDBBtn, MDBIcon }            from 'mdb-react-ui-kit'
 import { pick }                       from 'lodash'
 import CreateStudentModal              from '../students/modals/CreateStudentModal';
+import { Link } from 'react-router-dom';
 
 export default function UsersTable({ 
   canExport,
@@ -60,9 +59,9 @@ export default function UsersTable({
     handleSort,
 
     // class Detail Modal
-    setSelectedUser,
-    selectedUser,
-    showUserModal,
+    // setSelectedUser,
+    // selectedUser,
+    // showUserModal,
     setShowUserModal,
 
     conditionalRowStyles,
@@ -144,14 +143,28 @@ export default function UsersTable({
   const headerCreateRecord = (
     <>
       {canCreate && (
-        <MDBBtn
-          color="light"
-          rippleColor="dark"
-          onClick={() => setCreateShowModal(true)}
-        >
-          <MDBIcon fas icon="add" className="me-1" />
-          {t('add')}
-        </MDBBtn>
+        <>
+          <Link
+            to={'/students/bulkstudentsupload'}
+            style={{ textDecoration: 'none' }}
+          >
+          <MDBBtn
+            color="light"
+            rippleColor="dark"
+          >
+            <MDBIcon fas icon="add" className="me-1" />
+            {t('bulk_upload')}
+          </MDBBtn>
+          </Link>
+          <MDBBtn
+            color="light"
+            rippleColor="dark"
+            onClick={() => setCreateShowModal(true)}
+          >
+            <MDBIcon fas icon="add" className="me-1" />
+            {t('add')}
+          </MDBBtn>
+        </>
       )}
     </>
   )
@@ -175,26 +188,6 @@ export default function UsersTable({
   const csvData = filteredData.map(row =>
     pick(row, exportKeys)
   )
-  
-  // Your form-group definitions for DetailsModal
-  const userFormGroups = [
-    {
-      groupTitle: '',
-      columns:    2,
-      fields: [
-        { key: 'username', label: 'username', type: 'text', required: true},
-        { key: 'scholar_level_name', label: 'scholar_level_name', type: 'text', required: true },
-      ],
-    },
-    {
-      groupTitle: '',
-      columns:    2,
-      fields: [
-        { key: 'grade', label: 'grade', type: 'number', required: true },
-        { key: 'group', label: 'group', type: 'text', required: true },
-      ],
-    }
-  ];
   
   return (
     <>

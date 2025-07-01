@@ -2,13 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation }              from 'react-i18next';
 import { formatDate } from '../../utils/formatDate';
-import { getPaymentDetail } from '../../api/studentApi';
 import ProtectedFileModal from './ProtectedFileModal';
 import { Link } from 'react-router-dom'
 import {
   MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalTitle, MDBModalBody, MDBModalFooter, MDBBtn, MDBIcon, MDBRow, MDBCol, MDBSpinner
 } from 'mdb-react-ui-kit';
-import swal                            from 'sweetalert';
 import usePaymentDetails from '../../hooks/usePaymentDetails';
 
 export default function PaymentModal({paymentId, show,setShow,}) {

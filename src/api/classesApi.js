@@ -1,6 +1,11 @@
 import api from './api';
 
 
+export const getClassesCatalog = (lang) =>{
+  const params = { lang };
+  return api.get('/api/groups/catalog', { params }).then(r => r.data);
+};
+
 export const getClasses = ({
   group_id,
   school_id,

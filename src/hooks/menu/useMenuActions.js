@@ -14,7 +14,6 @@ export default function useMenuActions(onSuccess) {
         payload,
         { params: { lang } }
       );
-      console.log(res)
       swal(res.data.title, res.data.message, res.data.type);
       if (res.data.success !== false) {
         onSuccess();
@@ -34,7 +33,6 @@ export default function useMenuActions(onSuccess) {
         `/api/coffee/update/${menuId}/status`,
         { params: { lang } }
       );
-      console.log(res)
       swal(res.data.title, res.data.message, res.data.type);
       if (res.data.success !== false) {
         onSuccess();
@@ -54,7 +52,6 @@ export default function useMenuActions(onSuccess) {
       const res = await api.post(`/api/coffee/create?lang=${lang}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      console.log(res)
       swal(res.data.title, res.data.message, res.data.type);
       if (res.data.success !== false) {
         onSuccess();

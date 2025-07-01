@@ -28,7 +28,7 @@ export default function RequestSettings({
           {/* ── Desktop: show button inline ── */}
           <div className="d-none d-md-block">
             {canUpdateRequest &&  paymentRequest.payment_status_id !== 7 && paymentRequest.payment_status_id !== 8 && (
-              <MDBBtn flat size="sm" onClick={() => onEditRequestSettings(data)}>
+              <MDBBtn size="sm" onClick={() => onEditRequestSettings(data)}>
                 <MDBIcon fas icon="pen" />
               </MDBBtn>)
             }

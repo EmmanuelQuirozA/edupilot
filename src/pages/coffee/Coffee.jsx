@@ -127,8 +127,6 @@ export default function Coffee() {
         }))
       };
 
-      // console.log(payload);
-
       const res = await api.post(`/api/coffee/process?lang=${i18n.language}`, payload);
       swal(res.data.title, res.data.message, res.data.type);
 

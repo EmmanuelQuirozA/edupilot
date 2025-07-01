@@ -226,7 +226,7 @@ export default function BalanceRechargesTable({
         data={selectedStudent}
         title={t('student')}
         size="xl"
-        navigateTo={data => `/studentdetails/${data.student_id}`}
+        navigateTo={data => `/students/${data.student_id}`}
       />
             
     </>

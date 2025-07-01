@@ -207,15 +207,15 @@ export default function CreateStudentModal({ show, setShow, onSuccess }) {
       size="xl"
       idPrefix="create_"
       isSaving={isSaving}
-      mass_upload={true}
-      mass_component={
-        <MassUploadContent
-          school_id={formData.school_id}
-          group_id={formData.group_id}
-          onUploadSuccess={handleMassUploadSuccess}
-          onClose={() => setShow(false)}
-        />
-      }
+      // mass_upload={true}
+      // mass_component={
+      //   <MassUploadContent
+      //     school_id={formData.school_id}
+      //     group_id={formData.group_id}
+      //     onUploadSuccess={handleMassUploadSuccess}
+      //     onClose={() => setShow(false)}
+      //   />
+      // }
     />
   );
 }

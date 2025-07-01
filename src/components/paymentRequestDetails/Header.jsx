@@ -66,19 +66,19 @@ export default function RequestHeader({
 
       <MDBCol className="d-none d-md-flex justify-content-end gap-2">
         {canPrint && (
-          <MDBBtn flat size="sm" color="light" rippleColor="dark" onClick={onPrintRequest}>
+          <MDBBtn size="sm" color="light" rippleColor="dark" onClick={onPrintRequest}>
             <MDBIcon fas icon="print" className="me-1" /> {t('print')}
           </MDBBtn>
         )}
 
         {canUpdateRequest && paymentRequest.payment_status_id !== 7 && paymentRequest.payment_status_id !== 8 && (
-          <MDBBtn flat size="sm" onClick={() => onEditRequest(data)}>
+          <MDBBtn size="sm" onClick={() => onEditRequest(data)}>
             <MDBIcon fas icon="pen" />
           </MDBBtn>
         )}
 
         {canRegisterPayment && paymentRequest.payment_status_id !== 7 && paymentRequest.payment_status_id !== 8 && (
-          <MDBBtn flat size="sm" onClick={() => onRegisterPayment(data)}>
+          <MDBBtn size="sm" onClick={() => onRegisterPayment(data)}>
             <MDBIcon fas icon="hand-holding-usd" className="cursor-pointer" />
           </MDBBtn>
         )}

@@ -144,7 +144,7 @@ export default function useStudents({
       {
         name: t('actions'),
         cell: (row) => (
-          <Link to={`/students/${row.user_id}`}>
+          <Link to={`/students/${row.student_id}`}>
             <MDBBtn flat size="sm">
               <MDBIcon fas icon="eye" />
             </MDBBtn>

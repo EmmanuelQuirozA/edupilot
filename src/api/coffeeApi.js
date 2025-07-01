@@ -67,9 +67,9 @@ export const getMenuDetails = (menuId) =>
       throw err;
     });
 
-export const getUserBalances = (search_criteria, lang) =>
+export const getUserBalances = (full_name, lang) =>
   api
-    .get('/api/users/balances', { params: {search_criteria, lang } })
+    .get('/api/users/balances', { params: {full_name, lang } })
     .then(r => r.data)
     .catch(err => {
       console.error('Error fetching user balances:', err);

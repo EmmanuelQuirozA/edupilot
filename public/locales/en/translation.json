@@ -356,5 +356,20 @@
 	"qty": "Qty",
 	"processing_sale": "Processing sale",
   "sale_processed_successfully": "Sale processed successfully",
-  "failed_to_process_sale": "Failed to process sale"
+  "failed_to_process_sale": "Failed to process sale",
+	"duplicate_registration_id_in_file": "Duplicated registration Id in file",
+	"duplicate_payment_reference_in_file": "Duplicated payment reference in file",
+	"duplicate_username_in_file": "Duplicated username in file",
+	"registration_id_already_exists_in_DB": "Registration already exists in DB",
+	"payment_reference_already_exists_in_DB": "Payment reference already exists in DB",
+	"username_already_exists_in_DB": "Username already exists in DB",
+	"unexpected_validation_response": "Unexpected validation response",
+	"error_checking_database": "Error checking database",
+	"Invalid_class": "Select a valid class",
+	"error_validating_class": "Error while validating class",
+	"could_not_parse_csv": "Could not parse CSV",
+	"no_valid_records_to_upload": "No valid records to upload",
+	"bulk_student_upload": "Bulk Student Upload",
+	"row": "Row",
+	"bulk_upload": "Bulk upload"
 }

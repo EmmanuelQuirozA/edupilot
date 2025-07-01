@@ -233,7 +233,7 @@ export default function CoffeeSalesTable({
         data={selectedStudent}
         title={t('student')}
         size="xl"
-        navigateTo={data => `/studentdetails/${data.student_id}`}
+        navigateTo={data => `/students/${data.student_id}`}
       />
             
     </>

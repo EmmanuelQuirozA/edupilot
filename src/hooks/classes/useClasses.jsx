@@ -138,7 +138,6 @@ export default function useClasses({
         cell: (row) => (
           <div className='d-flex gap-3'>
             <MDBBtn 
-              flat="true" 
               size="sm" 
               onClick={() => {
                 openClassesModal(row.group_id);
