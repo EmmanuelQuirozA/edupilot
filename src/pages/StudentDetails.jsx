@@ -12,6 +12,8 @@ import {
 } from 'mdb-react-ui-kit';
 import NoDataComponent from '../components/common/NoDataComponent';
 import api from '../api/api';
+import ErrorComponent from '../components/common/ErrorComponent';
+import LoadingComponent from '../components/common/LoadingComponent'
 // import ProfileHeader from '../components/ProfileHeader/ProfileHeader';
 // import QuickActions           from '../components/QuickActions/QuickActions';
 
@@ -74,8 +76,8 @@ export default function StudentDetailPage() {
 		marginBottom: '15px'
 	};
 
-  if (loading) return <Layout><p>{t('loading')}</p></Layout>;
-  if (error)   return <Layout><p className="text-danger">{error}</p></Layout>;
+  if (loading) return <Layout><LoadingComponent /> </Layout>;
+  if (error)   return <Layout><ErrorComponent message={t('error')} body={t(error.message)} /></Layout>;
   if (!student) return <Layout><NoDataComponent message={t("no_data_available")}  body={t("no_data_available_body")}/></Layout>;
 
   return (
@@ -255,7 +257,7 @@ export default function StudentDetailPage() {
 							{/* Balance Recharges */}
 							<BalanceRechargesTable
 								fullList={false}
-								userId={student?.user_id}
+								user_id={student?.user_id}
 								canExport={canExport}
 							/>
 						</>

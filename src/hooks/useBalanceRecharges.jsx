@@ -9,6 +9,7 @@ import { formatDate } from '../utils/formatDate';
 
 export default function useBalanceRecharges({   
   fullList,
+  user_id,
   school_id,
   full_name,
   created_at
@@ -46,6 +47,7 @@ export default function useBalanceRecharges({
     setLoading(true)
     try {
       const { content, totalElements } = await getBalanceRecharges({
+        user_id,
         school_id,
         full_name,
         created_at,

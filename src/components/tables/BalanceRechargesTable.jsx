@@ -10,7 +10,7 @@ import DetailsModal                   from '../modals/DetailsModal'
 
 export default function BalanceRechargesTable({ 
   fullList,
-  studentId, 
+  user_id, 
   canExport,
   canCreate,
   canSeeHeaderActions = true 
@@ -56,6 +56,7 @@ export default function BalanceRechargesTable({
     
   } = useBalanceRecharges({
     fullList: fullList,
+    user_id: user_id,
     school_id: appliedFilters.school_id,
     full_name: appliedFilters.full_name,
     created_at: appliedFilters.created_at
