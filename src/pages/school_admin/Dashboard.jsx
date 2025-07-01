@@ -33,9 +33,9 @@ export default function Dashboard() {
                 borderColor="#008cf5"     // Yellow
                 iconColor="#008cf5"
                 counts={[
-                  { value: 57, label: 'Activos' },
-                  { value: 9, label: 'Egresados' },
-                  { value: 2000, label: 'Licencias' }
+                  { value: "-", label: 'Activos' },
+                  { value: "-", label: 'Egresados' },
+                  { value: "∞", label: 'Licencias' }
                 ]}
               />
             </MDBCol>
@@ -46,7 +46,7 @@ export default function Dashboard() {
               borderColor="#f5b700"     // Yellow
               iconColor="#f5b700"
               counts={[
-                { value: 13, label: 'Próximos' }
+                { value: "-", label: 'Próximos' }
               ]}
             />
             </MDBCol>
@@ -57,8 +57,8 @@ export default function Dashboard() {
               borderColor="#33f500"     // Yellow
               iconColor="#33f500"
               counts={[
-                { value: 57, label: 'Pre-admisión' },
-                { value: 9, label: 'En proceso' }
+                { value: "-", label: 'Pre-admisión' },
+                { value: "-", label: 'En proceso' }
               ]}
             />
             </MDBCol>
