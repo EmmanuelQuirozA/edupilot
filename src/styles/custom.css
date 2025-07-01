@@ -306,3 +306,7 @@ span.logo_name.ms-2 {
 button.accordion-button {
     border-radius: 40px !important;
 }
+
+.modal.top {
+    height: calc(100% - 45.6px);
+}
