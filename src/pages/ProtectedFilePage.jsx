@@ -11,10 +11,12 @@ export default function ProtectedFilePage() {
   const [loading, setLoading] = useState(true);
   const [fileUrl, setFileUrl] = useState(null);
 
-  // Fetch the protected file with auth header
+  const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+
+   // Fetch the protected file with auth header
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:8080/api/protectedfiles/${filename}`, {
+    fetch(`${baseUrl}/api/protectedfiles/${filename}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {

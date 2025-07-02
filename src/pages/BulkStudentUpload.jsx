@@ -18,6 +18,8 @@ export default function BulkStudentUpload() {
   const [validatingRows, setValidatingRows] = useState(new Set());
   const validationTimeouts = useRef({});
   
+  const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+
   const [formData, setFormData] = useState({ school_id: '' });
 
   const handleChange = (key, value) => {
@@ -93,7 +95,7 @@ export default function BulkStudentUpload() {
     // Special case for group_id to resolve it to group_id
     if (field === 'group_id') {
       try {
-        const classResp = await api.get(`http://localhost:8080/api/classes`, {
+        const classResp = await api.get(`${baseUrl}/api/classes`, {
           params: {
             lang: 'en',
             grade_group: value
@@ -139,7 +141,7 @@ export default function BulkStudentUpload() {
 
     // Check DB duplicates
     try {
-      const checkRes = await api.get(`http://localhost:8080/api/students/validate-exist`, {
+      const checkRes = await api.get(`${baseUrl}/api/students/validate-exist`, {
         params: {
           register_id: row.register_id,
           payment_reference: row.payment_reference,
@@ -209,7 +211,7 @@ export default function BulkStudentUpload() {
 
           // Check uniqueness in DB
           try {
-            const checkRes = await api.get(`http://localhost:8080/api/students/validate-exist`, {
+            const checkRes = await api.get(`${baseUrl}/api/students/validate-exist`, {
               params: {
                 register_id: row.register_id,
                 payment_reference: row.payment_reference,
@@ -230,7 +232,7 @@ export default function BulkStudentUpload() {
 
           // Validate group_id and resolve group_id
           try {
-            const classResp = await api.get(`http://localhost:8080/api/classes`, {
+            const classResp = await api.get(`${baseUrl}/api/classes`, {
               params: {
                 lang: 'en',
                 grade_group: row.group_id
@@ -272,7 +274,7 @@ export default function BulkStudentUpload() {
     if (!validRows.length) return swal('Error', t('no_valid_records_to_upload'), 'warning');
 
     try {
-      const res = await api.post('http://localhost:8080/api/students/create?lang=en', validRows);
+      const res = await api.post(`${baseUrl}/api/students/create?lang=en`, validRows);
 
       swal(res.data.title, res.data.message, res.data.type);
       setCsvData([]);

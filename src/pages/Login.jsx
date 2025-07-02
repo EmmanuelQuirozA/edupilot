@@ -27,12 +27,14 @@ const Login = () => {
   const [error, setError] = useState('');         // To display error messages
   const navigate = useNavigate();
 
+  const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const payload = { usernameOrEmail: email,password };
       const response = await axios.post(
-        'http://localhost:8080/api/auth/login',
+        `${baseUrl}/api/auth/login`,
         payload,
         { params: { lang: i18n.language || 'es' } }
       );
