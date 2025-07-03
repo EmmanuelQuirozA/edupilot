@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MDBBtn, MDBCard, MDBCardBody, MDBInput, MDBTable, MDBTableHead, MDBTableBody, MDBCol, MDBRow } from 'mdb-react-ui-kit';
+import { MDBBtn, MDBCard, MDBCardBody, MDBInput, MDBTable, MDBTableHead, MDBTableBody, MDBCol, MDBRow, MDBIcon } from 'mdb-react-ui-kit';
+import { useDropzone }               from 'react-dropzone';
 import Papa from 'papaparse';
 import swal from 'sweetalert';
 import axios from 'axios';
@@ -17,6 +18,8 @@ export default function BulkStudentUpload() {
   const [schools, setSchools] = useState([]);
   const [validatingRows, setValidatingRows] = useState(new Set());
   const validationTimeouts = useRef({});
+
+  const [file, setFile]       = useState(null);
   
   const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
@@ -287,101 +290,207 @@ export default function BulkStudentUpload() {
 
   return (
     <Layout pageTitle={t('bulk_student_upload')}>
-      <MDBCard className="p-4">
-        <MDBCardBody>
-          <MDBRow>
-            <MDBCol size="6" className='pb-2'>
-              <h4>{t('bulk_student_upload')}</h4>
-              <input type="file" accept=".csv" onChange={handleFileUpload} />
-            </MDBCol>
-            <MDBCol size="6">
+      <section className="home-section">
+        <div className="content-wrapper">
+          <MDBRow className="justify-content-center">
+            <MDBCol lg="10" md="10">
+              <MDBCard className="custom-card p-4 shadow-4">
+                <MDBCardBody>
+                  <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h4 className="fw-bold mb-0">{t('bulk_student_upload')}</h4>
+                  </div>
+
+                  {/* 1. School Selector */}
+                  <div className="mb-4">
+                    <label htmlFor="schoolSelect" className="form-label fw-bold">
+                      1. {t('select_school')}
+                    </label>
+                    <select
+                      className="form-select"
+                      id="schoolSelect"
+                      value={formData.school_id}
+                      onChange={(e) => handleChange('school_id', e.target.value)}
+                      required
+                    >
+                      <option value="">{`— ${t('select_option')} —`}</option>
+                      {schools.map((school) => (
+                        <option key={school.school_id} value={school.school_id}>
+                          {school.description}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* 2. Layout download */}
+                  <div className="mb-4">
+                    <label className="form-label fw-bold">2. {t('download_layout')}</label>
+                    <p className="text-muted">
+                      {t('layout_instructions')}
+                    </p>
+                    <MDBBtn color="success" className="w-100" onClick={async () => {
+                      try {
+                        const response = await api.get('/api/bulkfile/students_bulk_upload.csv', {
+                          responseType: 'blob' // Important to handle binary data
+                        });
+
+                        // Create a link to trigger the download
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', 'students_bulk_upload.csv'); // Set default filename
+                        document.body.appendChild(link);
+                        link.click();
+
+                        // Clean up
+                        link.remove();
+                        window.URL.revokeObjectURL(url);
+                      } catch (error) {
+                        console.error('Error downloading layout:', error);
+                        swal('Error', 'Could not download the layout file', 'error');
+                      }
+                    }}>
+                      <MDBIcon fas icon="file-archive" className="me-2" />
+                      {t('download_layout')}
+                    </MDBBtn>
+                  </div>
+
+                  {/* 3. File upload */}
+                  <div className="mb-4">
+                    <label htmlFor="fileUploadInput" className="form-label fw-bold">
+                      3. {t('upload_file')}
+                    </label>
+                    <div
+                      className={`border-2 border-secondary rounded drop-zone-box text-center p-4 bg-light drop-zone`}
+                      style={{borderStyle:'dashed'}}
+                      role="button"
+                      onClick={() => document.getElementById('fileUploadInput').click()}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        const files = e.dataTransfer.files;
+                        if (files.length > 0) handleFileUpload({ target: { files } });
+                      }}
+                    >
+                      <div className="text-primary drop-zone-icon mb-2">
+                        <MDBIcon fas icon="cloud-upload-alt" size="2x" />
+                      </div>
+                      <span>{t('drag_or_click')}</span>
+                      <p/>
+                      <small className='text-muted'>{t('supported_files')}: .csv</small>
+                      <input
+                        type="file"
+                        id="fileUploadInput"
+                        className="d-none"
+                        accept=".csv"
+                        onChange={handleFileUpload}
+                      />
+                    </div>
+                  </div>
+
+                  {/* 4. Preview table */}
+                  {csvData.length > 0 && (
+                    <>
+                      <div className="mb-3" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                          <MDBTable responsive className="w-100" style={{ tableLayout: 'fixed' }}>
+                            <colgroup>
+                              <col style={{ width: '40px', minWidth: '40px' }} /> {/* Columna # */}
+                              {displayHeaders.map((h, idx) => (
+                                <col
+                                  key={idx}
+                                  style={{
+                                    width:
+                                      h === 'email' || h === 'personal_email' || h === 'username'
+                                        ? '180px'
+                                        : h === 'first_name' || h === 'last_name_father' || h === 'last_name_mother'
+                                        ? '120px'
+                                        : h === 'group_id'
+                                        ? '140px'
+                                        : '100px',
+                                    minWidth:'200px'
+                                  }}
+                                />
+                              ))}
+                            </colgroup>
+
+                            <MDBTableHead>
+                              <tr>
+                                <th>#</th>
+                                {displayHeaders.map((h) => (
+                                  <th key={h}>{h}</th>
+                                ))}
+                              </tr>
+                            </MDBTableHead>
+
+                            <MDBTableBody>
+                              {csvData.map((row, i) => (
+                                <tr key={i} className={errors.find((e) => e.rowIndex === i) ? 'table-danger' : ''}>
+                                  <td>{i + 1}</td>
+                                  {displayHeaders.map((h) => (
+                                    <td key={h}>
+                                      {h === 'group_id' ? (
+                                        <select
+                                          className="form-select"
+                                          value={row[h] || ''}
+                                          onChange={(e) => handleFieldChange(i, h, e.target.value)}
+                                        >
+                                          <option value="">{t('select_class')}</option>
+                                          {classes.map((cls) => (
+                                            <option key={cls.group_id} value={cls.group_id}>
+                                              {cls.grade_group} ({cls.scholar_level_name})
+                                            </option>
+                                          ))}
+                                        </select>
+                                      ) : (
+                                        <input
+                                          className="form-control"
+                                          value={row[h] || ''}
+                                          onChange={(e) => handleFieldChange(i, h, e.target.value)}
+                                        />
+                                      )}
+                                    </td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </MDBTableBody>
+                          </MDBTable>
+                        </div>
+
+                      {/* 5. Error messages */}
+                      {(errors.length > 0 || validatingRows.size > 0) && (
+                        <div className="mb-3">
+                          <strong>{t('errors')}:</strong>
+                          <ul>
+                            {Array.from(validatingRows).map((idx) => (
+                              <li key={`loading-${idx}`} className="text-warning">
+                                {t('row')} {idx + 1}:{' '}
+                                <span className="spinner-border spinner-border-sm me-2" role="status" />{' '}
+                                {t('validating')}...
+                              </li>
+                            ))}
+                            {errors.map((err) => (
+                              <li key={err.rowIndex} className="text-danger">
+                                {t('row')} {err.rowIndex + 1}: {err.messages.map((m) => t(m)).join('; ')}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* 6. Upload Button */}
+                      <MDBCol className='d-flex justify-content-end'>
+                        <MDBBtn color="primary" className="btn-lg" onClick={handleUpload}>
+                          {t('upload_valid_records')}
+                        </MDBBtn>
+                      </MDBCol>
+                      
+                    </>
+                  )}
+                </MDBCardBody>
+              </MDBCard>
             </MDBCol>
           </MDBRow>
-          <MDBCol size="6">
-            <label htmlFor="schoolSelect">
-              {t('school')}
-            </label>
-            <select
-              id="schoolSelect"
-              className="form-select"
-              value={formData.school_id}
-              onChange={e =>
-                handleChange('school_id', e.target.value)
-              }
-              // disabled={isSaving}
-              required
-            >
-              {schools.map(school => (
-                <option key={school.id} value={school.school_id}>
-                  {school.description}
-                </option>
-              ))}
-            </select>
-          </MDBCol>
-          {csvData.length > 0 && (
-            <>
-              <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-                <MDBTable responsive  className="mt-4 h-50" >
-                  <MDBTableHead>
-                    <tr>
-                      {displayHeaders.map(h => <th key={h}>{h}</th>)}
-                    </tr>
-                  </MDBTableHead>
-                  <MDBTableBody>
-                    {csvData.map((row, i) => (
-                      <tr key={i} className={errors.find(e => e.rowIndex === i) ? 'table-danger' : ''}>
-                        {displayHeaders.map(h => (
-                          <td key={h}>
-                            {h === 'group_id' ? (
-                              <select
-                                value={row[h] || ''}
-                                onChange={(e) => handleFieldChange(i, h, e.target.value)}
-                              >
-                                <option value="">Seleccione una clase</option>
-                                
-                                {classes.map(cls => (
-                                  <option key={cls.group_id} value={cls.group_id}>
-                                    {cls.grade_group} ({cls.scholar_level_name})
-                                  </option>
-                                ))}
-                              </select>
-                            ) : (
-                              <input
-                                value={row[h] || ''}
-                                onChange={(e) => handleFieldChange(i, h, e.target.value)}
-                                style={{ border: 'none', background: 'transparent', width: '100%' }}
-                              />
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </MDBTableBody>
-                </MDBTable>
-              </div>
-              {(errors.length > 0 || validatingRows.size > 0) && (
-                <div className="mb-3">
-                  <strong>Errores:</strong>
-                  <ul>
-                    {Array.from(validatingRows).map(idx => (
-                      <li key={`loading-${idx}`} className="text-warning">
-                        {t('row')} {idx + 1}: <span className="spinner-border spinner-border-sm me-2" role="status" /> Validando...
-                      </li>
-                    ))}
-                    {errors.map(err => (
-                      <li key={err.rowIndex} className="text-danger">
-                        {t('row')} {err.rowIndex + 1}: {err.messages.map(m => t(m)).join('; ')}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <MDBBtn color="success" onClick={handleUpload}>Subir registros válidos</MDBBtn>
-            </>
-          )}
-        </MDBCardBody>
-      </MDBCard>
+        </div>
+      </section>
     </Layout>
   );
 }

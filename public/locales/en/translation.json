@@ -344,6 +344,7 @@
 	"please_fill_image": "Please, upload an image",
 	"only_jpg_allowed": "Only JPG images are allowed",
   "error": "Error",
+  "errors": "Errors",
   "image_uploaded": "Image uploaded successfully",
   "image_removed": "Image removed successfully",
   "failed_to_upload_image": "Failed to upload image",
@@ -371,5 +372,11 @@
 	"no_valid_records_to_upload": "No valid records to upload",
 	"bulk_student_upload": "Bulk Student Upload",
 	"row": "Row",
-	"bulk_upload": "Bulk upload"
+	"bulk_upload": "Bulk upload",
+	"select_school": "Select a school",
+	"download_layout": "Download the layout",
+	"layout_instructions": "Make sure your file (CSV) honor the right columns format to avoid errors on the upload.",
+	"upload_file": "Upload the file",
+	"drag_or_click": "Drag and drop a file here or click to select",
+	"supported_files": "Supported files"
 }

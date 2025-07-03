@@ -344,6 +344,7 @@
 	"please_fill_image": "Por favor, adjunte una imagen",
 	"only_jpg_allowed": "Solo imagenes JPG",
   "error": "Error",
+  "errors": "Errores",
   "image_uploaded": "Imagen guardada correctamente",
   "image_removed": "Imagen eliminada correctamente",
   "failed_to_upload_image": "Error al guardar la imagen",
@@ -371,5 +372,11 @@
 	"no_valid_records_to_upload": "No hay registros válidos para cargar",
 	"bulk_student_upload": "Carga masiva de estudiantes",
 	"row": "Fila",
-	"bulk_upload": "Carga masiva"
+	"bulk_upload": "Carga masiva",
+	"select_school": "Selecciona una escuela",
+	"download_layout": "Descarga el layout",
+	"layout_instructions": "Asegúrate de que tu archivo (CSV) siga el formato correcto para evitar errores en la carga.",
+	"upload_file": "Sube el archivo",
+	"drag_or_click": "Arrastra y suelta el archivo aquí o haz clic para seleccionarlo",
+	"supported_files": "Archivos soportados"
 }
