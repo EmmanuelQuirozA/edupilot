@@ -272,7 +272,7 @@ export default function BulkPaymentUpload() {
                         const url = window.URL.createObjectURL(new Blob([response.data]));
                         const link = document.createElement('a');
                         link.href = url;
-                        link.setAttribute('download', 'students_bulk_upload.csv'); // Set default filename
+                        link.setAttribute('download', 'payments_bulk_upload.csv'); // Set default filename
                         document.body.appendChild(link);
                         link.click();
 
