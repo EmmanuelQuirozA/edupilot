@@ -264,7 +264,7 @@ export default function BulkPaymentUpload() {
                     </p>
                     <MDBBtn color="success" className="w-100" onClick={async () => {
                       try {
-                        const response = await api.get('/api/bulkfile/students_bulk_upload.csv', {
+                        const response = await api.get('/api/bulkfile/payments_bulk_upload.csv', {
                           responseType: 'blob' // Important to handle binary data
                         });
 
