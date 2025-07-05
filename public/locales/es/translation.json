@@ -370,7 +370,8 @@
 	"error_validating_class": "Error validando el grupo",
 	"could_not_parse_csv": "No se pudo analizar el CSV",
 	"no_valid_records_to_upload": "No hay registros válidos para cargar",
-	"bulk_student_upload": "Carga masiva de estudiantes",
+	"bulk_student_upload": "Carga Masiva de Estudiantes",
+	"bulk_payment_upload": "Carga Masiva de Pagos",
 	"row": "Fila",
 	"bulk_upload": "Carga masiva",
 	"select_school": "Selecciona una escuela",
@@ -378,5 +379,8 @@
 	"layout_instructions": "Asegúrate de que tu archivo (CSV) siga el formato correcto para evitar errores en la carga.",
 	"upload_file": "Sube el archivo",
 	"drag_or_click": "Arrastra y suelta el archivo aquí o haz clic para seleccionarlo",
-	"supported_files": "Archivos soportados"
+	"supported_files": "Archivos soportados",
+	"upload_valid_records": "Cargar registros válidos",
+  "student_not_found_for_register_id": "No se encontró estiantes con el número de matrícula proporcionado",
+  "error_fetching_student_info": "Error obteniendo la información de estudiantes"
 }

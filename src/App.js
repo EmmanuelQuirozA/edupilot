@@ -34,6 +34,7 @@ import ClassesRouter  from './routes/ClassesRouter'
 import StudentDetailsRouter  from './routes/StudentDetailsRouter'
 import PaymentRequestDetailsRouter  from './routes/PaymentRequestDetailsRouter'
 import BulkStudentUploadRouter  from './routes/BulkStudentUploadRouter'
+import BulkPaymentUploadRouter  from './routes/BulkPaymentUploadRouter'
 // import SettingsRouter  from './routes/SettingsRouter'
 
 // import PrintDemo from './components/PrintDemo';
@@ -127,7 +128,8 @@ function AppRoutes() {
         <Route path="/users/*" element={<UsersRouter />} />
         <Route path="/teachers/*" element={<TeachersRouter />} />
         <Route path="/students/*" element={<StudentsRouter />} />
-        <Route path="/students/bulkstudentsupload" element={<BulkStudentUploadRouter />} />
+        <Route path="/students/bulkupload" element={<BulkStudentUploadRouter />} />
+        <Route path="/payments/bulkupload" element={<BulkPaymentUploadRouter />} />
       </Route>
       
       {/* Fallbacks */}

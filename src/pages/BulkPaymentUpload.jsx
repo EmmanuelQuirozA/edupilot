@@ -1,33 +1,34 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MDBBtn, MDBCard, MDBCardBody,  MDBTable, MDBTableHead, MDBTableBody, MDBCol, MDBRow, MDBIcon } from 'mdb-react-ui-kit';
+import { MDBBtn, MDBCard, MDBCardBody, MDBInput, MDBTable, MDBTableHead, MDBTableBody, MDBCol, MDBRow, MDBIcon } from 'mdb-react-ui-kit';
+import { useDropzone }               from 'react-dropzone';
 import Papa from 'papaparse';
 import swal from 'sweetalert';
+import axios from 'axios';
 import Layout from '../layout/Layout';
 import { getClassesCatalog } from '../api/classesApi';
 import { getSchools } from '../api/schoolsApi';
 import { useTranslation } from 'react-i18next';
 import api from '../api/api';
 
-export default function BulkStudentUpload() {
+export default function BulkPaymentUpload() {
   const { t,i18n } = useTranslation();
   const [csvData, setCsvData] = useState([]);
   const [errors, setErrors] = useState([]);
   const [classes, setClasses] = useState([]);
+  
   const [schools, setSchools] = useState([]);
+  const [paymentConcepts, setPaymentConcepts] = useState([]);
+  const [paymentMethods, setPaymentMethods] = useState([]);
+  
   const [validatingRows, setValidatingRows] = useState(new Set());
   const validationTimeouts = useRef({});
 
+  const [file, setFile]       = useState(null);
+  
   const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
   const [formData, setFormData] = useState({ school_id: '' });
 
-  const handleChange = (key, value) => {
-    setFormData(fd => ({ ...fd, [key]: value }));
-
-    if (key === 'school_id') {
-      setCsvData(data => data.map(row => ({ ...row, school_id: value })));
-    }
-  };
 
   useEffect(() => {
     getClassesCatalog(i18n.language)
@@ -48,6 +49,14 @@ export default function BulkStudentUpload() {
         }
       })
       .catch(err => console.error('Error loading schools:', err));
+    
+    api.get('/api/catalog/payment-concepts', { params: { lang: i18n.language } })
+      .then(res => setPaymentConcepts(res.data))
+      .catch(err => console.error('Error loading payment concepts', err));
+
+    api.get('/api/catalog/payment-through', { params: { lang: i18n.language } })
+      .then(res => setPaymentMethods(res.data))
+      .catch(err => console.error('Error loading payment methods', err));
 
   }, [i18n.language]);
 
@@ -59,7 +68,6 @@ export default function BulkStudentUpload() {
 
     // Set a new timeout for validation
     validationTimeouts.current[index] = setTimeout(async () => {
-      await validateRow(row, index);
       setValidatingRows(prev => {
         const updated = new Set(prev);
         updated.delete(index);
@@ -69,110 +77,88 @@ export default function BulkStudentUpload() {
   };
 
   const requiredHeaders = [
-    'first_name', 'last_name_father', 'last_name_mother', 'email', 'username', 'password', 'register_id', 'payment_reference', 'group_id'
+    'register_id', 'payment_month', 'amount',
+    'payment_through_id', 'payment_concept_id'
   ];
   const displayHeaders = [
-    'first_name', 'last_name_father', 'last_name_mother', 'birth_date', 'phone_number', 'tax_id', 'curp',
-    'street', 'ext_number', 'int_number', 'suburb', 'locality', 'municipality', 'state',
-    'personal_email', 'email', 'username', 'password', 'register_id', 'payment_reference', 'group_id', 'balance'
+  'register_id', 'full_name', 'student_id', // student_id hidden, full_name read-only
+  'payment_month', 'amount', 'comments',
+  'payment_through_id', 'payment_concept_id'
   ];
 
   const handleFieldChange = async (index, field, value) => {
+    // 1. Update value immediately
     setCsvData(data => {
       const updated = [...data];
       updated[index] = { ...updated[index], [field]: value };
       return updated;
     });
 
-    // Debounce validation
-    debouncedValidateRow(
-      { ...csvData[index], [field]: value },
-      index
-    );
+    // 2. Debounce or trigger validation (if needed)
+    debouncedValidateRow({ ...csvData[index], [field]: value }, index);
 
-    // Special case for group_id to resolve it to group_id
-    if (field === 'group_id') {
+    // 3. Handle register_id updates
+    if (field === 'register_id') {
       try {
-        const classResp = await api.get(`${baseUrl}/api/classes`, {
+        const resp = await api.get(`${baseUrl}/api/students`, {
           params: {
-            lang: 'en',
-            grade_group: value
+            lang: i18n.language,
+            offset: 0,
+            limit: 10,
+            export_all: false,
+            register_id: value
           }
         });
-        const group = classResp.data.content?.[0];
-        if (group) {
-          setCsvData(prevData => {
-            const updated = [...prevData];
-            updated[index]['group_id'] = group.group_id;
-            return updated;
-          });
-        } else {
-          setErrors(prev => [...prev, {
-            rowIndex: index,
-            messages: ['invalid_class']
-          }]);
-        }
-      } catch (err) {
-        setErrors(prev => [...prev, {
-          rowIndex: index,
-          messages: ['error_validating_class']
-        }]);
+
+        const student = resp.data?.content?.[0];
+
+        setCsvData(prev => {
+          const updated = [...prev];
+          updated[index] = {
+            ...updated[index],
+            register_id: value,
+            full_name: student?.full_name || '',
+            student_id: student?.student_id || ''
+          };
+          return updated;
+        });
+
+        // Update errors
+        setErrors(prevErrors => {
+          const filtered = prevErrors.filter(e => e.rowIndex !== index);
+          if (!student) {
+            return [
+              ...filtered,
+              { rowIndex: index, messages: ['student_not_found_for_register_id'] }
+            ];
+          }
+          return filtered;
+        });
+
+      } catch (error) {
+        console.error('Error fetching student info:', error);
+
+        setCsvData(prev => {
+          const updated = [...prev];
+          updated[index] = {
+            ...updated[index],
+            full_name: '',
+            student_id: ''
+          };
+          return updated;
+        });
+
+        setErrors(prevErrors => {
+          const filtered = prevErrors.filter(e => e.rowIndex !== index);
+          return [
+            ...filtered,
+            { rowIndex: index, messages: ['error_fetching_student_info'] }
+          ];
+        });
       }
     }
   };
 
-  const validateRow = async (row, index) => {
-    const rowErrors = [];
-
-    // Required fields
-    for (const field of requiredHeaders) {
-      if (!row[field]) rowErrors.push(`${field} is required`);
-    }
-
-    // Check duplicates in CSV
-    const regIdCount = csvData.filter((r, i) => r.register_id === row.register_id && i !== index).length;
-    const payRefCount = csvData.filter((r, i) => r.payment_reference === row.payment_reference && i !== index).length;
-    const payUnamCount = csvData.filter((r, i) => r.username === row.username && i !== index).length;
-    if (regIdCount > 0) rowErrors.push('duplicate_registration_id_in_file');
-    if (payRefCount > 0) rowErrors.push('duplicate_payment_reference_in_file');
-    if (payUnamCount > 0) rowErrors.push('duplicate_username_in_file');
-
-    // Check DB duplicates
-    try {
-      const checkRes = await api.get(`${baseUrl}/api/students/validate-exist`, {
-        params: {
-          register_id: row.register_id,
-          payment_reference: row.payment_reference,
-          username: row.username
-        }
-      });
-
-      if (typeof checkRes.data === 'object') {
-        if (checkRes.data[0].register_id === 1) rowErrors.push('registration_id_already_exists_in_DB');
-        if (checkRes.data[0].payment_reference === 1) rowErrors.push('payment_reference_already_exists_in_DB');
-        if (checkRes.data[0].username === 1) rowErrors.push('username_already_exists_in_DB');
-      } else {
-        rowErrors.push('unexpected_validation_response');
-      }
-    } catch {
-      rowErrors.push('error_checking_database');
-    }
-
-    // Validate group_id (must match a known group_id)
-    const classObj = classes.find(c => c.group_id === Number(row.group_id));
-    if (!classObj) {
-      rowErrors.push('invalid_class');
-    }
-
-    // Update the errors state
-    setErrors(prev => {
-      const newErrors = prev.filter(err => err.rowIndex !== index);
-      if (rowErrors.length) {
-        newErrors.push({ rowIndex: index, messages: rowErrors });
-      }
-      return newErrors;
-    });
-  };
 
 
   const handleFileUpload = async (e) => {
@@ -184,76 +170,47 @@ export default function BulkStudentUpload() {
       skipEmptyLines: true,
       complete: async (results) => {
         const parsed = results.data;
-        const seenRegIds = new Set();
-        const seenPayRefs = new Set();
-        const seenUsername = new Set();
         const newErrors = [];
 
-        const validatedData = await Promise.all(parsed.map(async (row, i) => {
+        const enrichedData = await Promise.all(parsed.map(async (row, i) => {
+          const enrichedRow = { ...row };
           const rowErrors = [];
 
-          // Check all required fields
-          for (const field of requiredHeaders) {
-            if (!row[field]) {
-              rowErrors.push(`${field} is required`);
-            }
-          }
-
-          // Check uniqueness within CSV
-          if (seenRegIds.has(row.register_id)) rowErrors.push('duplicate_registration_id_in_file');
-          if (seenPayRefs.has(row.payment_reference)) rowErrors.push('duplicate_payment_reference_in_file');
-          if (seenUsername.has(row.username)) rowErrors.push('duplicate_username_in_file');
-          seenRegIds.add(row.register_id);
-          seenPayRefs.add(row.payment_reference);
-          seenUsername.add(row.username);
-
-          // Check uniqueness in DB
-          try {
-            const checkRes = await api.get(`${baseUrl}/api/students/validate-exist`, {
-              params: {
-                register_id: row.register_id,
-                payment_reference: row.payment_reference,
-                username: row.username
+          // Fetch full_name and student_id based on register_id
+          if (row.register_id) {
+            try {
+              const res = await api.get(`${baseUrl}/api/students`, {
+                params: {
+                  lang: i18n.language,
+                  offset: 0,
+                  limit: 10,
+                  export_all: false,
+                  register_id: row.register_id
+                }
+              });
+              const student = res.data?.content?.[0];
+              if (student) {
+                enrichedRow.full_name = student.full_name;
+                enrichedRow.student_id = student.student_id;
+              } else {
+                enrichedRow.full_name = '';
+                enrichedRow.student_id = '';
+                rowErrors.push('student_not_found_for_register_id');
               }
-            });
-
-            if (typeof checkRes.data === 'object') {
-              if (checkRes.data[0].register_id === 1) rowErrors.push('registration_id_already_exists_in_DB');
-              if (checkRes.data[0].payment_reference === 1) rowErrors.push('payment_reference_already_exists_in_DB');
-              if (checkRes.data[0].username === 1) rowErrors.push('username_already_exists_in_DB');
-            } else {
-              rowErrors.push('unexpected_validation_response');
+            } catch (err) {
+              console.error(`Error fetching student for register_id ${row.register_id}`, err);
+              rowErrors.push('error_fetching_student_info');
             }
-          } catch (err) {
-            rowErrors.push('error_checking_database');
           }
 
-          // Validate group_id and resolve group_id
-          try {
-            const classResp = await api.get(`${baseUrl}/api/classes`, {
-              params: {
-                lang: 'en',
-                grade_group: row.group_id
-              }
-            });
-            // const group = classResp.data.content?.[0];
-            const group = classes.find(cls => cls.grade_group === row.group_id);
-            if (group) {
-              row.group_id = group.group_id;
-            } else {
-              rowErrors.push('invalid_class');
-            }
-          } catch (err) {
-            rowErrors.push('error_validating_class');
-          }
-
-          if (rowErrors.length) {
+          if (rowErrors.length > 0) {
             newErrors.push({ rowIndex: i, messages: rowErrors });
           }
-          return row;
+
+          return enrichedRow;
         }));
 
-        setCsvData(validatedData);
+        setCsvData(enrichedData);
         setErrors(newErrors);
       },
       error: (err) => {
@@ -264,27 +221,31 @@ export default function BulkStudentUpload() {
 
   const handleUpload = async () => {
     const validRows = csvData.filter((_, i) => !errors.find(err => err.rowIndex === i))
-    .map(row => ({
-      ...row,
-      school_id: formData.school_id || '',  // inject school_id from formData
-    }));
+      .map(row => ({
+        student_id: row.student_id,
+        payment_month: row.payment_month,
+        amount: parseFloat(row.amount),
+        comments: row.comments,
+        payment_through_id: parseInt(row.payment_through_id),
+        payment_concept_id: parseInt(row.payment_concept_id),
+      }));
 
     if (!validRows.length) return swal('Error', t('no_valid_records_to_upload'), 'warning');
 
     try {
-      const res = await api.post(`${baseUrl}/api/students/create?lang=en`, validRows);
-
+      const res = await api.post(`${baseUrl}/api/payments/create/bulk?lang=${i18n.language}`, validRows);
       swal(res.data.title, res.data.message, res.data.type);
       setCsvData([]);
       setErrors([]);
     } catch (err) {
       console.error(err);
-      swal('Error', 'upload_failed', 'error');
+      swal('Error', t('upload_failed'), 'error');
     }
   };
 
+
   return (
-    <Layout pageTitle={t('bulk_student_upload')}>
+    <Layout pageTitle={t('bulk_payment_upload')}>
       <section className="home-section">
         <div className="content-wrapper">
           <MDBRow className="justify-content-center">
@@ -292,33 +253,12 @@ export default function BulkStudentUpload() {
               <MDBCard className="custom-card p-4 shadow-4">
                 <MDBCardBody>
                   <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h4 className="fw-bold mb-0">{t('bulk_student_upload')}</h4>
+                    <h4 className="fw-bold mb-0">{t('bulk_payment_upload')}</h4>
                   </div>
 
-                  {/* 1. School Selector */}
+                  {/* 1. Layout download */}
                   <div className="mb-4">
-                    <label htmlFor="schoolSelect" className="form-label fw-bold">
-                      1. {t('select_school')}
-                    </label>
-                    <select
-                      className="form-select"
-                      id="schoolSelect"
-                      value={formData.school_id}
-                      onChange={(e) => handleChange('school_id', e.target.value)}
-                      required
-                    >
-                      <option value="">{`— ${t('select_option')} —`}</option>
-                      {schools.map((school) => (
-                        <option key={school.school_id} value={school.school_id}>
-                          {school.description}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* 2. Layout download */}
-                  <div className="mb-4">
-                    <label className="form-label fw-bold">2. {t('download_layout')}</label>
+                    <label className="form-label fw-bold">1. {t('download_layout')}</label>
                     <p className="text-muted">
                       {t('layout_instructions')}
                     </p>
@@ -349,10 +289,10 @@ export default function BulkStudentUpload() {
                     </MDBBtn>
                   </div>
 
-                  {/* 3. File upload */}
+                  {/* 2. File upload */}
                   <div className="mb-4">
                     <label htmlFor="fileUploadInput" className="form-label fw-bold">
-                      3. {t('upload_file')}
+                      2. {t('upload_file')}
                     </label>
                     <div
                       className={`border-2 border-secondary rounded drop-zone-box text-center p-4 bg-light drop-zone`}
@@ -401,8 +341,9 @@ export default function BulkStudentUpload() {
                                         : h === 'group_id'
                                         ? '140px'
                                         : '100px',
-                                    minWidth:'200px'
+                                    minWidth: '200px',
                                   }}
+                                  className={h === 'student_id' ? 'd-none' : ''}
                                 />
                               ))}
                             </colgroup>
@@ -411,7 +352,9 @@ export default function BulkStudentUpload() {
                               <tr>
                                 <th>#</th>
                                 {displayHeaders.map((h) => (
-                                  <th key={h}>{h}</th>
+                                  <th key={h} className={h === 'student_id' ? 'd-none' : ''}>
+                                    {h}
+                                  </th>
                                 ))}
                               </tr>
                             </MDBTableHead>
@@ -421,24 +364,37 @@ export default function BulkStudentUpload() {
                                 <tr key={i} className={errors.find((e) => e.rowIndex === i) ? 'table-danger' : ''}>
                                   <td>{i + 1}</td>
                                   {displayHeaders.map((h) => (
-                                    <td key={h}>
-                                      {h === 'group_id' ? (
+                                    <td key={h} className={h === 'student_id' ? 'd-none' : ''}>
+                                      {h === 'student_id' ? (
+                                        <input type="hidden" value={row[h] || ''} />
+                                      ) : h === 'full_name' ? (
+                                        <input className="form-control" value={row[h] || ''} disabled />
+                                      ) : h === 'payment_concept_id' ? (
                                         <select
                                           className="form-select"
                                           value={row[h] || ''}
                                           onChange={(e) => handleFieldChange(i, h, e.target.value)}
                                         >
-                                          <option value="">{t('select_class')}</option>
-                                          {classes.map((cls) => (
-                                            <option key={cls.group_id} value={cls.group_id}>
-                                              {cls.grade_group} ({cls.scholar_level_name})
-                                            </option>
+                                          <option value="">{t('select')}</option>
+                                          {paymentConcepts.map(pc => (
+                                            <option key={pc.id} value={pc.id}>{pc.name}</option>
                                           ))}
                                         </select>
-                                      ) : h === 'birth_date' ? (
+                                      ) : h === 'payment_through_id' ? (
+                                        <select
+                                          className="form-select"
+                                          value={row[h] || ''}
+                                          onChange={(e) => handleFieldChange(i, h, e.target.value)}
+                                        >
+                                          <option value="">{t('select')}</option>
+                                          {paymentMethods.map(pm => (
+                                            <option key={pm.id} value={pm.id}>{pm.name}</option>
+                                          ))}
+                                        </select>
+                                      ) : h === 'payment_month' ? (
                                         <input
                                           className="form-control"
-                                          type="date"
+                                          type="month"
                                           value={row[h] || ''}
                                           onChange={(e) => handleFieldChange(i, h, e.target.value)}
                                         />
@@ -451,6 +407,7 @@ export default function BulkStudentUpload() {
                                       )}
                                     </td>
                                   ))}
+
                                 </tr>
                               ))}
                             </MDBTableBody>

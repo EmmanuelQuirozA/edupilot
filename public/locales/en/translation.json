@@ -371,6 +371,7 @@
 	"could_not_parse_csv": "Could not parse CSV",
 	"no_valid_records_to_upload": "No valid records to upload",
 	"bulk_student_upload": "Bulk Student Upload",
+	"bulk_payment_upload": "Bulk Payment Upload",
 	"row": "Row",
 	"bulk_upload": "Bulk upload",
 	"select_school": "Select a school",
@@ -378,5 +379,8 @@
 	"layout_instructions": "Make sure your file (CSV) honor the right columns format to avoid errors on the upload.",
 	"upload_file": "Upload the file",
 	"drag_or_click": "Drag and drop a file here or click to select",
-	"supported_files": "Supported files"
+	"supported_files": "Supported files",
+	"upload_valid_records": "Upload valid records",
+  "student_not_found_for_register_id": "No student found for the given registration ID",
+  "error_fetching_student_info": "Error fetching student information"
 }

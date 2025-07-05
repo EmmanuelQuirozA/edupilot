@@ -8,6 +8,7 @@ import FiltersSidebar            from '../common/FiltersSidebar'
 import DetailsModal                   from '../modals/DetailsModal'
 import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit'
 import { pick } from 'lodash'
+import { Link } from 'react-router-dom'
 
 export default function PaymentsTable({ 
   studentId, 
@@ -145,6 +146,19 @@ export default function PaymentsTable({
     const headerCreateRecord = (
       <>
         {canCreate && (
+          <>
+          <Link
+            to={'/payments/bulkupload'}
+            style={{ textDecoration: 'none' }}
+          >
+            <MDBBtn
+              color="light"
+              rippleColor="dark"
+            >
+              <MDBIcon fas icon="add" className="me-1" />
+              {t('bulk_upload')}
+            </MDBBtn>
+          </Link>
           <MDBBtn
             color="light"
             rippleColor="dark"
@@ -153,6 +167,7 @@ export default function PaymentsTable({
             <MDBIcon fas icon="add" className="me-1" />
             {t('add')}
           </MDBBtn>
+          </>
         )}
       </>
     )

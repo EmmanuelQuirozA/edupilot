@@ -145,7 +145,7 @@ export default function UsersTable({
       {canCreate && (
         <>
           <Link
-            to={'/students/bulkstudentsupload'}
+            to={'/students/bulkupload'}
             style={{ textDecoration: 'none' }}
           >
           <MDBBtn
