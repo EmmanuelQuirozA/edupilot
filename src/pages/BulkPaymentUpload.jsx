@@ -9,12 +9,14 @@ import { getClassesCatalog } from '../api/classesApi';
 import { getSchools } from '../api/schoolsApi';
 import { useTranslation } from 'react-i18next';
 import api from '../api/api';
+import LoadingComponent from '../components/common/LoadingComponent'
 
 export default function BulkPaymentUpload() {
   const { t,i18n } = useTranslation();
   const [csvData, setCsvData] = useState([]);
   const [errors, setErrors] = useState([]);
   const [classes, setClasses] = useState([]);
+  const [loading, setLoading] = useState(false);
   
   const [schools, setSchools] = useState([]);
   const [paymentConcepts, setPaymentConcepts] = useState([]);
@@ -162,6 +164,7 @@ export default function BulkPaymentUpload() {
 
 
   const handleFileUpload = async (e) => {
+    setLoading(true);
     const file = e.target.files[0];
     if (!file) return;
 
@@ -210,10 +213,12 @@ export default function BulkPaymentUpload() {
           return enrichedRow;
         }));
 
+        setLoading(false);
         setCsvData(enrichedData);
         setErrors(newErrors);
       },
       error: (err) => {
+        setLoading(false);
         swal('Error', t('could_not_parse_csv'), 'error');
       }
     });
@@ -295,9 +300,9 @@ export default function BulkPaymentUpload() {
                       2. {t('upload_file')}
                     </label>
                     <div
-                      className={`border-2 border-secondary rounded drop-zone-box text-center p-4 bg-light drop-zone`}
+                      className={loading ? 'border-2 border-secondary rounded drop-zone-box text-center p-4 bg-light drop-zone user-select-none':'border-2 border-secondary rounded drop-zone-box text-center p-4 bg-light drop-zone' }
                       style={{borderStyle:'dashed'}}
-                      role="button"
+                      role={loading ? '':'button'}
                       onClick={() => document.getElementById('fileUploadInput').click()}
                       onDragOver={(e) => e.preventDefault()}
                       onDrop={(e) => {
@@ -306,13 +311,14 @@ export default function BulkPaymentUpload() {
                         if (files.length > 0) handleFileUpload({ target: { files } });
                       }}
                     >
-                      <div className="text-primary drop-zone-icon mb-2">
+                      <div className={loading ? 'text-secondary drop-zone-icon mb-2':'text-primary drop-zone-icon mb-2'}>
                         <MDBIcon fas icon="cloud-upload-alt" size="2x" />
                       </div>
                       <span>{t('drag_or_click')}</span>
                       <p/>
                       <small className='text-muted'>{t('supported_files')}: .csv</small>
                       <input
+                        disabled={loading}
                         type="file"
                         id="fileUploadInput"
                         className="d-none"
@@ -321,6 +327,10 @@ export default function BulkPaymentUpload() {
                       />
                     </div>
                   </div>
+
+                  {loading && (
+                    <LoadingComponent />
+                  )}
 
                   {/* 4. Preview table */}
                   {csvData.length > 0 && (
