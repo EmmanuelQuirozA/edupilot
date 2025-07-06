@@ -70,6 +70,7 @@ export default function BulkPaymentUpload() {
 
     // Set a new timeout for validation
     validationTimeouts.current[index] = setTimeout(async () => {
+      await validateRow(row, index);
       setValidatingRows(prev => {
         const updated = new Set(prev);
         updated.delete(index);
@@ -79,7 +80,7 @@ export default function BulkPaymentUpload() {
   };
 
   const requiredHeaders = [
-    'register_id', 'payment_month', 'amount',
+    'register_id', 'amount',
     'payment_through_id', 'payment_concept_id'
   ];
   const displayHeaders = [
@@ -161,7 +162,32 @@ export default function BulkPaymentUpload() {
     }
   };
 
+  const validateRow = async (row, index) => {
+    const rowErrors = [];
 
+    Object.keys(row).forEach(k => {
+      if (typeof row[k] === 'string') {
+        row[k] = row[k].trim();
+        if (row[k] === '') row[k] = null;
+      }
+    });
+
+    // Required fields
+    for (const field of requiredHeaders) {
+      if (row[field] === undefined || row[field] === null || String(row[field]).trim() === '') {
+        rowErrors.push(`${field} is required`);
+      }
+    }
+
+    // Update the errors state
+    setErrors(prev => {
+      const newErrors = prev.filter(err => err.rowIndex !== index);
+      if (rowErrors.length) {
+        newErrors.push({ rowIndex: index, messages: rowErrors });
+      }
+      return newErrors;
+    });
+  };
 
   const handleFileUpload = async (e) => {
     setLoading(true);
@@ -177,10 +203,44 @@ export default function BulkPaymentUpload() {
 
         const enrichedData = await Promise.all(parsed.map(async (row, i) => {
           const enrichedRow = { ...row };
+
+          // Normalize fields
+          Object.keys(enrichedRow).forEach(k => {
+            if (typeof enrichedRow[k] === 'string') {
+              enrichedRow[k] = enrichedRow[k].trim();
+              if (enrichedRow[k] === '') enrichedRow[k] = null;
+            }
+          });
+
           const rowErrors = [];
 
-          // Fetch full_name and student_id based on register_id
-          if (row.register_id) {
+          for (const field of requiredHeaders) {
+            if (enrichedRow[field] === undefined || enrichedRow[field] === null || String(enrichedRow[field]).trim() === '') {
+              rowErrors.push(`${field} is required`);
+            }
+          }
+
+          // 1. Normalize payment_concept_id (match by name)
+          if (enrichedRow.payment_concept_id) {
+            const matchedConcept = paymentConcepts.find(pc => pc.name.toLowerCase() === enrichedRow.payment_concept_id.toLowerCase());
+            if (matchedConcept) {
+              enrichedRow.payment_concept_id = matchedConcept.id;
+            } else {
+              rowErrors.push('invalid_payment_concept');
+            }
+          }
+
+          // 2. Normalize payment_through_id (match by name)
+          if (enrichedRow.payment_through_id) {
+            const matchedMethod = paymentMethods.find(pm => pm.name.toLowerCase() === enrichedRow.payment_through_id.toLowerCase());
+            if (matchedMethod) {
+              enrichedRow.payment_through_id = matchedMethod.id;
+            } else {
+              rowErrors.push('invalid_payment_through');
+            }
+          }
+
+          if (enrichedRow.register_id) {
             try {
               const res = await api.get(`${baseUrl}/api/students`, {
                 params: {
@@ -188,7 +248,7 @@ export default function BulkPaymentUpload() {
                   offset: 0,
                   limit: 10,
                   export_all: false,
-                  register_id: row.register_id
+                  register_id: enrichedRow.register_id
                 }
               });
               const student = res.data?.content?.[0];
@@ -196,12 +256,9 @@ export default function BulkPaymentUpload() {
                 enrichedRow.full_name = student.full_name;
                 enrichedRow.student_id = student.student_id;
               } else {
-                enrichedRow.full_name = '';
-                enrichedRow.student_id = '';
                 rowErrors.push('student_not_found_for_register_id');
               }
             } catch (err) {
-              console.error(`Error fetching student for register_id ${row.register_id}`, err);
               rowErrors.push('error_fetching_student_info');
             }
           }
@@ -213,9 +270,9 @@ export default function BulkPaymentUpload() {
           return enrichedRow;
         }));
 
-        setLoading(false);
         setCsvData(enrichedData);
         setErrors(newErrors);
+        setLoading(false);
       },
       error: (err) => {
         setLoading(false);
@@ -225,6 +282,7 @@ export default function BulkPaymentUpload() {
   };
 
   const handleUpload = async () => {
+    setLoading(true);
     const validRows = csvData.filter((_, i) => !errors.find(err => err.rowIndex === i))
       .map(row => ({
         student_id: row.student_id,
@@ -240,9 +298,11 @@ export default function BulkPaymentUpload() {
     try {
       const res = await api.post(`${baseUrl}/api/payments/create/bulk?lang=${i18n.language}`, validRows);
       swal(res.data.title, res.data.message, res.data.type);
+      setLoading(false);
       setCsvData([]);
       setErrors([]);
     } catch (err) {
+      setLoading(false);
       console.error(err);
       swal('Error', t('upload_failed'), 'error');
     }
@@ -447,7 +507,7 @@ export default function BulkPaymentUpload() {
 
                       {/* 6. Upload Button */}
                       <MDBCol className='d-flex justify-content-end'>
-                        <MDBBtn color="primary" className="btn-lg" onClick={handleUpload}>
+                        <MDBBtn disabled={loading} color={loading?'secondary':'primary'} className="btn-lg" onClick={handleUpload}>
                           {t('upload_valid_records')}
                         </MDBBtn>
                       </MDBCol>

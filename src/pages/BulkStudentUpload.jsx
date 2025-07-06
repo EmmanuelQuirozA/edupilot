@@ -268,6 +268,7 @@ export default function BulkStudentUpload() {
   };
 
   const handleUpload = async () => {
+    setLoading(true);
     const validRows = csvData.filter((_, i) => !errors.find(err => err.rowIndex === i))
     .map(row => ({
       ...row,
@@ -280,9 +281,11 @@ export default function BulkStudentUpload() {
       const res = await api.post(`${baseUrl}/api/students/create?lang=en`, validRows);
 
       swal(res.data.title, res.data.message, res.data.type);
+      setLoading(false);
       setCsvData([]);
       setErrors([]);
     } catch (err) {
+      setLoading(false);
       console.error(err);
       swal('Error', 'upload_failed', 'error');
     }
@@ -490,7 +493,7 @@ export default function BulkStudentUpload() {
 
                       {/* 6. Upload Button */}
                       <MDBCol className='d-flex justify-content-end'>
-                        <MDBBtn color="primary" className="btn-lg" onClick={handleUpload}>
+                        <MDBBtn disabled={loading} color={loading?'secondary':'primary'} className="btn-lg" onClick={handleUpload}>
                           {t('upload_valid_records')}
                         </MDBBtn>
                       </MDBCol>
