@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import api from '../api/api';
 
 
 const AuthContext = createContext();
@@ -26,14 +27,17 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
 
-  // Fetch the logo path from your endpoint, using the token for auth
-  const fetchLogo = async (token) => {
+  // Fetch the logo path from endpoint, using the token for auth
+  const fetchLogo = async (school_id) => {
     try {
-      const resp = await axios.get(
-        '/api/schools/school-image',
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setLogoUrl(resp.data);  // assuming resp.data is the URL/path string
+      const resp = await api.get(`/api/school-logo/${school_id}`, {
+        responseType: 'blob', // VERY IMPORTANT
+      });
+
+      const imageBlob = resp.data;
+      const imageUrl = URL.createObjectURL(imageBlob); // Convert to blob URL
+
+      setLogoUrl(imageUrl);
     } catch (err) {
       console.error('Error loading school logo:', err);
     }
@@ -61,7 +65,7 @@ export function AuthProvider({ children }) {
 
       setRole(decoded.role)
 
-      fetchLogo(token);
+      fetchLogo(decoded.schoolId);
 
       setLoading(false);
       
@@ -108,7 +112,7 @@ export function AuthProvider({ children }) {
 
     setRole(decoded.role)
 
-    fetchLogo(data.token);
+    fetchLogo(decoded.schoolId);
   };
 
   const logout = () => {

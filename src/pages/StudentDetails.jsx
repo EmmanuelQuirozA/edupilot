@@ -76,9 +76,9 @@ export default function StudentDetailPage() {
 		marginBottom: '15px'
 	};
 
-  if (loading) return <Layout><LoadingComponent /> </Layout>;
-  if (error)   return <Layout><ErrorComponent message={t('error')} body={t(error.message)} /></Layout>;
-  if (!student) return <Layout><NoDataComponent message={t("no_data_available")}  body={t("no_data_available_body")}/></Layout>;
+  if (loading) return <Layout pageTitle={t('student_details')}><LoadingComponent /> </Layout>;
+  if (error)   return <Layout pageTitle={t('student_details')}><ErrorComponent message={t('error')} body={t(error.message)} /></Layout>;
+  if (!student) return <Layout pageTitle={t('student_details')}><NoDataComponent message={t("no_data_available")}  body={t("no_data_available_body")}/></Layout>;
 
   return (
     <Layout pageTitle={t('student_details')}>

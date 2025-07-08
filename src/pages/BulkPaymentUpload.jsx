@@ -86,7 +86,7 @@ export default function BulkPaymentUpload() {
   const displayHeaders = [
   'register_id', 'full_name', 'student_id', // student_id hidden, full_name read-only
   'payment_month', 'amount', 'comments',
-  'payment_through_id', 'payment_concept_id'
+  'payment_through_id', 'payment_concept_id', 'created_at'
   ];
 
   const handleFieldChange = async (index, field, value) => {
@@ -291,6 +291,7 @@ export default function BulkPaymentUpload() {
         comments: row.comments,
         payment_through_id: parseInt(row.payment_through_id),
         payment_concept_id: parseInt(row.payment_concept_id),
+        created_at: row.created_at,
       }));
 
     if (!validRows.length) return swal('Error', t('no_valid_records_to_upload'), 'warning');
@@ -465,6 +466,13 @@ export default function BulkPaymentUpload() {
                                         <input
                                           className="form-control"
                                           type="month"
+                                          value={row[h] || ''}
+                                          onChange={(e) => handleFieldChange(i, h, e.target.value)}
+                                        />
+                                      ) : h === 'created_at' ? (
+                                        <input
+                                          className="form-control"
+                                          type="date"
                                           value={row[h] || ''}
                                           onChange={(e) => handleFieldChange(i, h, e.target.value)}
                                         />

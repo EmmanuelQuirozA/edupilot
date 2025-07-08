@@ -382,5 +382,12 @@
 	"supported_files": "Supported files",
 	"upload_valid_records": "Upload valid records",
   "student_not_found_for_register_id": "No student found for the given registration ID",
-  "error_fetching_student_info": "Error fetching student information"
+  "error_fetching_student_info": "Error fetching student information",
+	"file_size_exceeds_1mb_limit": "File size exceeds 1MB limit",
+	"school_logo": "School logo",
+	"general_information": "General information",
+	"address_and_contact": "Address and contact",
+	"street_and_number": "Street and number",
+	"city": "City",
+	"zip_number": "Zip number"
 }

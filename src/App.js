@@ -23,7 +23,8 @@ import ProtectedFilePage from './pages/ProtectedFilePage';
 import DashboardRouter from './routes/DashboardRouter'
 import UsersRouter     from './routes/UsersRouter'
 import ReportsRouter   from './routes/ReportsRouter'
-// import SchoolsRouter   from './routes/SchoolsRouter'
+import SchoolsRouter   from './routes/SchoolsRouter'
+import SchoolDetailsRouter   from './routes/SchoolDetailsRouter'
 import TeachersRouter   from './routes/TeachersRouter'
 import StudentsRouter   from './routes/StudentsRouter'
 import CoffeeRouter  from './routes/CoffeeRouter'
@@ -110,7 +111,8 @@ function AppRoutes() {
         <Route path="/paymentreports/paymentrequestdetails/:payment_request_id/" element={<PaymentRequestDetailsRouter />} />
         <Route path="/protectedfiles/:filename" element={<ProtectedFilePage />} />
 
-        {/* <Route path="/schools/*" element={<SchoolsRouter />} /> */}
+        <Route path="/schools/*" element={<SchoolsRouter />} />
+        <Route path="/schools/:school_id" element={<SchoolDetailsRouter />} />
         <Route path="/classes/*" element={<ClassesRouter />} />
         <Route path="/coffee/*" element={<CoffeeRouter />} />
         <Route path="/menu/*" element={<MenuRouter />} />

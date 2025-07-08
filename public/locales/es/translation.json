@@ -382,5 +382,12 @@
 	"supported_files": "Archivos soportados",
 	"upload_valid_records": "Cargar registros válidos",
   "student_not_found_for_register_id": "No se encontró estiantes con el número de matrícula proporcionado",
-  "error_fetching_student_info": "Error obteniendo la información de estudiantes"
+  "error_fetching_student_info": "Error obteniendo la información de estudiantes",
+	"file_size_exceeds_1mb_limit": "El peso del archivo supera el límite de 1MB",
+	"school_logo": "Logo de la escuela",
+	"general_information": "Información general",
+	"address_and_contact": "Dirección y contacto",
+	"street_and_number": "Calle y número",
+	"city": "Ciudad",
+	"zip_number": "Código postal"
 }

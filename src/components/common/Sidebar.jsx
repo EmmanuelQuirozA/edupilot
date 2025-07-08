@@ -47,7 +47,7 @@ const menuConfig = {
       items: [
         { name: 'finance', icon: 'bi bi-coin', link: '/paymentreports' },
         { name: 'reports', icon: 'bi bi-cash-coin', link: '/reports' },
-        { name: 'schools', icon: 'bi bi-building', link: '/schools', comingSoon: true },
+        { name: 'schools', icon: 'bi bi-building', link: '/schools' },
         { name: 'classes', icon: 'bi bi-card-checklist', link: '/classes' },
         { name: 'users', icon: 'bi bi-person-badge', link: '/users' },
         { name: 'teachers', icon: 'bi bi-briefcase', link: '/teachers' },
