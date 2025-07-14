@@ -1,8 +1,8 @@
 import api from './api';
 
 
-export const getClassesCatalog = (lang) =>{
-  const params = { lang };
+export const getClassesCatalog = ({lang, school_id}) =>{
+  const params = { lang, school_id };
   return api.get('/api/groups/catalog', { params }).then(r => r.data);
 };
 

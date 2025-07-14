@@ -144,7 +144,7 @@ export default function Sidebar({ collapsed, isMobile, mobileOpen }) {
           : undefined,
         transition: isMobile ? 'transform 0.3s ease' : undefined,
 
-        zIndex: 10000000000,
+        zIndex: 1000,
       }}
     >
       {/* Logo */}

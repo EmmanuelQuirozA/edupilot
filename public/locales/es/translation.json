@@ -389,5 +389,29 @@
 	"address_and_contact": "Dirección y contacto",
 	"street_and_number": "Calle y número",
 	"city": "Ciudad",
-	"zip_number": "Código postal"
+	"zip_number": "Código postal",
+	"csv_headers": {
+		"register_id": "Matrícula",
+		"first_name": "Nombre",
+		"last_name_father": "Apellido paterno",
+		"last_name_mother": "Apellido Materno",
+		"group_id": "Grupo",
+		"username": "Nombre de usuario",
+		"email": "Email",
+		"payment_reference": "Referencia de pago",
+		"birth_date": "Fecha de nacimiento",
+		"phone_number": "Número telefónico",
+		"tax_id": "RFC",
+		"curp": "CURP",
+		"street": "Calle",
+		"ext_number": "Número Ext",
+		"int_number": "Número Int",
+		"suburb": "Colonia",
+		"locality": "Localidad",
+		"municipality": "Municipio",
+		"state": "Estado",
+		"personal_email": "Email personal",
+		"password": "Contraseña",
+		"balance": "Balance"
+	}
 }

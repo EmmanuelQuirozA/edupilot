@@ -27,31 +27,62 @@ export default function BulkStudentUpload() {
     setFormData(fd => ({ ...fd, [key]: value }));
 
     if (key === 'school_id') {
-      setCsvData(data => data.map(row => ({ ...row, school_id: value })));
+      // Clear classes to avoid showing outdated options before fetch finishes
+      setClasses([]);
+
+      // Reset group_id for all rows if it's no longer valid
+      setCsvData(prev =>
+        prev.map(row => {
+          const validGroup = classes.some(cls => cls.group_id === Number(row.group_id));
+          return validGroup ? row : { ...row, group_id: '' };
+        })
+      );
+
+      // Optional: trigger re-validation of all rows
+      csvData.forEach((row, i) => validateRow(row, i));
     }
   };
 
   useEffect(() => {
-    getClassesCatalog(i18n.language)
-      .then(setClasses)
-      .catch(err => console.error('Error loading scholar levels:', err));
     getSchools(i18n.language)
       .then(res => {
         setSchools(res);
         if (res.length > 0) {
-          // Set first school_id in formData
-          setFormData(fd => ({ ...fd, school_id: res[0].school_id }));
-
-          // Set school_id in each student row (if any already parsed)
+          const firstSchoolId = res[0].school_id;
+          setFormData(fd => ({ ...fd, school_id: firstSchoolId }));
           setCsvData(data => data.map(row => ({
             ...row,
-            school_id: res[0].school_id
+            school_id: firstSchoolId
           })));
         }
       })
       .catch(err => console.error('Error loading schools:', err));
-
   }, [i18n.language]);
+
+  useEffect(() => {
+    if (!formData.school_id) return;
+
+    getClassesCatalog({ lang: i18n.language, school_id: formData.school_id })
+      .then(fetchedClasses => {
+        setClasses(fetchedClasses);
+
+        // ✅ Wait for classes to be set, then revalidate using the fetchedClasses
+        setCsvData(prevRows => {
+          // Optionally clear invalid group_ids
+          const updatedRows = prevRows.map(row => {
+            const validGroup = fetchedClasses.some(cls => cls.group_id === Number(row.group_id));
+            return validGroup ? row : { ...row, group_id: '' };
+          });
+
+          // Trigger revalidation
+          updatedRows.forEach((row, i) => validateRow(row, i, fetchedClasses));
+
+          return updatedRows;
+        });
+      })
+      .catch(err => console.error('Error loading classes:', err));
+  }, [formData.school_id, i18n.language]);
+
 
   const debouncedValidateRow = (row, index) => {
     // Clear any existing timeout for this row
@@ -123,8 +154,10 @@ export default function BulkStudentUpload() {
     }
   };
 
-  const validateRow = async (row, index) => {
+  const validateRow = async (row, index, classesOverride = null) => {
     const rowErrors = [];
+
+    const currentClasses = classesOverride || classes;
 
     // Required fields
     for (const field of requiredHeaders) {
@@ -161,7 +194,7 @@ export default function BulkStudentUpload() {
     }
 
     // Validate group_id (must match a known group_id)
-    const classObj = classes.find(c => c.group_id === Number(row.group_id));
+    const classObj = currentClasses.find(c => c.group_id === Number(row.group_id));
     if (!classObj) {
       rowErrors.push('invalid_class');
     }
@@ -330,26 +363,30 @@ export default function BulkStudentUpload() {
                     <p className="text-muted">
                       {t('layout_instructions')}
                     </p>
-                    <MDBBtn color="success" className="w-100" onClick={async () => {
+                    <MDBBtn color="success" className="w-100" 
+                    onClick={async () => {
                       try {
-                        const response = await api.get('/api/bulkfile/students_bulk_upload.csv', {
-                          responseType: 'blob' // Important to handle binary data
-                        });
 
-                        // Create a link to trigger the download
-                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const sampleRow = displayHeaders.map(() => ''); // Optional: empty row for structure
+                        const csvContent = [displayHeaders, sampleRow].map(r => r.join(',')).join('\n');
+
+                        const BOM = '\uFEFF'; // UTF-8 BOM
+                        const blob = new Blob([BOM + csvContent], {
+                          type: 'text/csv;charset=utf-8'
+                        });
+                        const url = window.URL.createObjectURL(blob);
+
                         const link = document.createElement('a');
                         link.href = url;
-                        link.setAttribute('download', 'students_bulk_upload.csv'); // Set default filename
+                        link.setAttribute('download', 'students_bulk_upload.csv');
                         document.body.appendChild(link);
                         link.click();
 
-                        // Clean up
                         link.remove();
                         window.URL.revokeObjectURL(url);
                       } catch (error) {
-                        console.error('Error downloading layout:', error);
-                        swal('Error', 'Could not download the layout file', 'error');
+                        console.error('Error generating layout file:', error);
+                        swal('Error', t('could_not_generate_layout'), 'error');
                       }
                     }}>
                       <MDBIcon fas icon="file-archive" className="me-2" />
@@ -420,11 +457,19 @@ export default function BulkStudentUpload() {
                               ))}
                             </colgroup>
 
-                            <MDBTableHead>
+                            {/* <MDBTableHead>
                               <tr>
                                 <th>#</th>
                                 {displayHeaders.map((h) => (
                                   <th key={h}>{h}</th>
+                                ))}
+                              </tr>
+                            </MDBTableHead> */}
+                            <MDBTableHead>
+                              <tr>
+                                <th style={{ minWidth: '10px' }}>#</th>
+                                {displayHeaders.map((h) => (
+                                  <th key={h}>{t(`csv_headers.${h}`)}</th> // Use i18n here
                                 ))}
                               </tr>
                             </MDBTableHead>

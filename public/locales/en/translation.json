@@ -389,5 +389,29 @@
 	"address_and_contact": "Address and contact",
 	"street_and_number": "Street and number",
 	"city": "City",
-	"zip_number": "Zip number"
+	"zip_number": "Zip number",
+	"csv_headers": {
+		"register_id": "Registration ID",
+		"first_name": "First Name",
+		"last_name_father": "Last Name (Father)",
+		"last_name_mother": "Last Name (Mother)",
+		"group_id": "Class",
+		"username": "Username",
+		"email": "Email",
+		"payment_reference": "Payment Reference",
+		"birth_date": "Birth Date",
+		"phone_number": "Phone Number",
+		"tax_id": "Tax Id",
+		"curp": "CURP",
+		"street": "Street",
+		"ext_number": "Ext Number",
+		"int_number": "Int Number",
+		"suburb": "Suburb",
+		"locality": "Locality",
+		"municipality": "Municipality",
+		"state": "State",
+		"personal_email": "Personal Email",
+		"password": "Password",
+		"balance": "Balance"
+	}
 }

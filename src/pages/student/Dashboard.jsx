@@ -98,7 +98,7 @@ export default function Dashboard() {
                 <MDBIcon fas icon="dollar-sign" size="3x" className="text-danger me-4" />
                 <div>
                   <p className="text-muted mb-1">{t('pending_payments')}</p>
-                  <h4 className="mb-0 fw-bold">${pendingPayment.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} MXN</h4>
+                  <h4 className="mb-0 fw-bold">${pendingPayment?.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} MXN</h4>
                 </div>
               </MDBCardBody>
             </MDBCard>
@@ -109,7 +109,7 @@ export default function Dashboard() {
                 <MDBIcon fas icon="utensils" size="3x" className="text-success me-4" />
                 <div>
                   <p className="text-muted mb-1">{t('coffee_balance')}</p>
-                  <h4 className="mb-0 fw-bold">${student.balance.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} MXN</h4>
+                  <h4 className="mb-0 fw-bold">${student.balance?.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} MXN</h4>
                 </div>
               </MDBCardBody>
             </MDBCard>
