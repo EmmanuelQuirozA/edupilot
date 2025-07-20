@@ -381,7 +381,7 @@
 	"drag_or_click": "Arrastra y suelta el archivo aquí o haz clic para seleccionarlo",
 	"supported_files": "Archivos soportados",
 	"upload_valid_records": "Cargar registros válidos",
-  "student_not_found_for_register_id": "No se encontró estiantes con el número de matrícula proporcionado",
+  "student_not_found_for_register_id": "No se encontró estudiantes con el número de matrícula proporcionado",
   "error_fetching_student_info": "Error obteniendo la información de estudiantes",
 	"file_size_exceeds_1mb_limit": "El peso del archivo supera el límite de 1MB",
 	"school_logo": "Logo de la escuela",

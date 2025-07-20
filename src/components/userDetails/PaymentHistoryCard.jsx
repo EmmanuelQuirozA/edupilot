@@ -37,14 +37,15 @@ export default function PaymentHistoryCard({ history,  tuitions=false  }) {
               alwaysOpen
               key={`nested-${yearBlock.year}-${monthBlock.month}`}
               initialActive={[]}
-                className='border-0 p-0'
+              className='border-0 p-0'
             >
               <MDBAccordionItem
                 className='card mb-2'
                 collapseId={`month-${yearBlock.year}-${monthBlock.month}`}
                 headerTitle={
                   <div className="d-flex justify-content-between w-100">
-                    <span>{formatDate("0"+monthBlock.month, i18n.language, { month: 'long' })}</span>
+                    {/* <span>{formatDate("0"+monthBlock.month, i18n.language, { month: 'long' })}</span> */}
+                    {new Date(2020, parseInt(monthBlock.month) - 1).toLocaleDateString(i18n.language, { month: 'long' })}
                     <MDBBadge light color="secondary">
                       ${monthBlock.total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     </MDBBadge>

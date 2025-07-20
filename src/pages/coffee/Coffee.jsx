@@ -171,7 +171,7 @@ export default function Coffee() {
           <MDBCol>
             {canSeeReports && (
               <>
-              <Link className="btn btn-info me-2" to={'http://localhost:3000/reports?tab=coffeeSales'}>
+              <Link className="btn btn-info me-2" to={'/reports?tab=coffeeSales'}>
                 <MDBIcon fas icon="chart-line" className="me-1" />
                 {t('sales_reports')}
               </Link>
@@ -179,7 +179,7 @@ export default function Coffee() {
             )}
             {canEdit && (
               <>
-              <Link className="btn btn-dark me-2" to={'http://localhost:3000/menu'}>
+              <Link className="btn btn-dark me-2" to={'/menu'}>
                 <MDBIcon fas icon="utensils" className="me-1" />
                 {t('menu_management')}
               </Link>

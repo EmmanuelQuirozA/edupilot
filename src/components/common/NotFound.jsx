@@ -34,7 +34,7 @@ const NotFoundPage = () => {
                 {t('page_not_found_body')}
             </p>
             <Link
-              to={`http://localhost:3000/dashboard`}
+              to={`/dashboard`}
               style={{ textDecoration: 'none' }}
             >
               <MDBBtn color="info">
