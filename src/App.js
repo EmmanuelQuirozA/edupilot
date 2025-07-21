@@ -36,6 +36,8 @@ import StudentDetailsRouter  from './routes/StudentDetailsRouter'
 import PaymentRequestDetailsRouter  from './routes/PaymentRequestDetailsRouter'
 import BulkStudentUploadRouter  from './routes/BulkStudentUploadRouter'
 import BulkPaymentUploadRouter  from './routes/BulkPaymentUploadRouter'
+import ProfileRouter  from './routes/ProfileRouter'
+
 // import SettingsRouter  from './routes/SettingsRouter'
 
 // import PrintDemo from './components/PrintDemo';
@@ -104,6 +106,7 @@ function AppRoutes() {
       {/* All secured pages */}
       <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SCHOOL_ADMIN', 'FINANCE', 'STUDENT']} />}>
         <Route path="/dashboard" element={<DashboardRouter />} />
+        <Route path="/profile" element={<ProfileRouter />} />
         <Route path="/paymentreports" element={<PaymentsReportsRouter />} />
         <Route path="/reports" element={<ReportsRouter />} />
         <Route path="/paymentreports/paymentdetails/:payment_id/" element={<PaymentDetailsRouter />} />

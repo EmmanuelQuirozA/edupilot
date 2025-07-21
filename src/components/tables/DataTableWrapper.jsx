@@ -7,7 +7,7 @@ import LoadingComponent from '../common/LoadingComponent';
 import usePaginationOptions from '../../hooks/usePaginationOptions';
 import { 
   MDBRow, MDBCol, MDBCard, MDBCardHeader, MDBCardBody, 
-  MDBBtn, MDBIcon, MDBContainer, MDBSpinner
+  MDBBtn, MDBIcon
 } from 'mdb-react-ui-kit';
 import { useTranslation } from 'react-i18next';
 

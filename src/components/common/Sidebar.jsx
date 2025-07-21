@@ -27,12 +27,12 @@ const menuConfig = {
         { name: 'users',     icon: 'fa-solid fa-user-graduate', link: '/users' }
       ]
     },
-    {
-      level: 'Settings',
-      items: [
-        { name: 'settings', icon: 'bi bi-gear', link: '/settings', comingSoon: true }
-      ]
-    }
+    // {
+    //   level: 'Settings',
+    //   items: [
+    //     { name: 'settings', icon: 'bi bi-gear', link: '/settings', comingSoon: true }
+    //   ]
+    // }
   ],
 
   SCHOOL_ADMIN: [
@@ -71,13 +71,13 @@ const menuConfig = {
         { name: 'menu', icon: 'bi bi-columns', link: '/menu' }
       ]
     },
-    {
-      level: 'Settings',
-      items: [
-        { name: 'profile',  icon: 'bi bi-person-circle', link: '/profile' },
-        { name: 'settings', icon: 'bi bi-gear',          link: '/settings' }
-      ]
-    }
+    // {
+    //   level: 'Settings',
+    //   items: [
+    //     { name: 'profile',  icon: 'bi bi-person-circle', link: '/profile' },
+    //     { name: 'settings', icon: 'bi bi-gear',          link: '/settings' }
+    //   ]
+    // }
   ],
 
   STUDENT: [
@@ -103,13 +103,13 @@ const menuConfig = {
         { name: 'announcements', icon: 'bi bi-megaphone', link: '/announcements', comingSoon: true },
       ]
     },
-    {
-      level: 'Settings',
-      items: [
-        { name: 'profile',  icon: 'bi bi-person-circle', link: '/profile', comingSoon: true },
-        { name: 'settings', icon: 'bi bi-gear',          link: '/settings', comingSoon: true }
-      ]
-    }
+    // {
+    //   level: 'Settings',
+    //   items: [
+    //     { name: 'profile',  icon: 'bi bi-person-circle', link: '/profile', comingSoon: true },
+    //     { name: 'settings', icon: 'bi bi-gear',          link: '/settings', comingSoon: true }
+    //   ]
+    // }
   ]
 };
 
@@ -144,7 +144,7 @@ export default function Sidebar({ collapsed, isMobile, mobileOpen }) {
           : undefined,
         transition: isMobile ? 'transform 0.3s ease' : undefined,
 
-        zIndex: 1000,
+        zIndex: 1001,
       }}
     >
       {/* Logo */}
@@ -169,61 +169,61 @@ export default function Sidebar({ collapsed, isMobile, mobileOpen }) {
             {group.items.map(item => {
               const isActive = location.pathname.endsWith(item.link)
               return (
-                  <MDBListGroupItem
-                    tag={Link}
-                    to={item.comingSoon ? '#' : item.link}
-                    key={item.name}
-                    active={isActive.toString()}
-                    className={`
-                      d-flex pb-1 pt-1 align-items-center px-2
-                      ${collapsed ? 'justify-content-center' : ''} 
-                      ${isActive ? 'ms-2' : 'mx-2'} 
-                      `}
-                    style={{
-                      border: 'none',
-                    background: isActive ? '#fff' : 'transparent',
-                    color: isActive ? '#000' : '#fff',
-                      opacity: item.comingSoon ? 0.5 : 1,
-                    pointerEvents: item.comingSoon ? 'none' : 'auto',
-                    borderRadius: isActive ? '0.5rem 0 0 0.5rem' : '',
-                    }}
-                  >
-                    <i className={item.icon} />
-                    {!collapsed && <span className="ms-2 text-nowrap">{t(item.name)}</span>}
-                    {!collapsed && item.comingSoon && (
-                        <span
-                          className="text-nowrap"
-                          style={{
-                            position: 'absolute',
-                            top: '0',
-                            right: '0',
-                            backgroundColor: '#ed7d31',
-                            color: 'white',
-                            fontSize: '0.6rem',
-                            padding: '2px 4px',
-                            borderRadius: '0 4px 0 4px'
-                          }}
-                        >
-                        {t('coming_soon')}
-                      </span>
-                    )}
-                    {collapsed && item.comingSoon && (
-                      <span
-                        style={{
-                          position: 'absolute',
-                          top: '0',
-                          right: '0',
-                          backgroundColor: '#ed7d31',
-                          color: 'white',
-                          fontSize: '0.6rem',
-                          padding: '2px 4px',
-                          borderRadius: '0 4px 0 4px'
-                        }}
-                      >
-                        <i className="bi bi-info-circle position-absolute top-0 end-0 text-warning" />
-                      </span>
-                    )}
-                  </MDBListGroupItem>
+                <MDBListGroupItem
+                  tag={Link}
+                  to={item.comingSoon ? '#' : item.link}
+                  key={item.name}
+                  active={isActive.toString()}
+                  className={`
+                    d-flex pb-1 pt-1 align-items-center px-2
+                    ${collapsed ? 'justify-content-center' : ''} 
+                    ${isActive ? 'ms-2' : 'mx-2'} 
+                    `}
+                  style={{
+                    border: 'none',
+                  background: isActive ? '#fff' : 'transparent',
+                  color: isActive ? '#000' : '#fff',
+                    opacity: item.comingSoon ? 0.5 : 1,
+                  pointerEvents: item.comingSoon ? 'none' : 'auto',
+                  borderRadius: isActive ? '0.5rem 0 0 0.5rem' : '',
+                  }}
+                >
+                  <i className={item.icon} />
+                  {!collapsed && <span className="ms-2 text-nowrap">{t(item.name)}</span>}
+                  {!collapsed && item.comingSoon && (
+                    <span
+                      className="text-nowrap"
+                      style={{
+                        position: 'absolute',
+                        top: '0',
+                        right: '0',
+                        backgroundColor: '#ed7d31',
+                        color: 'white',
+                        fontSize: '0.6rem',
+                        padding: '2px 4px',
+                        borderRadius: '0 4px 0 4px'
+                      }}
+                    >
+                      {t('coming_soon')}
+                    </span>
+                  )}
+                  {collapsed && item.comingSoon && (
+                    <span
+                      style={{
+                        position: 'absolute',
+                        top: '0',
+                        right: '0',
+                        backgroundColor: '#ed7d31',
+                        color: 'white',
+                        fontSize: '0.6rem',
+                        padding: '2px 4px',
+                        borderRadius: '0 4px 0 4px'
+                      }}
+                    >
+                      <i className="bi bi-info-circle position-absolute top-0 end-0 text-warning" />
+                    </span>
+                  )}
+                </MDBListGroupItem>
               )
             })}
             {gi < groups.length - 1 && (

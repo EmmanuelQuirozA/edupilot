@@ -153,9 +153,9 @@ export default function Header({ pageTitle, collapsed, toggleSidebar }) {
                 <MDBDropdownItem onClick={() => navigate('/profile')} className="dropdown-item cursor-pointer">
                   {t('profile')}
                 </MDBDropdownItem>
-                <MDBDropdownItem onClick={() => navigate('/settings')} className="dropdown-item cursor-pointer">
+                {/* <MDBDropdownItem onClick={() => navigate('/settings')} className="dropdown-item cursor-pointer">
                   {t('settings')}
-                </MDBDropdownItem>
+                </MDBDropdownItem> */}
                 
                 <MDBDropdownItem onClick={() => {logout()
                     navigate('/login')

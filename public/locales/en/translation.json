@@ -272,6 +272,7 @@
 	"state":"State",
 	"phone_number":"Phone number",
 	"profile":"Profile",
+	"security": "Security",
 	"additional_info":"Additional info",
 	"email":"Email",
 	"first_name":"First name(s)",
@@ -390,6 +391,10 @@
 	"street_and_number": "Street and number",
 	"city": "City",
 	"zip_number": "Zip number",
+	"update_password": "Update password",
+	"current_password": "Current password",
+	"new_password": "New password",
+	"confirm_new_password": "Confirm new password",
 	"csv_headers": {
 		"register_id": "Registration ID",
 		"first_name": "First Name",

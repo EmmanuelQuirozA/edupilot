@@ -272,6 +272,7 @@
   "state":"Estado",
   "phone_number":"Número telefónico",
   "profile":"Perfil",
+	"security": "Seguridad",
   "additional_info":"Información adicional",
   "email":"Email",
 	"first_name":"Nombre(s)",
@@ -390,6 +391,10 @@
 	"street_and_number": "Calle y número",
 	"city": "Ciudad",
 	"zip_number": "Código postal",
+	"update_password": "Actualizar contraseña",
+	"current_password": "Contraseña actual",
+	"new_password": "Nueva contraseña",
+	"confirm_new_password": "Confirme la nueva contraseña",
 	"csv_headers": {
 		"register_id": "Matrícula",
 		"first_name": "Nombre",
