@@ -19,6 +19,8 @@ export default function BulkStudentUpload() {
   const [validatingRows, setValidatingRows] = useState(new Set());
   const validationTimeouts = useRef({});
 
+  const MAX_ROWS = 100;
+
   const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
   const [formData, setFormData] = useState({ school_id: '' });
@@ -220,6 +222,11 @@ export default function BulkStudentUpload() {
       skipEmptyLines: true,
       complete: async (results) => {
         const parsed = results.data;
+        if (parsed.length > MAX_ROWS) {
+          setLoading(false);
+          swal('Error', t('file_exceeds_100_records_limit'), 'error');
+          return;
+        }
         const seenRegIds = new Set();
         const seenPayRefs = new Set();
         const seenUsername = new Set();
