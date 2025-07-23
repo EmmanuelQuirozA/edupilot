@@ -26,6 +26,8 @@ export default function BulkPaymentUpload() {
   const validationTimeouts = useRef({});
 
   const [file, setFile]       = useState(null);
+
+  const MAX_ROWS = 100;
   
   const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
@@ -199,6 +201,11 @@ export default function BulkPaymentUpload() {
       skipEmptyLines: true,
       complete: async (results) => {
         const parsed = results.data;
+        if (parsed.length > MAX_ROWS) {
+          setLoading(false);
+          swal('Error', t('file_exceeds_100_records_limit'), 'error');
+          return;
+        }
         const newErrors = [];
 
         const enrichedData = await Promise.all(parsed.map(async (row, i) => {
