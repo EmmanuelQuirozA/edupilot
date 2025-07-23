@@ -285,6 +285,7 @@
 	"joining_date":"Fecha de ingreso",
 	"curp":"CURP",
 	"balance": "Saldo",
+	"account_balance": "Balance de Saldo",
 	"coffee_balance": "Saldo de Cafetería",
 
 	"closed": "Cerrado",

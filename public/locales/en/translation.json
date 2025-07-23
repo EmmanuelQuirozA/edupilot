@@ -285,6 +285,7 @@
 	"joining_date":"Joining date",
 	"curp":"CURP or ID",
 	"balance": "Balance",
+	"account_balance": "Account Balance",
 	"coffee_balance": "Coffee Balance",
 
 	"closed": "Closed",

@@ -37,11 +37,6 @@ export const getStudentDetailsReadOnly = ({studentId, lang}) =>{
   return api.get('/api/students/read-only', { params }).then(r => r.data);
 };
 
-export const getBalanceRecharge = (userId, lang) =>
-  api.get('/api/reports/balancerecharge', { params: { user_id: userId, lang } })
-     .then(r => r.data)
-     .catch(err => console.error("Error loading data:", err));
-
 export const getBalanceRecharges = ({
   user_id,
   school_id,

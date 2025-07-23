@@ -4,33 +4,34 @@ import Layout from '../../layout/Layout'
 import { useTranslation } from 'react-i18next'
 import { MDBBadge, MDBBtn, MDBCard, MDBCardBody, MDBCardHeader, MDBCardText, MDBCardTitle, MDBCol, MDBContainer, MDBIcon, MDBListGroup, MDBListGroupItem, MDBRow, MDBTabs, MDBTabsContent, MDBTabsItem, MDBTabsLink, MDBTabsPane }            from 'mdb-react-ui-kit'
 
-import { formatDate } from '../../utils/formatDate';
-
 import usePendingPayments from '../../hooks/paymentRequest/usePendingPayments';
 import useStudent from '../../hooks/students/useStudent';
 import useUserDetails from '../../hooks/users/useUserDetails';
 import useGroupedPayments from '../../hooks/users/useGroupedPayments';
 import usePaymentRequests from '../../hooks/students/usePaymentRequests';
+// import { getAccountBalanceGrouped } from '../../api/balanceApi';
 
 import LoadingComponent from '../../components/common/LoadingComponent';
-import ProtectedFileModal from '../../components/modals/ProtectedFileModal';
+// import ProtectedFileModal from '../../components/modals/ProtectedFileModal';
 
 import PurchasesList from '../../components/userDetails/PurchasesList';
 import PaymentHistoryCard from '../../components/userDetails/PaymentHistoryCard';
 import PaymentRequestCard from '../../components/userDetails/PaymentRequestCard';
+import AccountBalanceCard from '../../components/userDetails/AccountBalanceCard';
 
 import MonthlyPaymentsTable      from '../../components/tables/MonthlyPaymentsTable'
 import StudentPaymentsTable      from '../../components/tables/StudentPaymentsTable'
 import StudentPaymentRequestsTable      from '../../components/tables/StudentPaymentRequestsTable'
+import AccountBalanceTable      from '../../components/tables/AccountBalanceTable'
 import BalanceRechargesTable from '../../components/tables/BalanceRechargesTable';
 
 export default function Dashboard() {
   const { t, i18n } = useTranslation();
 
-  const [showFileModal, setShowFileModal] = useState(false);
-  const [modalFilename, setModalFilename] = useState('');
-  const [modalFilepath, setModalFilepath] = useState('');
-  
+  // const [showFileModal, setShowFileModal] = useState(false);
+  // const [modalFilename, setModalFilename] = useState('');
+  // const [modalFilepath, setModalFilepath] = useState('');
+
   // ── Preserve the active tab in URL ────────────────────────────────────────────────────────
   const [searchParams, setSearchParams] = useSearchParams();
   const tabFromUrl = searchParams.get('tab') || 'pending';
@@ -45,6 +46,12 @@ export default function Dashboard() {
     const currentTab = searchParams.get('tab') || 'pending';
     setBasicActive(currentTab);
   }, [searchParams]);
+
+  // useEffect(() => {
+  //   getAccountBalanceGrouped(i18n.language)
+  //     .then(setAccountBalanceGroup)
+  //     .catch(err => console.error('Error loading account balance group:', err));
+  // }, [accountBalanceGroup,i18n.language]);
 
 
   // Fetch data 
@@ -117,6 +124,23 @@ export default function Dashboard() {
         </MDBRow>
 
         <MDBRow>
+          <MDBCol className="mb-4">
+                
+            {/* ── Desktop: show table ── */}
+            <div className="d-none d-md-block">
+              <AccountBalanceTable
+                canExport={true}
+              />
+            </div>
+            {/* ── Mobile: show cards instead ── */}
+            <div className="d-block d-md-none">
+              <AccountBalanceCard  />
+            </div>
+
+          </MDBCol>
+        </MDBRow>
+
+        <MDBRow>
           {/* <MDBCol lg="7" className="mb-4">
             <MDBCard>
               <MDBCardBody>
@@ -146,6 +170,7 @@ export default function Dashboard() {
               </MDBCardBody>
             </MDBCard>
           </MDBCol> */}
+
           <MDBCol className="mb-4">
             <MDBCard>
               <MDBCardBody>
@@ -250,13 +275,13 @@ export default function Dashboard() {
           </MDBCol>
         </MDBRow>
 
-        <ProtectedFileModal
+        {/* <ProtectedFileModal
           filename={modalFilename}
           filepath={modalFilepath}
           show={showFileModal}
           onClose={() => setShowFileModal(false)}
           lang={i18n.language}
-        />
+        /> */}
         </div>
       }
     </Layout>

@@ -64,7 +64,7 @@ export default function PaymentHistoryCard({ history,  tuitions=false  }) {
                         </span>
                       ):(
                         <span>
-                          {formatDate(item.paymentCreatedAt, i18n.language, { year: 'numeric', month: 'long', day: '2-digit' })} 
+                          {formatDate(item.paymentCreatedAt, i18n.language, { month: 'short', day: '2-digit' })} 
                         </span>
                       )}
                       <br/>
