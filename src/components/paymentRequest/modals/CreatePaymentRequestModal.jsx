@@ -21,7 +21,7 @@ import { getStudents } from '../../../api/studentsApi';
 import { getSchools } from '../../../api/schoolsApi';
 import { getClasses } from '../../../api/classesApi';
 import AsyncSearchableSelect from '../../common/AsyncSearchableSelect';
-import { validateExistence, createPaymentRequest } from '../../../api/paymentRequestsApi';
+import { validateExistence, createPaymentRequest, createRecurringPaymentRequest } from '../../../api/paymentRequestsApi';
 
 export default function CreatePaymentRequestModal({ show, setShow, onSuccess }) {
   const { t, i18n } = useTranslation();
@@ -38,6 +38,13 @@ export default function CreatePaymentRequestModal({ show, setShow, onSuccess }) 
     late_fee_frequency: '',
     payment_month: '',
     partial_payment: false
+  });
+  const [scheduleEnabled, setScheduleEnabled] = useState(false);
+  const [scheduleData, setScheduleData] = useState({
+    period: 'DAILY',
+    interval_count: '',
+    start_date: '',
+    end_date: ''
   });
   const [isSaving, setIsSaving] = useState(false);
   const [createFor, setCreateFor] = useState('school');
@@ -131,6 +138,10 @@ export default function CreatePaymentRequestModal({ show, setShow, onSuccess }) 
 
   const handleChange = (key, value) => {
     setFormData(fd => ({ ...fd, [key]: value }));
+  };
+
+  const handleScheduleChange = (key, value) => {
+    setScheduleData(sd => ({ ...sd, [key]: value }));
   };
 
   const handleSubmit = async e => {
@@ -231,7 +242,15 @@ export default function CreatePaymentRequestModal({ show, setShow, onSuccess }) 
       if (createFor === 'class')   payload.group_id   = formData.group_id;
       if (createFor === 'student') payload.student_id = formData.student_id?.value;
 
-      const createdList = await createPaymentRequest(payload);
+      let createdList = [];
+      if (scheduleEnabled) {
+        createdList = await createRecurringPaymentRequest({
+          ...payload,
+          ...scheduleData
+        });
+      } else {
+        createdList = await createPaymentRequest(payload);
+      }
       // createdList is an array like:
       // [ { payment_request_id: 65, full_name: "FRANCISCO AGUILAR GONZALEZ" }, … ]
 
@@ -272,6 +291,13 @@ export default function CreatePaymentRequestModal({ show, setShow, onSuccess }) 
         payment_month: '',
         partial_payment: false
       });
+      setScheduleEnabled(false);
+      setScheduleData({
+        period: 'DAILY',
+        interval_count: '',
+        start_date: '',
+        end_date: ''
+      });
       onSuccess();
       setShow(false);
     } catch (err) {
@@ -301,20 +327,53 @@ export default function CreatePaymentRequestModal({ show, setShow, onSuccess }) 
 
               <MDBModalBody>
                 <MDBRow className="g-3">
-                  {/* ── Main “Create For” dropdown ──────────────────── */}
-                  <MDBCol size="3" className="mb-3">
-                    <label htmlFor="createForSelect">{t('create_for')}</label>
-                    <select
-                      id="createForSelect"
-                      className="form-select"
-                      value={createFor}
-                      onChange={handleCreateForChange}
-                      disabled={isSaving}
-                    >
-                      <option value="school">{t('school')}</option>
-                      <option value="class">{t('class')}</option>
-                      <option value="student">{t('student')}</option>
-                    </select>
+                  {/* ── Main “Create For” radios ─────────────────────── */}
+                  <MDBCol size="12" className="mb-3">
+                    <label className="form-label">{t('create_for')}</label>
+                    <div className="d-flex gap-3">
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          id="radioSchool"
+                          value="school"
+                          checked={createFor === 'school'}
+                          onChange={handleCreateForChange}
+                          disabled={isSaving}
+                        />
+                        <label className="form-check-label" htmlFor="radioSchool">
+                          {t('school')}
+                        </label>
+                      </div>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          id="radioClass"
+                          value="class"
+                          checked={createFor === 'class'}
+                          onChange={handleCreateForChange}
+                          disabled={isSaving}
+                        />
+                        <label className="form-check-label" htmlFor="radioClass">
+                          {t('class')}
+                        </label>
+                      </div>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          id="radioStudent"
+                          value="student"
+                          checked={createFor === 'student'}
+                          onChange={handleCreateForChange}
+                          disabled={isSaving}
+                        />
+                        <label className="form-check-label" htmlFor="radioStudent">
+                          {t('student')}
+                        </label>
+                      </div>
+                    </div>
                   </MDBCol>
 
                   {/* ── Conditionally show exactly one of these three ──────────────────── */}
@@ -539,6 +598,69 @@ export default function CreatePaymentRequestModal({ show, setShow, onSuccess }) 
                       />
                     </div>
                   </MDBCol>
+
+                  <MDBCol size="12">
+                    <div className="form-check form-switch mb-3">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="scheduleSwitch"
+                        checked={scheduleEnabled}
+                        onChange={e => setScheduleEnabled(e.target.checked)}
+                        disabled={isSaving}
+                      />
+                      <label className="form-check-label" htmlFor="scheduleSwitch">
+                        Agendar solicitud de pago
+                      </label>
+                    </div>
+                  </MDBCol>
+
+                  {scheduleEnabled && (
+                    <>
+                      <MDBCol size="6">
+                        <label htmlFor="periodSelect">Frecuencia de la solicitud</label>
+                        <select
+                          id="periodSelect"
+                          className="form-select"
+                          value={scheduleData.period}
+                          onChange={e => handleScheduleChange('period', e.target.value)}
+                          disabled={isSaving}
+                        >
+                          <option value="DAILY">Diario</option>
+                          <option value="WEEKLY">Semanal</option>
+                          <option value="MONTHLY">Mensual</option>
+                          <option value="YEARLY">Anual</option>
+                        </select>
+                      </MDBCol>
+                      <MDBCol size="6">
+                        <MDBInput
+                          label="Periodo"
+                          type="number"
+                          min="1"
+                          step="1"
+                          value={scheduleData.interval_count}
+                          onChange={e => handleScheduleChange('interval_count', e.target.value)}
+                        />
+                      </MDBCol>
+                      <MDBCol size="6">
+                        <MDBInput
+                          label="Fecha de inicio"
+                          type="date"
+                          value={scheduleData.start_date}
+                          onChange={e => handleScheduleChange('start_date', e.target.value)}
+                        />
+                      </MDBCol>
+                      <MDBCol size="6">
+                        <MDBInput
+                          label="Fecha de fin"
+                          type="date"
+                          value={scheduleData.end_date}
+                          onChange={e => handleScheduleChange('end_date', e.target.value)}
+                        />
+                      </MDBCol>
+                    </>
+                  )}
                 </MDBRow>
               </MDBModalBody>
 
