@@ -156,3 +156,13 @@ export const getStudentPaymentRequests = (lang) => {
       throw err;
     });
 };
+
+export const createRecurringPaymentRequest = (data) => {
+  return api
+    .post('/api/payment-requests/recurrence', data, { params: { lang: 'es' } })
+    .then((res) => res.data)
+    .catch((err) => {
+      console.error('Error creating recurring payment request:', err);
+      throw err;
+    });
+};
